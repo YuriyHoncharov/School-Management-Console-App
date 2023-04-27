@@ -4,6 +4,7 @@ public class Main {
 
 	public static void main(String[] args) throws Exception {
 		DataBaseCreation dataBase = new DataBaseCreation();
-		dataBase.DataBaseCreation();
+//		dataBase.createDataBase();
+		dataBase.createTables();
 	}
 }
