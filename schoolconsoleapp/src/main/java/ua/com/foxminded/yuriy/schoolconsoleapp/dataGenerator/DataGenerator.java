@@ -1,17 +1,14 @@
 package ua.com.foxminded.yuriy.schoolconsoleapp.dataGenerator;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import ua.com.foxminded.yuriy.schoolconsoleapp.config.ConnectionUtil;
 import ua.com.foxminded.yuriy.schoolconsoleapp.reader.FileHandler;
 
 public class DataGenerator {
 
-	private final Connection connection;
 	public final static String FILE_PATH = "src/main/resources/";
 	public final static String DATA_BASE_PATH = "data_base_creation.sql";
 	public final static String TABLE_PATH = "tables_creation.sql";
@@ -20,33 +17,30 @@ public class DataGenerator {
 
 	public void createDataBase() throws SQLException {
 
-		try (Connection connection = ConnectionUtil.getConnection()) {
+		try {
 			runSQLScript(FileHandler.readFile(DATA_BASE_FILE_PATH));
 			System.out.println("Database created.");
 		} catch (SQLException e) {
-			System.out.println("Error: " + e);
-		} catch (Exception e) {
-			System.out.println("Error: " + e);
+			System.out.println("Error while creating Data Base: " + e);
 		}
 	}
 
 	public void createTables() throws SQLException {
-		try (Connection conn = ConnectionUtil.getConnection()) {
+		try {
 			runSQLScript(FileHandler.readFile(TABLE_FILE_PATH));
 			System.out.println("Tables were created.");
 		} catch (SQLException e) {
 			System.out.println("Error: " + e);
-		} catch (Exception e) {
-			System.out.println("Error: " + e);
 		}
 	}
 
-	public DataGenerator(Connection connection) {
-		this.connection = connection;
-	}
-
-	public void runSQLScript(String SQLQuery) throws SQLException, IOException {
-		PreparedStatement statement = connection.prepareStatement(SQLQuery);
-		statement.execute();
+	public void runSQLScript(String sqlQuery) throws SQLException {
+		try (
+			Connection connection = ConnectionUtil.getConnection();
+			PreparedStatement statement = connection.prepareStatement(sqlQuery)){
+			statement.execute();
+		} catch (SQLException e) {
+			System.out.println("Error while reading SQL Query: " + e);
+		} 
 	}
 }

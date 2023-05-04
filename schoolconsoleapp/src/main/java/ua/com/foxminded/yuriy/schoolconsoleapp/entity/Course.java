@@ -1,11 +1,14 @@
 package ua.com.foxminded.yuriy.schoolconsoleapp.entity;
 
-public class Courses {
-
+public class Course {
+	
+	private int id;
 	private String name;
 	private String description;
+	
 
-	public Courses(String name, String description) {
+	public Course(int id, String name, String description) {
+		this.id = id;
 		this.name = name;
 		this.description = description;
 	}
