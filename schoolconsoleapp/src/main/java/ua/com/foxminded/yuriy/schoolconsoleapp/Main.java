@@ -14,11 +14,8 @@ public class Main {
 		dataGeneration.createTables();
 		RandomDataGenerator generate = new RandomDataGenerator();
 		
-		List<String> groups = generate.getGroups(20);
-		List<String> students = generate.getStudent(200);
-		List<String> courses = generate.getCoursesList();
 		
-		HashMap<String, List<String>> filledGroups = generate.fillGroup(groups, students);
+		
 		
 	}
 }
