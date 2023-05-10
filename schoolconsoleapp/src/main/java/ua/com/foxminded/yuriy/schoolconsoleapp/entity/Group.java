@@ -10,19 +10,13 @@ public class Group {
 
 	private int id;
 	private String name;
-	private int numberOfStudents = 0;
-	private static Random random = new Random();
-	private Set<Integer> usedId = new HashSet<>();
 
 	public Group(String name) {
-		this.id = generateUniqueId();
 		this.name = name;
-		this.numberOfStudents = 0;
-
 	}
 
-	public int getNumberOfStudents() {
-		return this.numberOfStudents;
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public int getId() {
@@ -33,18 +27,10 @@ public class Group {
 		return name;
 	}
 
-	private int generateUniqueId() {
-		int newId = random.nextInt(100);
-		while (usedId.contains(newId)) {
-			newId = random.nextInt(100);
-		}
-		usedId.add(newId);
-		return newId;
+	@Override
+	public String toString() {
+		return "Group [id=" + id + ", name=" + name + "]";
 	}
-
-	public void increaseNumberOfStudent() {
-		this.numberOfStudents++;
-	}
-
-
+	
 }
+ 

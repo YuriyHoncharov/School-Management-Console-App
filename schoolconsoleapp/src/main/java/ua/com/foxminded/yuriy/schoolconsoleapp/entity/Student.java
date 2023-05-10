@@ -12,17 +12,16 @@ public class Student {
 	private int groupId;
 	private String firstName;
 	private String lastName;
-	private List<Course>courses;
-	private static Random random = new Random();
-	private static Set<Integer> usedId = new HashSet<>();
 
-	public Student(String firstName, String lastName, Integer groupId) {
+	public Student(String firstName, String lastName) {
 
-		this.id = generateUniqueId();
-		this.groupId = groupId;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		}
+	}
+
+	public void setGroupId(int groupId) {
+		this.groupId = groupId;
+	}
 
 	public int getId() {
 		return id;
@@ -36,28 +35,13 @@ public class Student {
 		return firstName;
 	}
 
+	@Override
+	public String toString() {
+		return "Student [id=" + id + ", groupId=" + groupId + ", firstName=" + firstName + ", lastName=" + lastName + "]";
+	}
+
 	public String getLastName() {
 		return lastName;
 	}
 
-	public void setGroupId(int groupId) {
-		this.groupId = groupId;
-	}
-	
-	public List<Course> getCourses() {
-		return courses;
-	}
-
-	public void setCourse(Course course) {
-		this.courses.add(course);
-	}
-
-	private int generateUniqueId() {
-		int newId = random.nextInt(2000);
-		while (usedId.contains(newId)) {
-			newId = random.nextInt(2000);
-		}
-		usedId.add(newId);
-		return newId;
-	}
 }

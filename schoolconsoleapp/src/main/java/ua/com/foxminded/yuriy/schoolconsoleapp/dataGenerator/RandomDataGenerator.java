@@ -1,9 +1,12 @@
 package ua.com.foxminded.yuriy.schoolconsoleapp.dataGenerator;
 
 import java.util.ArrayList;
-
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Random;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -53,43 +56,10 @@ public class RandomDataGenerator {
 		for (int i = 0; i < count; i++) {
 			String name = firstName[random.nextInt(firstName.length)];
 			String surname = lastName[random.nextInt(lastName.length)];
-			Integer groupId = null;
 
-			studentNames.add(new Student(name, surname, groupId));
+			studentNames.add(new Student(name, surname));
 		}
 		return studentNames;
-	}
-
-	public void assignStudentsToGroup(List<Student> students, List<Group> groups) {
-
-		int maxNumberOfStudentsInGroup = 30;
-
-		IntStream.range(0, students.size()).forEach(index -> {
-			Student student = students.get(index);
-			if (student.getGroupId() == null) {
-				Group randomGroup = getRandomGroup(groups);
-				if (randomGroup != null && randomGroup.getNumberOfStudents() < maxNumberOfStudentsInGroup) {
-					student.setGroupId(randomGroup.getId());
-					randomGroup.increaseNumberOfStudent();
-				}
-			}
-		});
-	}
-	
-	public void assignCourses (List<Student> students, List<Course>courses, int maxCoursePerStudent) {
-				
-		students.forEach(student -> {
-			List<Course> assignedCourse = courses.stream()
-					.filter(course -> course.getStudentsOfCourse().size() < maxCoursePerStudent)
-					.limit(maxCoursePerStudent - student.getCourses().size())
-					.collect(Collectors.toList());
-			
-			assignedCourse.forEach(course ->{
-				student.getCourses().add(course);
-				course.getStudentsOfCourse().add(student);
-			});
-					
-		});
 	}
 
 	public Group getRandomGroup(List<Group> groups) {
@@ -97,4 +67,30 @@ public class RandomDataGenerator {
 				shuffledList -> shuffledList.stream().findFirst().orElse(null)));
 	}
 
+	public void assignStudentsToGroups(List<Student> students, List<Group> groups) {
+
+		Random random = new Random();
+		Queue<Student> studentsList = new LinkedList<>(students);
+		Queue<Group> groupsList = new LinkedList<>(groups);
+		int studentsPerCourse = random.nextInt(21) + 10;
+		
+		studentsList.stream().forEach(student -> {
+		
+		student.setGroupId(groupsList.peek().getId());
+		});
+	}
+
+	public void assignId(List<Group> groups) {
+		Random random = new Random();
+		Set<Integer> usedId = new HashSet<>();
+		for (Group group : groups) {
+
+			int randomId = random.nextInt(10) + 1;
+			while (usedId.contains(randomId)) {
+				randomId = random.nextInt(10) + 1;
+			}
+			group.setId(randomId);
+			usedId.add(randomId);
+		}
+	}
 }

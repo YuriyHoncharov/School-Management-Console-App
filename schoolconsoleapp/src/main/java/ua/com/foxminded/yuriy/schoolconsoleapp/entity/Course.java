@@ -4,17 +4,18 @@ import java.util.List;
 
 public class Course {
 
-	private static int nextId = 1;
 	private int id;
 	private String name;
 	private String description;
-	private List<Student> studentsOfCourse;
 
 	public Course(String name, String description) {
 
-		this.id = nextId++;
 		this.name = name;
 		this.description = description;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public int getId() {
@@ -27,10 +28,6 @@ public class Course {
 
 	public String getDescription() {
 		return description;
-	}
-
-	public List<Student> getStudentsOfCourse() {
-		return studentsOfCourse;
 	}
 
 }
