@@ -56,7 +56,6 @@ public class RandomDataGenerator {
 		for (int i = 0; i < count; i++) {
 			String name = firstName[random.nextInt(firstName.length)];
 			String surname = lastName[random.nextInt(lastName.length)];
-
 			studentNames.add(new Student(name, surname));
 		}
 		return studentNames;
