@@ -12,15 +12,14 @@ public class Student {
 	private int groupId;
 	private String firstName;
 	private String lastName;
+	List<Course> courses = new ArrayList<>();
 
-	public Student(String firstName, String lastName) {
+	public Student(String firstName, String lastName, int id, int groupId) {
 
 		this.firstName = firstName;
 		this.lastName = lastName;
-	}
-
-	public void setGroupId(int groupId) {
 		this.groupId = groupId;
+		this.id = id;
 	}
 
 	public int getId() {
@@ -37,11 +36,32 @@ public class Student {
 
 	@Override
 	public String toString() {
-		return "Student [id=" + id + ", groupId=" + groupId + ", firstName=" + firstName + ", lastName=" + lastName + "]";
+		return "Student [id=" + id + ", groupId=" + groupId + ", firstName=" + firstName + ", lastName=" + lastName
+				+ ", courses=" + coursesToString() + "]";
 	}
 
 	public String getLastName() {
 		return lastName;
 	}
 
+	public List<Course> getCourses() {
+		return courses;
+	}
+
+	private String coursesToString() {
+
+		StringBuilder sb = new StringBuilder();
+		for (Course course : courses) {
+			sb.append(course.toString()).append(", ");
+		}
+
+		if (sb.length() > 0) {
+			sb.delete(sb.length() - 2, sb.length());
+		}
+		return sb.toString();
+	}
+
+	public void setCourse(List<Course> courses) {
+		this.courses = courses;
+	}
 }

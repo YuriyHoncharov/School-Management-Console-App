@@ -17,22 +17,20 @@ public class Main {
 		dataGenerator.createTables();
 		RandomDataGenerator generate = new RandomDataGenerator();
 	// Generate groups
-	    List<Group> groups = generate.generateGroups(10);
+		
+		
+		
+	    List<Group> groups = generate.generateGroups();
 
 	    // Generate courses
 	    List<Course> courses = generate.generateCourses();
 
 	    // Generate students
-	    List<Student> students = generate.generateStudents(200);
-	    
-	   generate.assignId(groups);
-	    
-	    generate.assignStudentsToGroups(students, groups);
+	    List<Student> students = generate.generateStudents();
 	    
 	    for (Student student : students) {
 			System.out.println(student.toString());
-		}
-	    
+		}   
 	    
 				System.out.println(groups.toString());
 			
