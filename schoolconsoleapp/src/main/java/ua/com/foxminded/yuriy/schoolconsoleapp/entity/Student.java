@@ -14,14 +14,17 @@ public class Student {
 	private String lastName;
 	List<Course> courses = new ArrayList<>();
 
-	public Student(String firstName, String lastName, int id, int groupId) {
+	public Student(String firstName, String lastName, int groupId) {
 
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.groupId = groupId;
+		}
+	
+	public void setId(int id) {
 		this.id = id;
 	}
-
+	
 	public int getId() {
 		return id;
 	}

@@ -19,7 +19,7 @@ public class RandomDataGenerator {
 	int groupCount = 10;
 	int studentCount = 200;
 	int maxStudentInGroup = 20;
-	
+
 	Random random = new Random();
 
 	public List<Group> generateGroups() {
@@ -56,7 +56,7 @@ public class RandomDataGenerator {
 	public List<Student> generateStudents() {
 
 		List<Student> students = new ArrayList<>();
-		int studentId = 1;
+
 		int studentsCount = 1;
 		int groupId = 1;
 		List<Course> courses = generateCourses();
@@ -69,24 +69,28 @@ public class RandomDataGenerator {
 
 			String name = firstName[random.nextInt(firstName.length)];
 			String surname = lastName[random.nextInt(lastName.length)];
-			
+
 			int coursesCount = random.nextInt(3) + 1;
 			Set<Course> assignedCourse = new HashSet<>();
-			
-			while(assignedCourse.size() < coursesCount) {
+
+			while (assignedCourse.size() < coursesCount) {
 				Course randomCourse = courses.get(random.nextInt(courses.size()));
 				assignedCourse.add(randomCourse);
 			}
-			
+
 			if (studentsCount > maxStudentInGroup) {
 				studentsCount = 1;
 				groupId++;
 			}
-			Student student = new Student(name, surname, studentId, groupId);
+			Student student = new Student(name, surname, groupId);
 			student.setCourse(new ArrayList<>(assignedCourse));
 			students.add(student);
+
+			for (Course course : assignedCourse) {
+				course.addStudents(student);
+			}
+
 			studentsCount++;
-			studentId++;			
 		}
 		return students;
 	}

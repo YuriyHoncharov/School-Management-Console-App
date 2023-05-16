@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import ua.com.foxminded.yuriy.schoolconsoleapp.config.ConnectionUtil;
-import ua.com.foxminded.yuriy.schoolconsoleapp.customexception.CustomException;
+import ua.com.foxminded.yuriy.schoolconsoleapp.customexception.SqlExecuteException;
 import ua.com.foxminded.yuriy.schoolconsoleapp.reader.FileHandler;
 
 public class DataGenerator {
@@ -34,8 +34,10 @@ public class DataGenerator {
 		try (Connection connection = ConnectionUtil.getConnection();
 				PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
 			statement.execute();
-		} catch (SQLException e) {	
+		} catch (SqlExecuteException e) {	
 			System.out.println("An error occured: " + e.getMessage());
+		} catch (SQLException e1) {
+			e1.printStackTrace();
 		}
 	}
 }

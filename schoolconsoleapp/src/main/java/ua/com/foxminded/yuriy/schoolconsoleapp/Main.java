@@ -16,25 +16,28 @@ public class Main {
 		dataGenerator.createDataBase();
 		dataGenerator.createTables();
 		RandomDataGenerator generate = new RandomDataGenerator();
-	// Generate groups
-		
-		
-		
-	    List<Group> groups = generate.generateGroups();
+		// Generate groups
 
-	    // Generate courses
-	    List<Course> courses = generate.generateCourses();
+		List<Group> groups = generate.generateGroups();
 
-	    // Generate students
-	    List<Student> students = generate.generateStudents();
-	    
-	    for (Student student : students) {
+		// Generate courses
+		List<Course> courses = generate.generateCourses();
+
+		// Generate students
+		List<Student> students = generate.generateStudents();
+
+		for (Student student : students) {
 			System.out.println(student.toString());
-		}   
-	    
-				System.out.println(groups.toString());
-			
+		}
+		System.out.println(groups.toString());
+		System.out.println(courses.size());
+		
+		List<Student> studentsOfCourse = (courses.get(9)).getStudents();
+		System.out.println(studentsOfCourse.toString());
+		
+		for (Student student : studentsOfCourse) {
+			System.out.println(student.getLastName() + " " + student.getFirstName());
+		}
 
-	
 	}
 }
