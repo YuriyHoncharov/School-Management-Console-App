@@ -3,6 +3,10 @@ package ua.com.foxminded.yuriy.schoolconsoleapp;
 import java.util.HashMap;
 import java.util.List;
 
+import ua.com.foxminded.yuriy.schoolconsoleapp.config.ConnectionUtil;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.CourseDao;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.GroupDao;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dataGenerator.DataGenerator;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dataGenerator.RandomDataGenerator;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
@@ -31,13 +35,13 @@ public class Main {
 		}
 		System.out.println(groups.toString());
 		System.out.println(courses.size());
-		
-		List<Student> studentsOfCourse = (courses.get(9)).getStudents();
-		System.out.println(studentsOfCourse.toString());
-		
-		for (Student student : studentsOfCourse) {
-			System.out.println(student.getLastName() + " " + student.getFirstName());
-		}
+
+		GroupDao groupDao = new GroupDao();
+		groupDao.addGroupToDataBase(ConnectionUtil.getConnection(), groups);
+		StudentDao studentDao = new StudentDao();
+		studentDao.addListOfStudentsToDataBase(ConnectionUtil.getConnection(), students);
+		CourseDao courseDao = new CourseDao();
+		courseDao.addCourseToDataBase(ConnectionUtil.getConnection(), courses);
 
 	}
 }

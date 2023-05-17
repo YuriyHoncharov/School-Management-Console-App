@@ -19,17 +19,17 @@ public class Student {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.groupId = groupId;
-		}
-	
+	}
+
 	public void setId(int id) {
 		this.id = id;
 	}
-	
+
 	public int getId() {
 		return id;
 	}
 
-	public Integer getGroupId() {
+	public int getGroupId() {
 		return groupId;
 	}
 
@@ -37,14 +37,14 @@ public class Student {
 		return firstName;
 	}
 
+	public String getLastName() {
+		return lastName;
+	}
+
 	@Override
 	public String toString() {
 		return "Student [id=" + id + ", groupId=" + groupId + ", firstName=" + firstName + ", lastName=" + lastName
 				+ ", courses=" + coursesToString() + "]";
-	}
-
-	public String getLastName() {
-		return lastName;
 	}
 
 	public List<Course> getCourses() {

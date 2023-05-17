@@ -2,10 +2,10 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.customexception;
 
 import java.sql.SQLException;
 
-public class SqlExecuteException extends SQLException{
+public class SqlRunException extends SQLException{
 	
-	public SqlExecuteException(String message) {
+	public SqlRunException(String message) {
 		super(message);
-	}
+	}	
 
 }

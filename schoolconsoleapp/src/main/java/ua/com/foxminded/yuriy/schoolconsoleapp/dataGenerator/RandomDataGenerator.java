@@ -86,10 +86,6 @@ public class RandomDataGenerator {
 			student.setCourse(new ArrayList<>(assignedCourse));
 			students.add(student);
 
-			for (Course course : assignedCourse) {
-				course.addStudents(student);
-			}
-
 			studentsCount++;
 		}
 		return students;
