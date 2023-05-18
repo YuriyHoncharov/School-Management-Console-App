@@ -18,7 +18,8 @@ last_name TEXT NOT NULL
 
 CREATE TABLE courses (
 course_id SERIAL PRIMARY KEY,
-course_name TEXT NOT NULL
+course_name TEXT NOT NULL,
+course_description TEXT
 );
 
 CREATE TABLE students_courses (

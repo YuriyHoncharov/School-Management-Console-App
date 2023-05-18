@@ -1,18 +1,20 @@
-package ua.com.foxminded.yuriy.schoolconsoleapp.dao;
+package ua.com.foxminded.yuriy.schoolconsoleapp.dao.implement;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
+import ua.com.foxminded.yuriy.schoolconsoleapp.config.ConnectionUtil;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.DaoException;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 
-public class StudentDao {
+public class StudentDaoImpl {
 
-	public void addListOfStudentsToDataBase(Connection connection, List<Student> students) {
+	public void addAll(List<Student> students) throws DaoException {
 		String sqlQuery = "INSERT INTO students(group_id, first_name, last_name) VALUES (?, ?, ?)";
 
-		try {
+		try (Connection connection = ConnectionUtil.getConnection()) {
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
 			for (int i = 0; i < students.size(); i++) {
 				int groupId = students.get(i).getGroupId();
@@ -25,10 +27,8 @@ public class StudentDao {
 			}
 			statement.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new DaoException("Failed to add students: " + e.getMessage());
 		}
-
 	}
 
 	String QUERY_SELECT_STUDENTS_ON_COURSE = "SELECT students.student_id, students.first_name, students.last_name\r\n"

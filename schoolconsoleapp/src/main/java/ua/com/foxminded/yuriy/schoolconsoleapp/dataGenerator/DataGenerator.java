@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import ua.com.foxminded.yuriy.schoolconsoleapp.config.ConnectionUtil;
-import ua.com.foxminded.yuriy.schoolconsoleapp.customexception.SqlRunException;
 import ua.com.foxminded.yuriy.schoolconsoleapp.reader.FileHandler;
 
 public class DataGenerator {

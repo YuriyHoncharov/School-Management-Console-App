@@ -12,7 +12,7 @@ public class Student {
 	private int groupId;
 	private String firstName;
 	private String lastName;
-	List<Course> courses = new ArrayList<>();
+	private List<Course> courses = new ArrayList<>();
 
 	public Student(String firstName, String lastName, int groupId) {
 

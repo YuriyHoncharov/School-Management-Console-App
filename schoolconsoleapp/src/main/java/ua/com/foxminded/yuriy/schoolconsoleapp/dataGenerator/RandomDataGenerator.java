@@ -20,7 +20,7 @@ public class RandomDataGenerator {
 	int studentCount = 200;
 	int maxStudentInGroup = 20;
 
-	Random random = new Random();
+	private Random random = new Random();
 
 	public List<Group> generateGroups() {
 		int groupId = 1;

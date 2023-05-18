@@ -15,8 +15,8 @@ public class FileHandler {
 			List<String> lines = Files.readAllLines(Paths.get(filePath));
 			return String.join(NEW_LINE, lines);
 		} catch (IOException e) {
-			System.out.println("Error while reading file: " + e);
-			return null;
+			System.out.println("Error while reading file: " + e);		
+			return null; // have to solve this part, waiting for your answer =)
 		}
 	}
 }

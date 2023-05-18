@@ -1,4 +1,4 @@
-package ua.com.foxminded.yuriy.schoolconsoleapp.customexception;
+package ua.com.foxminded.yuriy.schoolconsoleapp.dataGenerator;
 
 import java.sql.SQLException;
 
