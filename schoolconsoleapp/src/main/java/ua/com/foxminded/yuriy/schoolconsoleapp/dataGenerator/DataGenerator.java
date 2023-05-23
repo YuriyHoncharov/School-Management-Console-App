@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import ua.com.foxminded.yuriy.schoolconsoleapp.config.ConnectionUtil;
+import ua.com.foxminded.yuriy.schoolconsoleapp.exception.SqlRunException;
 import ua.com.foxminded.yuriy.schoolconsoleapp.reader.FileHandler;
 
 public class DataGenerator {
@@ -17,7 +18,7 @@ public class DataGenerator {
 
 	public void createDataBase() {
 
-		runSQLScript(FileHandler.readFile(DATA_BASE_FILE_PATH));
+		runInitialSQLScript(FileHandler.readFile(DATA_BASE_FILE_PATH));
 		System.out.println("Database created.");
 
 	}
@@ -33,10 +34,17 @@ public class DataGenerator {
 		try (Connection connection = ConnectionUtil.getConnection();
 				PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
 			statement.execute();
-		} catch (SqlRunException e) {	
-			System.out.println("An error occured: " + e.getMessage());
-		} catch (SQLException e1) {
-			e1.printStackTrace();
+		} catch (SQLException e) {
+			throw new SqlRunException("An error occured: " + e.getMessage());
+		}
+	}
+
+	public void runInitialSQLScript(String sqlQuery) {
+		try (Connection connection = ConnectionUtil.getConnectionForCreate();
+				PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
+			statement.execute();
+		} catch (SQLException e) {
+			throw new SqlRunException("An error occured: " + e.getMessage());
 		}
 	}
 }

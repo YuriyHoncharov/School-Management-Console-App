@@ -12,7 +12,7 @@ public class Group {
 	private String name;
 
 	public Group(String name, int id) {
-		this.name = name;		
+		this.name = name;
 		this.id = id;
 	}
 
@@ -28,6 +28,5 @@ public class Group {
 	public String toString() {
 		return "Group [id=" + id + ", name=" + name + "]";
 	}
-	
+
 }
- 

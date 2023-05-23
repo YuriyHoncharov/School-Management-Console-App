@@ -7,9 +7,9 @@ import java.util.List;
 
 import ua.com.foxminded.yuriy.schoolconsoleapp.config.ConnectionUtil;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.CourseDao;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.DaoException;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
+import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
 
 public class CourseDaoImpl implements CourseDao {
 
