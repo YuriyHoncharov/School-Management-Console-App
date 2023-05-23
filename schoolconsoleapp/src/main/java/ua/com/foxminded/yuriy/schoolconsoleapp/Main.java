@@ -42,6 +42,9 @@ public class Main {
 		studentDao.addAll(students);
 		CourseDaoImpl courseDao = new CourseDaoImpl();
 		courseDao.addAll(courses);
+		
+		StudentDaoImpl student = new StudentDaoImpl();
+		student.addCourse(courses);
 
 	}
 }

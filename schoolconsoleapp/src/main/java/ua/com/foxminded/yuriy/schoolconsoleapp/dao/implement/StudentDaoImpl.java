@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 
 import ua.com.foxminded.yuriy.schoolconsoleapp.config.ConnectionUtil;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentDao;
@@ -89,20 +90,74 @@ public class StudentDaoImpl implements StudentDao {
 
 	}
 
+//	@Override
+//	public void addCourse(Student student, List<Course> courses) throws DaoException {
+//		Random random = new Random();
+//		String QUERY_ADD_COURSE = "INSERT INTO students_courses (course_id, student_id) VALUES (? ,?)";
+//
+//		try (Connection connection = ConnectionUtil.getConnection()) {
+//			PreparedStatement statement = connection.prepareStatement(QUERY_ADD_COURSE);
+//			int randomIdCourse = courses.get(random.nextInt(courses.size())).getId();
+//			statement.setInt(1, randomIdCourse);
+//			statement.setInt(2, student.getId());
+//			statement.executeUpdate();
+//
+//		} catch (SQLException e) {
+//			throw new DaoException("Failed to assign the course: " + e.getMessage());
+//		}
+//	}
+
 	@Override
-	public void addCourse(Student student, List<Course> courses) throws DaoException {
-		Random random = new Random();
-		String QUERY_ADD_COURSE = "INSERT INTO students_courses (course_id, student_id) VALUES (? ,?)";
+	public void addCourse(List<Course> courses) throws DaoException {
 
-		try (Connection connection = ConnectionUtil.getConnection()) {
-			PreparedStatement statement = connection.prepareStatement(QUERY_ADD_COURSE);
-			int randomIdCourse = courses.get(random.nextInt(courses.size())).getId();
-			statement.setInt(1, randomIdCourse);
-			statement.setInt(2, student.getId());
-			statement.executeUpdate();
+		List<Course> coursesToAdd = new ArrayList<>(courses);
+		try (Scanner scanner = new Scanner(System.in)) {
+			System.out.println("Please enter the student's id...");
+			int studentId = scanner.nextInt();
 
-		} catch (SQLException e) {
-			throw new DaoException("Failed to assign the course: " + e.getMessage());
+			String QUERY_SELECT_STUDENT_USING_ID = "SELECT * FROM courses WHERE (course_id) IN (\r\n"
+					+ "SELECT course_id FROM students_courses WHERE student_id = ?";
+			try (Connection connection = ConnectionUtil.getConnection()) {
+				PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_STUDENT_USING_ID);
+				statement.setInt(1, studentId);
+				ResultSet rs = statement.executeQuery();
+				if (rs.next()) {
+					int id = rs.getInt("course_id");
+					String courseName = rs.getString("course_name");
+					String courseDescription = rs.getString("course_description");
+					Course course = new Course(courseName, courseDescription, id);
+					if (coursesToAdd.contains(course)) {
+						coursesToAdd.remove(course);
+					}
+				} else {
+					System.out.println("This student does not exist.");
+
+				}
+			} catch (SQLException e) {
+				throw new DaoException("Failed to add a course");
+			}
+			System.out.println("Please select the course to add...");
+			for (int i = 0; i <= coursesToAdd.size(); i++) {
+				Course course = coursesToAdd.get(i);
+				System.out.println((i + 1) + ". " + course.getName() + " | " + course.getDescription());
+			}
+			int chosenCourse = scanner.nextInt();
+
+			if (chosenCourse - 1 >= coursesToAdd.size()) {
+				throw new DaoException("This number is missing, please choose the course from the list");
+			}
+
+			Course selectedCourse = coursesToAdd.get(chosenCourse - 1);
+			try (Connection connection = ConnectionUtil.getConnection()) {
+				String QUERY_ADD_COURSE = "INSERT INTO students_courses (course_id, student_id) VALUES (?, ?)";
+				PreparedStatement statement = connection.prepareStatement(QUERY_ADD_COURSE);
+				statement.setInt(1, selectedCourse.getId());
+				statement.setInt(2, studentId);
+				statement.executeUpdate();
+				System.out.println("Course has been succesfuly added to the student.");
+			} catch (SQLException e) {
+				throw new DaoException("Failed to add the new course");
+			}
 		}
 	}
 
