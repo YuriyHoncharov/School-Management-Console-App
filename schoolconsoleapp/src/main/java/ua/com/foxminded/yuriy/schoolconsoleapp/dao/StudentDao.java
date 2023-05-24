@@ -12,5 +12,5 @@ public interface StudentDao {
 	void delete (int id) throws DaoException;
 //	void addCourse (Student student, List<Course>courses) throws DaoException;
 	void addCourse (List<Course>courses) throws DaoException;
-	void deleteRandomCourse (Student student) throws DaoException;
+	void deleteCourse () throws DaoException;
 }

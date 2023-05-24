@@ -29,13 +29,7 @@ public class Main {
 
 		// Generate students
 		List<Student> students = generate.generateStudents();
-
-		for (Student student : students) {
-			System.out.println(student.toString());
-		}
-		System.out.println(groups.toString());
-		System.out.println(courses.size());
-
+		
 		GroupDaoImpl groupDao = new GroupDaoImpl();
 		groupDao.addAll(groups);
 		StudentDaoImpl studentDao = new StudentDaoImpl();
@@ -43,8 +37,17 @@ public class Main {
 		CourseDaoImpl courseDao = new CourseDaoImpl();
 		courseDao.addAll(courses);
 		
-		StudentDaoImpl student = new StudentDaoImpl();
-		student.addCourse(courses);
+		for (Student student : students) {
+			System.out.println(student.toString());
+		}
+		
+		studentDao.addCourse(courses);
+
+		
+		System.out.println(groups.toString());
+		System.out.println(courses.size());
+
+		
 
 	}
 }
