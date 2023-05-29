@@ -30,12 +30,13 @@ public class Main {
 		// Generate students
 		List<Student> students = generate.generateStudents();
 		
+		CourseDaoImpl courseDao = new CourseDaoImpl();
+		courseDao.addAll(courses);
 		GroupDaoImpl groupDao = new GroupDaoImpl();
 		groupDao.addAll(groups);
 		StudentDaoImpl studentDao = new StudentDaoImpl();
 		studentDao.addAll(students);
-		CourseDaoImpl courseDao = new CourseDaoImpl();
-		courseDao.addAll(courses);
+		
 		
 		for (Student student : students) {
 			System.out.println(student.toString());

@@ -15,7 +15,7 @@ public class CourseDaoImpl implements CourseDao {
 
 	@Override
 	public boolean addAll(List<Course> courses) throws DaoException {
-		String sqlQuery = "INSERT INTO courses (course_id, course_name) VALUES (?, ?)";
+		String sqlQuery = "INSERT INTO courses (course_id, course_name, course_description) VALUES (?, ?, ?)";
 		try (Connection connection = ConnectionUtil.getConnection()) {
 			PreparedStatement statement = connection.prepareStatement(sqlQuery);
 
@@ -24,6 +24,8 @@ public class CourseDaoImpl implements CourseDao {
 				statement.setInt(1, id);
 				String name = courses.get(i).getName();
 				statement.setString(2, name);
+				String description = courses.get(i).getDescription();
+				statement.setString(3, description);
 				statement.executeUpdate();
 			}
 			statement.close();
