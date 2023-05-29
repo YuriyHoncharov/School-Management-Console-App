@@ -10,7 +10,6 @@ public interface StudentDao {
 	List<Student> findAllByCourse (Course course) throws DaoException;
 	void add (Student student) throws DaoException;
 	void delete (int id) throws DaoException;
-//	void addCourse (Student student, List<Course>courses) throws DaoException;
 	void addCourse (List<Course>courses) throws DaoException;
 	void deleteCourse () throws DaoException;
 }
