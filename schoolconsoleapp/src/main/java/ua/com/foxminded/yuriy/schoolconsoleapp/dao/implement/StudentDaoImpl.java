@@ -127,7 +127,7 @@ public class StudentDaoImpl implements StudentDao {
 				String courseName = rs.getString("course_name");
 				String courseDescription = rs.getString("course_description");
 				Course course = new Course(courseName, courseDescription, id);
-					for (int i = 0; i < coursesToAdd.size(); i++) {
+				for (int i = 0; i < coursesToAdd.size(); i++) {
 					if (coursesToAdd.get(i).equals(course)) {
 						coursesToAdd.remove(i);
 						break;
@@ -163,10 +163,8 @@ public class StudentDaoImpl implements StudentDao {
 	}
 
 	@Override
-	public void deleteCourse() throws DaoException {
-		Scanner scanner = new Scanner(System.in);
-		System.out.println("Please enter the student id...");
-		int studentId = scanner.nextInt();
+	public void selectCourses(int studentId) throws DaoException {
+
 		String SQL_QUERY_GET_COURSES = "SELECT * FROM courses\r\n" + "WHERE (course_id) IN (\r\n" + "SELECT course_id\r\n"
 				+ "FROM students_courses\r\n" + "WHERE student_id = ?)";
 		try (Connection connection = ConnectionUtil.getConnection()) {
@@ -184,16 +182,20 @@ public class StudentDaoImpl implements StudentDao {
 		} catch (SQLException e1) {
 			throw new DaoException("Failed to remove course from student's course list.");
 		}
+	}
+
+	@Override
+	public void deleteCourse(int courseId) throws DaoException {
+
 		String QUERY_DELETE_COURSE = "DELETE FROM students_courses \r\n" + "WHERE (course_id, student_id) IN (\r\n"
 				+ "SELECT course_id, student_id\r\n" + "FROM students_courses\r\n" + "WHERE student_id = ?\r\n"
 				+ "GROUP BY course_id, student_id\r\n" + "HAVING course_id = ?" + ")";
 
 		try (Connection connection = ConnectionUtil.getConnection()) {
 			System.out.println("Please enter the course ID to remove it...");
-			int courseToRemove = scanner.nextInt();
 
 			PreparedStatement statement = connection.prepareStatement(QUERY_DELETE_COURSE);
-			statement.setInt(1, courseToRemove);
+			statement.setInt(1, courseId);
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			throw new DaoException("Failed to delete random course: " + e.getMessage());
