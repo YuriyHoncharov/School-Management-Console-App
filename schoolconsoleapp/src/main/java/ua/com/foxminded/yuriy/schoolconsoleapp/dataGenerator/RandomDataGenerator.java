@@ -82,7 +82,8 @@ public class RandomDataGenerator {
 				studentsCount = 1;
 				groupId++;
 			}
-			Student student = new Student(name, surname, groupId);
+			Student student = new Student(name, surname);
+			student.setGroupId(groupId);
 			student.setCourse(new ArrayList<>(assignedCourse));
 			students.add(student);
 

@@ -55,7 +55,7 @@ public class StudentDaoImpl implements StudentDao {
 	}
 
 	@Override
-	public List<Student> findAllByCourse(Course course) throws DaoException {
+	public List<Student> findAllByCourse(String courseName) throws DaoException {
 
 		String QUERY_SELECT_STUDENTS_ON_COURSE = "SELECT students.student_id, students.first_name, students.last_name\r\n"
 				+ "FROM students\r\n" + "INNER JOIN students_course ON students.student_id = students_course.student_id\r\n"
@@ -65,13 +65,14 @@ public class StudentDaoImpl implements StudentDao {
 
 		try (Connection connection = ConnectionUtil.getConnection()) {
 			PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_STUDENTS_ON_COURSE);
-			statement.setString(1, course.getName());
+			statement.setString(1, courseName);
 			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {
 				String firstName = rs.getString("first_name");
 				String lastName = rs.getString("last_name");
 				int id = rs.getInt("student_id");
-				Student student = new Student(firstName, lastName, id);
+				Student student = new Student(firstName, lastName);
+				student.setId(id);
 				studentsOfCourse.add(student);
 			}
 		} catch (SQLException e) {
@@ -187,7 +188,7 @@ public class StudentDaoImpl implements StudentDao {
 	@Override
 	public void deleteCourse(int courseId) throws DaoException {
 
-		String QUERY_DELETE_COURSE = "DELETE FROM students_courses \r\n" + "WHERE (course_id, student_id) IN (\r\n"
+		String QUERY_DELETE_COURSE = "DELETE FROM students_courses\r\n" + "WHERE (course_id, student_id) IN (\r\n"
 				+ "SELECT course_id, student_id\r\n" + "FROM students_courses\r\n" + "WHERE student_id = ?\r\n"
 				+ "GROUP BY course_id, student_id\r\n" + "HAVING course_id = ?" + ")";
 
@@ -201,6 +202,32 @@ public class StudentDaoImpl implements StudentDao {
 			throw new DaoException("Failed to delete random course: " + e.getMessage());
 		}
 
+	}
+
+	@Override
+	public Student getInfo(int id) throws DaoException {
+		String QUERY_GET_STUDENT_INFO = "SELECT * FROM students\r\n" + "WHERE student_id = ?";
+		Student student = new Student("", "");
+		try(Connection connection = ConnectionUtil.getConnection()){
+			PreparedStatement statement = connection.prepareStatement(QUERY_GET_STUDENT_INFO);
+			statement.setInt(1, id);
+			ResultSet rs = statement.executeQuery();
+			
+			while(rs.next()) {
+				String firstName = rs.getString("first_name");
+				String lastName = rs.getString("last_name");
+				int studentId = rs.getInt("student_id");
+				student.setFirstName(firstName);
+				student.setLastName(lastName);
+				student.setId(studentId);
+			}
+		} catch (SQLException e) {
+			throw new DaoException("Failed to find student: " + e.getMessage());
+		}		
+		return student;
+		
+		
+		
 	}
 
 }

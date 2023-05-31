@@ -36,7 +36,7 @@ public class GroupDaoImpl implements GroupDao {
 	}
 
 	@Override
-	public List<Group> findAllLessOrEqual(int number) throws DaoException {
+	public List<Group> findAllLessOrEqual(int studentCount) throws DaoException {
 
 		String QUERY_SELECT_LESS_OR_EQUAL_STUDENTS = "SELECT * " + "FROM groups "
 				+ "LEFT JOIN students ON groups.group_id = students.group_id "
@@ -44,14 +44,14 @@ public class GroupDaoImpl implements GroupDao {
 		List<Group> groups = new ArrayList<>();
 		try (Connection connection = ConnectionUtil.getConnection()) {
 			PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_LESS_OR_EQUAL_STUDENTS);
-			statement.setInt(1, number);
+			statement.setInt(1, studentCount);
 			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {
 				int groupId = rs.getInt("group_id");
 				String groupName = rs.getString("group_name");
 				int studentsCount = rs.getInt("students.student_id");
 				Group group = new Group(groupName, groupId);
-				groups.add(group);
+				groups.add(group); 
 			}
 		} catch (SQLException e) {
 			throw new DaoException("Failed to get groups list: " + e.getMessage());

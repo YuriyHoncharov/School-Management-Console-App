@@ -14,15 +14,26 @@ public class Student {
 	private String lastName;
 	private List<Course> courses = new ArrayList<>();
 
-	public Student(String firstName, String lastName, int groupId) {
+	public Student(String firstName, String lastName) {
 
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.groupId = groupId;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
 	public void setId(int id) {
 		this.id = id;
+	}
+	
+	public void setGroupId(int groupId) {
+		this.groupId = groupId;
 	}
 
 	public int getId() {
