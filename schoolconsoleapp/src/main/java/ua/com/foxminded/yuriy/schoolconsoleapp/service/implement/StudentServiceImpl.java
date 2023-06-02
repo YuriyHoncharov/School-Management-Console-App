@@ -20,12 +20,12 @@ public class StudentServiceImpl implements StudentService {
 	@Override
 	public void delete(int id) throws DaoException {
 		studentDao.delete(id);
-		
+
 	}
 
 	@Override
 	public void add(Student student) throws DaoException {
-		studentDao.add(student);		
+		studentDao.add(student);
 	}
 
 	@Override
@@ -34,11 +34,24 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	@Override
-	public void addCourse(List<Course> course) throws DaoException {
-		studentDao.addCourse(course);
-		
+	public List<Course> availableCourses(int studentId) throws DaoException {
+		return studentDao.availableCourses(studentId);
 	}
 
-	
+	@Override
+	public void addCourse(List<Course>availableCourses, int choosenCourse, int studentId) throws DaoException {
+		studentDao.addCourse(availableCourses, choosenCourse, studentId);
+	}
+
+	@Override
+	public List<Course> actualCourses(int studentId) throws DaoException {
+		return studentDao.availableCourses(studentId);
+	}
+
+	@Override
+	public void deleteCourse(int courseId) throws DaoException {
+		studentDao.deleteCourse(courseId);
+		
+	}
 
 }

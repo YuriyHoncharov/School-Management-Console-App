@@ -1,4 +1,4 @@
-package ua.com.foxminded.yuriy.schoolconsoleapp.commands;
+ package ua.com.foxminded.yuriy.schoolconsoleapp.commands;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -110,11 +110,10 @@ public class StudentDaoImpl implements StudentDao {
 	}
 
 	@Override
-	public void addCourse(int studentId) throws DaoException {
-		
+	public List<Course> availableCourses(int studentId) throws DaoException {
+
 		RandomDataGenerator randomDataGenerator = new RandomDataGenerator();
-		List<Course> coursesToAdd = randomDataGenerator.generateCourses();
-		
+		List<Course> allCourses = randomDataGenerator.generateCourses();
 
 		String QUERY_SELECT_STUDENT_USING_ID = "SELECT * FROM courses WHERE (course_id) IN (\r\n"
 				+ "SELECT course_id FROM students_courses WHERE student_id = ?)";
@@ -128,9 +127,9 @@ public class StudentDaoImpl implements StudentDao {
 				String courseName = rs.getString("course_name");
 				String courseDescription = rs.getString("course_description");
 				Course course = new Course(courseName, courseDescription, id);
-				for (int i = 0; i < coursesToAdd.size(); i++) {
-					if (coursesToAdd.get(i).equals(course)) {
-						coursesToAdd.remove(i);
+				for (int i = 0; i < allCourses.size(); i++) {
+					if (allCourses.get(i).equals(course)) {
+						allCourses.remove(i);
 						break;
 					}
 				}
@@ -138,36 +137,28 @@ public class StudentDaoImpl implements StudentDao {
 		} catch (SQLException e) {
 			throw new DaoException("Failed to add a course");
 		}
-		
-		
-		System.out.println("Please select the course to add...");
-		for (int i = 0; i < coursesToAdd.size(); i++) {
-			Course course = coursesToAdd.get(i);
-			System.out.println((i + 1) + ". " + course.getName() + " | " + course.getDescription());
-		}
+		return allCourses;
+	}
 
-		int chosenCourse = scanner.nextInt();
+	@Override
+	public void addCourse(List<Course> availableCourses, int choosenCourse, int studentId) throws DaoException {
 
-		if (chosenCourse - 1 >= coursesToAdd.size()) {
-			throw new DaoException("This number is missing, please choose the course from the list");
-		}
-
-		Course selectedCourse = coursesToAdd.get(chosenCourse - 1);
+		Course selectedCourse = availableCourses.get(choosenCourse - 1);
 		try (Connection connection = ConnectionUtil.getConnection()) {
 			String QUERY_ADD_COURSE = "INSERT INTO students_courses (course_id, student_id) VALUES (?, ?)";
 			PreparedStatement statement = connection.prepareStatement(QUERY_ADD_COURSE);
 			statement.setInt(1, selectedCourse.getId());
 			statement.setInt(2, studentId);
 			statement.executeUpdate();
-			System.out.println("Course has been succesfuly added to the student.");
 		} catch (SQLException e) {
 			throw new DaoException("Failed to add the new course");
 		}
 	}
 
 	@Override
-	public void selectCourses(int studentId) throws DaoException {
+	public List<Course> selectCourses(int studentId) throws DaoException {
 
+		List<Course> actualCourses = new ArrayList<>();
 		String SQL_QUERY_GET_COURSES = "SELECT * FROM courses\r\n" + "WHERE (course_id) IN (\r\n" + "SELECT course_id\r\n"
 				+ "FROM students_courses\r\n" + "WHERE student_id = ?)";
 		try (Connection connection = ConnectionUtil.getConnection()) {
@@ -179,12 +170,14 @@ public class StudentDaoImpl implements StudentDao {
 				int id = coursesList.getInt("course_id");
 				String courseName = coursesList.getString("course_name");
 				String courseDescription = coursesList.getString("course_description");
-				System.out.println(id + ". " + courseName + " | " + courseDescription);
+				Course course = new Course(courseName, courseDescription, id);
+				actualCourses.add(course);
 			}
 
 		} catch (SQLException e1) {
 			throw new DaoException("Failed to remove course from student's course list.");
 		}
+		return actualCourses;
 	}
 
 	@Override
@@ -195,27 +188,24 @@ public class StudentDaoImpl implements StudentDao {
 				+ "GROUP BY course_id, student_id\r\n" + "HAVING course_id = ?" + ")";
 
 		try (Connection connection = ConnectionUtil.getConnection()) {
-			System.out.println("Please enter the course ID to remove it...");
-
 			PreparedStatement statement = connection.prepareStatement(QUERY_DELETE_COURSE);
 			statement.setInt(1, courseId);
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			throw new DaoException("Failed to delete random course: " + e.getMessage());
 		}
-
 	}
 
 	@Override
 	public Student getInfo(int id) throws DaoException {
 		String QUERY_GET_STUDENT_INFO = "SELECT * FROM students\r\n" + "WHERE student_id = ?";
 		Student student = new Student("", "");
-		try(Connection connection = ConnectionUtil.getConnection()){
+		try (Connection connection = ConnectionUtil.getConnection()) {
 			PreparedStatement statement = connection.prepareStatement(QUERY_GET_STUDENT_INFO);
 			statement.setInt(1, id);
 			ResultSet rs = statement.executeQuery();
-			
-			while(rs.next()) {
+
+			while (rs.next()) {
 				String firstName = rs.getString("first_name");
 				String lastName = rs.getString("last_name");
 				int studentId = rs.getInt("student_id");
@@ -225,11 +215,9 @@ public class StudentDaoImpl implements StudentDao {
 			}
 		} catch (SQLException e) {
 			throw new DaoException("Failed to find student: " + e.getMessage());
-		}		
+		}
 		return student;
-		
-		
-		
+
 	}
 
 }

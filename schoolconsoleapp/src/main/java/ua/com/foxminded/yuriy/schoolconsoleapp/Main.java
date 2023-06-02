@@ -29,26 +29,18 @@ public class Main {
 
 		// Generate students
 		List<Student> students = generate.generateStudents();
-		
+
 		CourseDaoImpl courseDao = new CourseDaoImpl();
 		courseDao.addAll(courses);
 		GroupDaoImpl groupDao = new GroupDaoImpl();
 		groupDao.addAll(groups);
 		StudentDaoImpl studentDao = new StudentDaoImpl();
 		studentDao.addAll(students);
-		
-		
+
 		for (Student student : students) {
 			System.out.println(student.toString());
 		}
-		
-		studentDao.addCourse(courses);
-
-		
-		System.out.println(groups.toString());
-		System.out.println(courses.size());
-
-		
-
+		ConsoleMenu consoleMenu = new ConsoleMenu();
+		consoleMenu.run();
 	}
 }
