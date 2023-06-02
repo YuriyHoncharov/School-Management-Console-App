@@ -7,9 +7,11 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
+import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
+import ua.com.foxminded.yuriy.schoolconsoleapp.service.implement.StudentServiceImpl;
 
 public class FindAllStudentsByCourseCommand implements Command {
-	private StudentDao studentDao;
+	private StudentService studentService = new StudentServiceImpl();
 
 	@Override
 	public void execute() throws DaoException {
@@ -17,7 +19,7 @@ public class FindAllStudentsByCourseCommand implements Command {
 		Scanner sc = new Scanner(System.in);
 		String courseName = sc.nextLine();
 		sc.close();
-		List<Student> studentList = studentDao.findAllByCourse(courseName);
+		List<Student> studentList = studentService.findAllByCourse(courseName);
 		for (Student student : studentList) {
 			System.out.println(student.getId() + ". " + student.getFirstName() + " " + student.getLastName());
 		}

@@ -6,22 +6,24 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
+import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
+import ua.com.foxminded.yuriy.schoolconsoleapp.service.implement.StudentServiceImpl;
 
 public class DeleteStudentCommand implements Command {
-	private StudentDao studentDao;
+	private StudentService studentService = new StudentServiceImpl();
 
 	@Override
 	public void execute() throws DaoException {
 		System.out.println("Enter student's ID you want to delete..");
 		Scanner sc = new Scanner(System.in);
 		int id = sc.nextInt();
-		Student student = studentDao.getInfo(id);
+		Student student = studentService.getInfo(id);
 		System.out.println(
 				"Selected student is: " + student.getId() + ". " + student.getFirstName() + " " + student.getLastName());
 		System.out.println("Enter - 1 to confirm and - 2 to cancel.");
 		int confirmation = sc.nextInt();
 		if (confirmation == 1) {
-			studentDao.delete(id);
+			studentService.delete(id);
 		} else {
 			System.out.println("You canceled the operation.");
 		}

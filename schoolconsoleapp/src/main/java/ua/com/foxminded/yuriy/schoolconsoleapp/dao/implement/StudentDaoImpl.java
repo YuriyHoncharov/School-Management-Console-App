@@ -12,6 +12,7 @@ import java.util.Scanner;
 
 import ua.com.foxminded.yuriy.schoolconsoleapp.config.ConnectionUtil;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentDao;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dataGenerator.RandomDataGenerator;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
@@ -109,12 +110,11 @@ public class StudentDaoImpl implements StudentDao {
 	}
 
 	@Override
-	public void addCourse(List<Course> courses) throws DaoException {
-
-		List<Course> coursesToAdd = new ArrayList<>(courses);
-		Scanner scanner = new Scanner(System.in);
-		System.out.println("Please enter the student's id...");
-		int studentId = scanner.nextInt();
+	public void addCourse(int studentId) throws DaoException {
+		
+		RandomDataGenerator randomDataGenerator = new RandomDataGenerator();
+		List<Course> coursesToAdd = randomDataGenerator.generateCourses();
+		
 
 		String QUERY_SELECT_STUDENT_USING_ID = "SELECT * FROM courses WHERE (course_id) IN (\r\n"
 				+ "SELECT course_id FROM students_courses WHERE student_id = ?)";
@@ -138,6 +138,8 @@ public class StudentDaoImpl implements StudentDao {
 		} catch (SQLException e) {
 			throw new DaoException("Failed to add a course");
 		}
+		
+		
 		System.out.println("Please select the course to add...");
 		for (int i = 0; i < coursesToAdd.size(); i++) {
 			Course course = coursesToAdd.get(i);

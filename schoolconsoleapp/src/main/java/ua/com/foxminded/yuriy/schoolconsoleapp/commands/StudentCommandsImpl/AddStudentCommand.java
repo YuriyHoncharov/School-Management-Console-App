@@ -6,10 +6,12 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
+import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
+import ua.com.foxminded.yuriy.schoolconsoleapp.service.implement.StudentServiceImpl;
 
 public class AddStudentCommand implements Command{
-	private StudentDao studentDao;
-
+	private StudentService studentService = new StudentServiceImpl();
+	
 	@Override
 	public void execute() throws DaoException {
 		System.out.println("Enter student name..");
@@ -18,7 +20,7 @@ public class AddStudentCommand implements Command{
 		System.out.println("Enter student lastname..");
 		String lastName = sc.nextLine();
 		Student newStudent = new Student(name, lastName);
-		studentDao.add(newStudent);
+		studentService.add(newStudent);
 	}
 
 	@Override

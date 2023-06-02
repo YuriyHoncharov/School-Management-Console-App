@@ -7,9 +7,11 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.GroupDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
+import ua.com.foxminded.yuriy.schoolconsoleapp.service.GroupService;
+import ua.com.foxminded.yuriy.schoolconsoleapp.service.implement.GroupServiceImpl;
 
 public class FindGroupsByStudentsNumberCommand implements Command {
-	private GroupDao groupDao;
+	private GroupService groupService = new GroupServiceImpl();
 
 	@Override
 	public void execute() throws DaoException {
@@ -17,7 +19,7 @@ public class FindGroupsByStudentsNumberCommand implements Command {
 		Scanner sc = new Scanner(System.in);
 		int count = sc.nextInt();
 		sc.close();
-		List<Group> result = groupDao.findAllLessOrEqual(count);
+		List<Group> result = groupService.findAllLessOrEqual(count);
 		for (Group group : result) {
 			System.out.println(group.getId() + ". " + group.getName());
 		}
