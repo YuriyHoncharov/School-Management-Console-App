@@ -27,7 +27,7 @@ public class FindAllStudentsByCourseCommand implements Command {
 
 	@Override
 	public String name() {
-		return "3";
+		return "6";
 	}
 
 	@Override

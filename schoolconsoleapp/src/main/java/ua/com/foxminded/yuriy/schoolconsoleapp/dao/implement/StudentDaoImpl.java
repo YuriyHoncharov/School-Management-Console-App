@@ -127,12 +127,7 @@ public class StudentDaoImpl implements StudentDao {
 				String courseName = rs.getString("course_name");
 				String courseDescription = rs.getString("course_description");
 				Course course = new Course(courseName, courseDescription, id);
-				for (int i = 0; i < allCourses.size(); i++) {
-					if (allCourses.get(i).equals(course)) {
-						allCourses.remove(i);
-						break;
-					}
-				}
+				allCourses.removeIf(c -> c.equals(course));
 			}
 		} catch (SQLException e) {
 			throw new DaoException("Failed to add a course");

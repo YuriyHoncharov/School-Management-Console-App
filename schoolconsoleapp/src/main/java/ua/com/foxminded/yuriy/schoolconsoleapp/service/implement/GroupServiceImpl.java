@@ -12,6 +12,7 @@ public class GroupServiceImpl implements GroupService{
 
 	@Override
 	public List<Group> findAllLessOrEqual(int studentsCount) throws DaoException {
-		return groupDao.findAllLessOrEqual(studentsCount);	
+			return groupDao.findAllLessOrEqual(studentsCount);	
 	}	
 }
+   

@@ -40,7 +40,7 @@ public class AddCourseToStudentCommand implements Command {
 
 	@Override
 	public String name() {
-		return "4";
+		return "2";
 	}
 
 	@Override

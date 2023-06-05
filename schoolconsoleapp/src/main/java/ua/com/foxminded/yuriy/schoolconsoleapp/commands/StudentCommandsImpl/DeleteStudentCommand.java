@@ -32,7 +32,7 @@ public class DeleteStudentCommand implements Command {
 
 	@Override
 	public String name() {
-		return "2";
+		return "4";
 	}
 
 	@Override

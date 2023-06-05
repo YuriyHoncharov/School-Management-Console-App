@@ -49,7 +49,7 @@ public class GroupDaoImpl implements GroupDao {
 			while (rs.next()) {
 				int groupId = rs.getInt("group_id");
 				String groupName = rs.getString("group_name");
-				int studentsCount = rs.getInt("students.student_id");
+				int studentsCount = rs.getInt("student_id");
 				Group group = new Group(groupName, groupId);
 				groups.add(group); 
 			}

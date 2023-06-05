@@ -25,7 +25,7 @@ public class AddStudentCommand implements Command{
 
 	@Override
 	public String name() {
-		return "1";
+		return "3";
 	}
 
 	@Override
