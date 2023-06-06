@@ -26,14 +26,14 @@ public class AddCourseToStudentCommand implements Command {
 			System.out.println((i + 1) + ". " + course.getName() + " | " + course.getDescription());
 		}
 
-		int chosenCourse = scanner.nextInt();
+		int choosenCourse = scanner.nextInt();
 		scanner.close();
 
-		if (chosenCourse - 1 >= availableCourses.size()) {
+		if (choosenCourse - 1 >= availableCourses.size()) {
 			throw new DaoException("This number is missing, please choose the course from the list");
 		}
-
-		studentService.addCourse(availableCourses, chosenCourse, studentId);
+		Course selectedCourse = availableCourses.get(choosenCourse - 1);
+		studentService.addCourse(selectedCourse, studentId);
 		System.out.println("Course has been succesfuly added to the student.");
 
 	}

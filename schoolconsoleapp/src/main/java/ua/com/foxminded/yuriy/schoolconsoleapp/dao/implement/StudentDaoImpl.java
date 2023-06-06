@@ -112,8 +112,33 @@ public class StudentDaoImpl implements StudentDao {
 	@Override
 	public List<Course> availableCourses(int studentId) throws DaoException {
 
-		RandomDataGenerator randomDataGenerator = new RandomDataGenerator();
-		List<Course> allCourses = randomDataGenerator.generateCourses();
+		List<Course> allCourses = new ArrayList<>();
+
+		String QUERY_SELECT_STUDENT_USING_ID = "SELECT * FROM courses WHERE (course_id) NOT IN (\r\n"
+				+ "SELECT course_id FROM students_courses WHERE student_id = ?)";
+		try (Connection connection = ConnectionUtil.getConnection()) {
+
+			PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_STUDENT_USING_ID);
+			statement.setInt(1, studentId);
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				int id = rs.getInt("course_id");
+				String courseName = rs.getString("course_name");
+				String courseDescription = rs.getString("course_description");
+				Course course = new Course(courseName, courseDescription, id);
+				allCourses.add(course);
+				//				allCourses.removeIf(c -> c.equals(course));
+			}
+		} catch (SQLException e) {
+			throw new DaoException("Failed to add a course");
+		}
+		return allCourses;
+	}
+	
+	@Override
+	public List<Course> actualCourses(int studentId) throws DaoException {
+
+		List<Course> allCourses = new ArrayList<>();
 
 		String QUERY_SELECT_STUDENT_USING_ID = "SELECT * FROM courses WHERE (course_id) IN (\r\n"
 				+ "SELECT course_id FROM students_courses WHERE student_id = ?)";
@@ -127,7 +152,7 @@ public class StudentDaoImpl implements StudentDao {
 				String courseName = rs.getString("course_name");
 				String courseDescription = rs.getString("course_description");
 				Course course = new Course(courseName, courseDescription, id);
-				allCourses.removeIf(c -> c.equals(course));
+				allCourses.add(course);
 			}
 		} catch (SQLException e) {
 			throw new DaoException("Failed to add a course");
@@ -136,10 +161,9 @@ public class StudentDaoImpl implements StudentDao {
 	}
 
 	@Override
-	public void addCourse(List<Course> availableCourses, int choosenCourse, int studentId) throws DaoException {
+	public void addCourse(Course selectedCourse, int studentId) throws DaoException {
 
-		Course selectedCourse = availableCourses.get(choosenCourse - 1);
-		try (Connection connection = ConnectionUtil.getConnection()) {
+			try (Connection connection = ConnectionUtil.getConnection()) {
 			String QUERY_ADD_COURSE = "INSERT INTO students_courses (course_id, student_id) VALUES (?, ?)";
 			PreparedStatement statement = connection.prepareStatement(QUERY_ADD_COURSE);
 			statement.setInt(1, selectedCourse.getId());
@@ -176,7 +200,7 @@ public class StudentDaoImpl implements StudentDao {
 	}
 
 	@Override
-	public void deleteCourse(int courseId) throws DaoException {
+	public void deleteCourse(int courseId, int studentId) throws DaoException {
 
 		String QUERY_DELETE_COURSE = "DELETE FROM students_courses\r\n" + "WHERE (course_id, student_id) IN (\r\n"
 				+ "SELECT course_id, student_id\r\n" + "FROM students_courses\r\n" + "WHERE student_id = ?\r\n"
@@ -184,10 +208,11 @@ public class StudentDaoImpl implements StudentDao {
 
 		try (Connection connection = ConnectionUtil.getConnection()) {
 			PreparedStatement statement = connection.prepareStatement(QUERY_DELETE_COURSE);
-			statement.setInt(1, courseId);
+			statement.setInt(1, studentId);
+			statement.setInt(2, courseId);
 			statement.executeUpdate();
 		} catch (SQLException e) {
-			throw new DaoException("Failed to delete random course: " + e.getMessage());
+			throw new DaoException("Failed to delete course: " + e.getMessage());
 		}
 	}
 

@@ -14,9 +14,11 @@ public interface StudentService {
 	Student getInfo (int id) throws DaoException;
 	//Add Courses
 	List<Course> availableCourses (int studentId) throws DaoException;
-	void addCourse (List<Course>availableCourses, int choosenCourse, int studentId) throws DaoException;
+	void addCourse(Course selectedCourse, int studentId) throws DaoException;
 	//Delete courses
 	List<Course> actualCourses(int studentId) throws DaoException;
-	void deleteCourse (int courseId) throws DaoException;
+	void deleteCourse(int studentId, int courseId) throws DaoException;
+	
+	
 }
 		

@@ -26,3 +26,10 @@ CREATE TABLE students_courses (
 course_id INTEGER REFERENCES courses(course_id),
 student_id INTEGER REFERENCES students(student_id)
 );
+
+ALTER TABLE students_courses
+DROP CONSTRAINT students_courses_student_id_fkey,
+ADD CONSTRAINT students_courses_student_id_fkey
+FOREIGN KEY (student_id)
+REFERENCES students (student_id)
+ON DELETE CASCADE;

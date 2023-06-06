@@ -17,10 +17,10 @@ public class DeleteStudentCourseCommand implements Command {
 		System.out.println("Please enter student ID..");
 		Scanner sc = new Scanner(System.in);
 		int studentId = sc.nextInt();
-		List<Course> acvtualCourses = studentService.actualCourses(studentId);
+		List<Course> actualCourses = studentService.actualCourses(studentId);
 
-		for (int i = 0; i < acvtualCourses.size(); i++) {
-			Course course = acvtualCourses.get(i);
+		for (int i = 0; i < actualCourses.size(); i++) {
+			Course course = actualCourses.get(i);
 			System.out.println(
 					(i + 1) + ". " + course.getName() + " | " + course.getDescription() + " | ID : " + course.getId());
 		}
@@ -31,7 +31,7 @@ public class DeleteStudentCourseCommand implements Command {
 		sc.close();
 
 		Course desiredCourse = null;
-		for (Course course : acvtualCourses) {
+		for (Course course : actualCourses) {
 			if (course.getId() == choosenCourse) {
 				desiredCourse = course;
 				break;
@@ -39,7 +39,8 @@ public class DeleteStudentCourseCommand implements Command {
 		}
 
 		if (desiredCourse != null) {
-			studentService.deleteCourse(choosenCourse);
+			studentService.deleteCourse(studentId,choosenCourse);
+			System.out.println("Course has been succesfully removed.");
 		} else {
 			System.out.println(
 					"Unable to find the course with the provided ID. Please ensure that the ID is correct and the student is not already unenrolled from this course..");

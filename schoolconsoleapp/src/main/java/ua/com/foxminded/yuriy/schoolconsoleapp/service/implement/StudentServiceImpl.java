@@ -40,18 +40,18 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	@Override
-	public void addCourse(List<Course>availableCourses, int choosenCourse, int studentId) throws DaoException {
-		studentDao.addCourse(availableCourses, choosenCourse, studentId);
+	public void addCourse(Course selectedCourse, int studentId) throws DaoException {
+		studentDao.addCourse(selectedCourse, studentId);
 	}
 
 	@Override
 	public List<Course> actualCourses(int studentId) throws DaoException {
-		return studentDao.availableCourses(studentId);
+		return studentDao.actualCourses(studentId);
 	}
 
 	@Override
-	public void deleteCourse(int courseId) throws DaoException {
-		studentDao.deleteCourse(courseId);
+	public void deleteCourse(int studentId, int courseId) throws DaoException {
+		studentDao.deleteCourse(studentId, courseId);
 		
 	}
 
