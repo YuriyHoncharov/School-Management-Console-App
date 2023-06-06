@@ -1,10 +1,9 @@
 package ua.com.foxminded.yuriy.schoolconsoleapp.commands.GroupCommandsImpl;
 
-import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.GroupDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.GroupService;
@@ -19,11 +18,12 @@ public class FindGroupsByStudentsNumberCommand implements Command {
 		Scanner sc = new Scanner(System.in);
 		int count = sc.nextInt();
 		sc.close();
-		List<Group> result = groupService.findAllLessOrEqual(count);
-		for (Group group : result) {
-			System.out.println(group.getId() + ". " + group.getName());
+		Map<Group, Integer> result = groupService.findAllLessOrEqual(count);
+//		for (Group group : result) {
+//			System.out.println(group.getId() + ". " + group.getName());
+			result.forEach((group, integer) -> System.out.println(group.getId() + ". " + group.getName() + " = " + integer + " students in this group."));
 		}
-	}
+	
 
 	@Override
 	public String name() {

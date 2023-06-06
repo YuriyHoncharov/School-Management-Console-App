@@ -59,8 +59,8 @@ public class StudentDaoImpl implements StudentDao {
 	public List<Student> findAllByCourse(String courseName) throws DaoException {
 
 		String QUERY_SELECT_STUDENTS_ON_COURSE = "SELECT students.student_id, students.first_name, students.last_name\r\n"
-				+ "FROM students\r\n" + "INNER JOIN students_course ON students.student_id = students_course.student_id\r\n"
-				+ "INNER JOIN courses ON students_course.course_id = courses.course_id\r\n"
+				+ "FROM students\r\n" + "INNER JOIN students_courses ON students.student_id = students_courses.student_id\r\n"
+				+ "INNER JOIN courses ON students_courses.course_id = courses.course_id\r\n"
 				+ "WHERE courses.course_name = ?";
 		List<Student> studentsOfCourse = new ArrayList<>();
 

@@ -32,6 +32,8 @@ public class ConsoleMenu {
 				break;
 			}
 			commands.get(command).execute();
+
 		}
+		scanner.close();
 	}
 }

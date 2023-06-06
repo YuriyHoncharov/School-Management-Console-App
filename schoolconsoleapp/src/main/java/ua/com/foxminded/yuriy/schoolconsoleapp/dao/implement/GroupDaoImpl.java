@@ -6,7 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ua.com.foxminded.yuriy.schoolconsoleapp.config.ConnectionUtil;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.GroupDao;
@@ -36,12 +38,14 @@ public class GroupDaoImpl implements GroupDao {
 	}
 
 	@Override
-	public List<Group> findAllLessOrEqual(int studentCount) throws DaoException {
+	public Map<Group, Integer> findAllLessOrEqual(int studentCount) throws DaoException {
 
-		String QUERY_SELECT_LESS_OR_EQUAL_STUDENTS = "SELECT * " + "FROM groups "
-				+ "LEFT JOIN students ON groups.group_id = students.group_id "
-				+ "GROUP BY groups.group_id, groups.group_name " + "HAVING COUNT(students.student_id) <= ?";
-		List<Group> groups = new ArrayList<>();
+		String QUERY_SELECT_LESS_OR_EQUAL_STUDENTS = "SELECT groups.group_id, groups.group_name, COUNT(students.student_id) AS student_count " +
+		        "FROM groups " +
+		        "LEFT JOIN students ON groups.group_id = students.group_id " +
+		        "GROUP BY groups.group_id, groups.group_name " +
+		        "HAVING COUNT(students.student_id) <= ?";
+		Map<Group, Integer> groups = new HashMap<>();
 		try (Connection connection = ConnectionUtil.getConnection()) {
 			PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_LESS_OR_EQUAL_STUDENTS);
 			statement.setInt(1, studentCount);
@@ -49,9 +53,9 @@ public class GroupDaoImpl implements GroupDao {
 			while (rs.next()) {
 				int groupId = rs.getInt("group_id");
 				String groupName = rs.getString("group_name");
-				int studentsCount = rs.getInt("student_id");
+				int studentsCount = rs.getInt("student_count");
 				Group group = new Group(groupName, groupId);
-				groups.add(group); 
+				groups.put(group, studentsCount);
 			}
 		} catch (SQLException e) {
 			throw new DaoException("Failed to get groups list: " + e.getMessage());
