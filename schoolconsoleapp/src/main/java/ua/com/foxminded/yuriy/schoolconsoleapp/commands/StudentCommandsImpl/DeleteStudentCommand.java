@@ -17,9 +17,7 @@ public class DeleteStudentCommand implements Command {
 		System.out.println("Enter student's ID you want to delete..");
 		Scanner sc = new Scanner(System.in);
 		int id = sc.nextInt();
-		Student student = studentService.getInfo(id);
-		System.out.println(
-				"Selected student is: " + student.getId() + ". " + student.getFirstName() + " " + student.getLastName());
+		System.out.println(studentService.getInfo(id));
 		System.out.println("Enter - 1 to confirm and - 2 to cancel.");
 		int confirmation = sc.nextInt();
 		if (confirmation == 1) {

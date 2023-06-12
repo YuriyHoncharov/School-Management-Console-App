@@ -30,29 +30,10 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	@Override
-	public Student getInfo(int id) throws DaoException {
-		return studentDao.getInfo(id);
-	}
-
-	@Override
-	public List<Course> availableCourses(int studentId) throws DaoException {
-		return studentDao.availableCourses(studentId);
-	}
-
-	@Override
-	public void addCourse(Course selectedCourse, int studentId) throws DaoException {
-		studentDao.addCourse(selectedCourse, studentId);
-	}
-
-	@Override
-	public List<Course> actualCourses(int studentId) throws DaoException {
-		return studentDao.actualCourses(studentId);
-	}
-
-	@Override
-	public void deleteCourse(int studentId, int courseId) throws DaoException {
-		studentDao.deleteCourse(studentId, courseId);
-		
+	public String getInfo(int id) throws DaoException {
+		Student student = studentDao.getInfo(id);
+		String studentInfo;
+		return studentInfo = "Please confirm you want to delete: " + student.getFirstName() + " " + student.getLastName();
 	}
 
 }

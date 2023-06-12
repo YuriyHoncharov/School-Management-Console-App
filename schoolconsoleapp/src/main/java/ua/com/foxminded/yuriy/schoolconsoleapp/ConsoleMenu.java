@@ -7,7 +7,6 @@ import java.util.Scanner;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Invoker;
 import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
-import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
 
 public class ConsoleMenu {
 
@@ -28,11 +27,13 @@ public class ConsoleMenu {
 			}
 			printStream.println("Enter \"Exit\" if you want to quit.");
 			String command = scanner.nextLine();
-			if (command.equals("exit")) {
+			if (command.equalsIgnoreCase("exit")) {
 				break;
+			} else if (commands.containsKey(command)) {
+				commands.get(command).execute();
+			} else {
+				printStream.println("Invalid command, please try again.");
 			}
-			commands.get(command).execute();
-
 		}
 		scanner.close();
 	}

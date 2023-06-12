@@ -6,18 +6,20 @@ import java.util.Scanner;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
+import ua.com.foxminded.yuriy.schoolconsoleapp.service.CourseService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
+import ua.com.foxminded.yuriy.schoolconsoleapp.service.implement.CourseServiceImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.implement.StudentServiceImpl;
 
 public class DeleteStudentCourseCommand implements Command {
-	StudentService studentService = new StudentServiceImpl();
+	CourseService courseService = new CourseServiceImpl();
 
 	@Override
 	public void execute() throws DaoException {
 		System.out.println("Please enter student ID..");
 		Scanner sc = new Scanner(System.in);
 		int studentId = sc.nextInt();
-		List<Course> actualCourses = studentService.actualCourses(studentId);
+		List<Course> actualCourses = courseService.actualCourses(studentId);
 
 		for (int i = 0; i < actualCourses.size(); i++) {
 			Course course = actualCourses.get(i);
@@ -39,7 +41,7 @@ public class DeleteStudentCourseCommand implements Command {
 		}
 
 		if (desiredCourse != null) {
-			studentService.deleteCourse(studentId,choosenCourse);
+			courseService.deleteCourse(studentId,choosenCourse);
 			System.out.println("Course has been succesfully removed.");
 		} else {
 			System.out.println(

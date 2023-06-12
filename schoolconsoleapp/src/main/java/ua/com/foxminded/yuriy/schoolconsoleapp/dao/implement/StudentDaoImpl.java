@@ -58,9 +58,10 @@ public class StudentDaoImpl implements StudentDao {
 	@Override
 	public List<Student> findAllByCourse(String courseName) throws DaoException {
 
-		String QUERY_SELECT_STUDENTS_ON_COURSE = "SELECT students.student_id, students.first_name, students.last_name\r\n"
-				+ "FROM students\r\n" + "INNER JOIN students_courses ON students.student_id = students_courses.student_id\r\n"
-				+ "INNER JOIN courses ON students_courses.course_id = courses.course_id\r\n"
+		String QUERY_SELECT_STUDENTS_ON_COURSE = "SELECT students.student_id, students.first_name, students.last_name "
+				+ "FROM students "
+				+ "INNER JOIN students_courses ON students.student_id = students_courses.student_id "
+				+ "INNER JOIN courses ON students_courses.course_id = courses.course_id "
 				+ "WHERE courses.course_name = ?";
 		List<Student> studentsOfCourse = new ArrayList<>();
 
@@ -84,7 +85,7 @@ public class StudentDaoImpl implements StudentDao {
 
 	@Override
 	public void add(Student student) throws DaoException {
-		String QUERY_ADD_NEW_STUDENT = "INSERT INTO students (first_name, last_name) VALUES (?, ?, ?)";
+		String QUERY_ADD_NEW_STUDENT = "INSERT INTO students (first_name, last_name) VALUES (?, ?)";
 		try (Connection connection = ConnectionUtil.getConnection()) {
 			PreparedStatement statement = connection.prepareStatement(QUERY_ADD_NEW_STUDENT);
 			statement.setString(1, student.getFirstName());
@@ -106,119 +107,11 @@ public class StudentDaoImpl implements StudentDao {
 		} catch (SQLException e) {
 			throw new DaoException("Failed to delete the student: " + e.getMessage());
 		}
-
-	}
-
-	@Override
-	public List<Course> availableCourses(int studentId) throws DaoException {
-
-		List<Course> allCourses = new ArrayList<>();
-
-		String QUERY_SELECT_STUDENT_USING_ID = "SELECT * FROM courses WHERE (course_id) NOT IN (\r\n"
-				+ "SELECT course_id FROM students_courses WHERE student_id = ?)";
-		try (Connection connection = ConnectionUtil.getConnection()) {
-
-			PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_STUDENT_USING_ID);
-			statement.setInt(1, studentId);
-			ResultSet rs = statement.executeQuery();
-			while (rs.next()) {
-				int id = rs.getInt("course_id");
-				String courseName = rs.getString("course_name");
-				String courseDescription = rs.getString("course_description");
-				Course course = new Course(courseName, courseDescription, id);
-				allCourses.add(course);
-				//				allCourses.removeIf(c -> c.equals(course));
-			}
-		} catch (SQLException e) {
-			throw new DaoException("Failed to add a course");
-		}
-		return allCourses;
-	}
-	
-	@Override
-	public List<Course> actualCourses(int studentId) throws DaoException {
-
-		List<Course> allCourses = new ArrayList<>();
-
-		String QUERY_SELECT_STUDENT_USING_ID = "SELECT * FROM courses WHERE (course_id) IN (\r\n"
-				+ "SELECT course_id FROM students_courses WHERE student_id = ?)";
-		try (Connection connection = ConnectionUtil.getConnection()) {
-
-			PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_STUDENT_USING_ID);
-			statement.setInt(1, studentId);
-			ResultSet rs = statement.executeQuery();
-			while (rs.next()) {
-				int id = rs.getInt("course_id");
-				String courseName = rs.getString("course_name");
-				String courseDescription = rs.getString("course_description");
-				Course course = new Course(courseName, courseDescription, id);
-				allCourses.add(course);
-			}
-		} catch (SQLException e) {
-			throw new DaoException("Failed to add a course");
-		}
-		return allCourses;
-	}
-
-	@Override
-	public void addCourse(Course selectedCourse, int studentId) throws DaoException {
-
-			try (Connection connection = ConnectionUtil.getConnection()) {
-			String QUERY_ADD_COURSE = "INSERT INTO students_courses (course_id, student_id) VALUES (?, ?)";
-			PreparedStatement statement = connection.prepareStatement(QUERY_ADD_COURSE);
-			statement.setInt(1, selectedCourse.getId());
-			statement.setInt(2, studentId);
-			statement.executeUpdate();
-		} catch (SQLException e) {
-			throw new DaoException("Failed to add the new course");
-		}
-	}
-
-	@Override
-	public List<Course> selectCourses(int studentId) throws DaoException {
-
-		List<Course> actualCourses = new ArrayList<>();
-		String SQL_QUERY_GET_COURSES = "SELECT * FROM courses\r\n" + "WHERE (course_id) IN (\r\n" + "SELECT course_id\r\n"
-				+ "FROM students_courses\r\n" + "WHERE student_id = ?)";
-		try (Connection connection = ConnectionUtil.getConnection()) {
-			PreparedStatement statement = connection.prepareStatement(SQL_QUERY_GET_COURSES);
-			statement.setInt(1, studentId);
-			ResultSet coursesList = statement.executeQuery();
-
-			while (coursesList.next()) {
-				int id = coursesList.getInt("course_id");
-				String courseName = coursesList.getString("course_name");
-				String courseDescription = coursesList.getString("course_description");
-				Course course = new Course(courseName, courseDescription, id);
-				actualCourses.add(course);
-			}
-
-		} catch (SQLException e1) {
-			throw new DaoException("Failed to remove course from student's course list.");
-		}
-		return actualCourses;
-	}
-
-	@Override
-	public void deleteCourse(int courseId, int studentId) throws DaoException {
-
-		String QUERY_DELETE_COURSE = "DELETE FROM students_courses\r\n" + "WHERE (course_id, student_id) IN (\r\n"
-				+ "SELECT course_id, student_id\r\n" + "FROM students_courses\r\n" + "WHERE student_id = ?\r\n"
-				+ "GROUP BY course_id, student_id\r\n" + "HAVING course_id = ?" + ")";
-
-		try (Connection connection = ConnectionUtil.getConnection()) {
-			PreparedStatement statement = connection.prepareStatement(QUERY_DELETE_COURSE);
-			statement.setInt(1, studentId);
-			statement.setInt(2, courseId);
-			statement.executeUpdate();
-		} catch (SQLException e) {
-			throw new DaoException("Failed to delete course: " + e.getMessage());
-		}
 	}
 
 	@Override
 	public Student getInfo(int id) throws DaoException {
-		String QUERY_GET_STUDENT_INFO = "SELECT * FROM students\r\n" + "WHERE student_id = ?";
+		String QUERY_GET_STUDENT_INFO = "SELECT * FROM students " + "WHERE student_id = ?";
 		Student student = new Student("", "");
 		try (Connection connection = ConnectionUtil.getConnection()) {
 			PreparedStatement statement = connection.prepareStatement(QUERY_GET_STUDENT_INFO);
