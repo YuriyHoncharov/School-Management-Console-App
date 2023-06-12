@@ -38,14 +38,12 @@ public class GroupDaoImpl implements GroupDao {
 	}
 
 	@Override
-	public Map<Group, Integer> findAllLessOrEqual(int studentCount) throws DaoException {
+	public List<Group> findAllLessOrEqual(int studentCount) throws DaoException {
 
-		String QUERY_SELECT_LESS_OR_EQUAL_STUDENTS = "SELECT groups.group_id, groups.group_name, COUNT(students.student_id) AS student_count " +
-		        "FROM groups " +
-		        "LEFT JOIN students ON groups.group_id = students.group_id " +
-		        "GROUP BY groups.group_id, groups.group_name " +
-		        "HAVING COUNT(students.student_id) <= ?";
-		Map<Group, Integer> groups = new HashMap<>();
+		String QUERY_SELECT_LESS_OR_EQUAL_STUDENTS = "SELECT groups.group_id, groups.group_name, COUNT(students.student_id) AS student_count "
+				+ "FROM groups " + "LEFT JOIN students ON groups.group_id = students.group_id "
+				+ "GROUP BY groups.group_id, groups.group_name " + "HAVING COUNT(students.student_id) <= ?";
+		List<Group> groups = new ArrayList<>();
 		try (Connection connection = ConnectionUtil.getConnection()) {
 			PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_LESS_OR_EQUAL_STUDENTS);
 			statement.setInt(1, studentCount);
@@ -55,11 +53,31 @@ public class GroupDaoImpl implements GroupDao {
 				String groupName = rs.getString("group_name");
 				int studentsCount = rs.getInt("student_count");
 				Group group = new Group(groupName, groupId);
-				groups.put(group, studentsCount);
+				groups.add(group);
 			}
 		} catch (SQLException e) {
 			throw new DaoException("Failed to get groups list: " + e.getMessage());
 		}
 		return groups;
-	}	
+	}
+
+	@Override
+	public int studentsCountByGroupId(int groupId) throws DaoException {
+		String QUERY_SELECT_STUDENTS_COUNT = "SELECT COUNT(students.student_id) AS student_count "
+				+ "FROM groups " 
+				+ "LEFT JOIN students ON groups.group_id = students.group_id "
+				+ "WHERE groups.group_id = ? ";
+		int count = 0;
+		try (Connection connection = ConnectionUtil.getConnection()) {
+			PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_STUDENTS_COUNT);
+			statement.setInt(1, groupId);
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				count = rs.getInt("student_count");
+			}
+		} catch (SQLException e) {
+			throw new DaoException("Failed to get groups list: " + e.getMessage());
+		}
+		return count;
+	}
 }
