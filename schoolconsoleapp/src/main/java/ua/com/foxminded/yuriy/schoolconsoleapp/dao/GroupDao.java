@@ -8,7 +8,9 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
 
 public interface GroupDao {
 
-	List<Group> findAllLessOrEqual(int studentCount) throws DaoException;
-	int studentsCountByGroupId (int groupId) throws DaoException;
+	List<Group> findAllLessOrEqual(int studentCount);
+	int studentsCountByGroupId (int groupId);
+	List<Group> getAll();
+	Group getById (int groupId);
 
 }

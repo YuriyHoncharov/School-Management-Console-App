@@ -51,7 +51,6 @@ public class GroupDaoImpl implements GroupDao {
 			while (rs.next()) {
 				int groupId = rs.getInt("group_id");
 				String groupName = rs.getString("group_name");
-				int studentsCount = rs.getInt("student_count");
 				Group group = new Group(groupName, groupId);
 				groups.add(group);
 			}
@@ -63,10 +62,8 @@ public class GroupDaoImpl implements GroupDao {
 
 	@Override
 	public int studentsCountByGroupId(int groupId) throws DaoException {
-		String QUERY_SELECT_STUDENTS_COUNT = "SELECT COUNT(students.student_id) AS student_count "
-				+ "FROM groups " 
-				+ "LEFT JOIN students ON groups.group_id = students.group_id "
-				+ "WHERE groups.group_id = ? ";
+		String QUERY_SELECT_STUDENTS_COUNT = "SELECT COUNT(students.student_id) AS student_count " + "FROM groups "
+				+ "LEFT JOIN students ON groups.group_id = students.group_id " + "WHERE groups.group_id = ? ";
 		int count = 0;
 		try (Connection connection = ConnectionUtil.getConnection()) {
 			PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_STUDENTS_COUNT);
@@ -79,5 +76,45 @@ public class GroupDaoImpl implements GroupDao {
 			throw new DaoException("Failed to get groups list: " + e.getMessage());
 		}
 		return count;
+	}
+
+	@Override
+	public List<Group> getAll() {
+		String QUURY_SELECT_ALL_GROUPS = "SELECT * FROM groups";
+		List<Group> allGroups = new ArrayList<>();
+		try (Connection connection = ConnectionUtil.getConnection()) {
+			PreparedStatement statement = connection.prepareStatement(QUURY_SELECT_ALL_GROUPS);
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				int group_id = rs.getInt("group_id");
+				String group_name = rs.getString("group_name");
+				Group group = new Group(group_name, group_id);
+				allGroups.add(group);
+			}
+		} catch (SQLException e) {
+			throw new DaoException("Failed to get all groups from database.");
+		}
+		return allGroups;
+	}
+
+	@Override
+	public Group getById(int groupId) {
+		String QUERY_GET_GROUP_BY_ID = "SELECT * FROM groups WHERE group_id = ?";
+		Group group = new Group("", 0);
+		try(Connection connection = ConnectionUtil.getConnection()){
+			PreparedStatement statement = connection.prepareStatement(QUERY_GET_GROUP_BY_ID);
+			statement.setInt(1, groupId);
+			ResultSet rs = statement.executeQuery();
+			if(rs.next()) {
+			int id = rs.getInt("group_id");
+			String name = rs.getString("group_name");
+			group.setId(id);
+			group.setName(name);
+			}
+			
+		} catch (SQLException e) {
+			throw new DaoException("Failed to get group by following id :" + groupId);
+		}
+		return group;
 	}
 }

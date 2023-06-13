@@ -10,7 +10,7 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.service.CourseService;
 
 public class CourseServiceImpl implements CourseService {
 
-	CourseDao courseDao = new CourseDaoImpl();
+	private CourseDao courseDao = new CourseDaoImpl();
 
 	@Override
 	public List<Course> availableCourses(int studentId) throws DaoException {

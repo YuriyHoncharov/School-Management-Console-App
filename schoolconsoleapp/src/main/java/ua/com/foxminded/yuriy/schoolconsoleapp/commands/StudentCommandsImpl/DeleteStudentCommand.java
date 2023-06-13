@@ -16,16 +16,31 @@ public class DeleteStudentCommand implements Command {
 	public void execute() throws DaoException {
 		System.out.println("Enter student's ID you want to delete..");
 		Scanner sc = new Scanner(System.in);
-		int id = sc.nextInt();
-		System.out.println(studentService.getInfo(id));
-		System.out.println("Enter - 1 to confirm and - 2 to cancel.");
-		int confirmation = sc.nextInt();
-		if (confirmation == 1) {
-			studentService.delete(id);
-		} else {
-			System.out.println("You canceled the operation.");
+
+		while (!sc.hasNextInt()) {
+			sc.next();
+			System.out.println("You should enter a numeric value, please retry.");
 		}
-		sc.close();
+
+		int id = sc.nextInt();
+		Student student = studentService.getById(id);
+
+		if (student.getFirstName() == null) {
+			System.out.println("Student with following ID : " + "[ " + id + " ] is not found.");
+		} else {
+			System.out.println("Are you sure that you want to delete: " + studentService.getById(id).toString());
+			System.out.println("Enter - 1 to confirm and - 2 to cancel.");
+			while (!sc.hasNextInt()) {
+				sc.next();
+				System.out.println("You should enter a numeric value, please retry.");
+			}
+			int confirmation = sc.nextInt();
+			if (confirmation == 1) {
+				studentService.delete(id);
+			} else {
+				System.out.println("You canceled the operation.");
+			}
+		}
 	}
 
 	@Override

@@ -31,7 +31,7 @@ public class Student {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
+
 	public void setGroupId(int groupId) {
 		this.groupId = groupId;
 	}
@@ -54,8 +54,8 @@ public class Student {
 
 	@Override
 	public String toString() {
-		return "Student [id=" + id + ", groupId=" + groupId + ", firstName=" + firstName + ", lastName=" + lastName
-				+ ", courses=" + coursesToString() + "]";
+		return "[Student ID : " + id + ", Group ID : " + groupId + ", First Name : " + firstName + ", Last Name : "
+				+ lastName + coursesToString() + "]";
 	}
 
 	public List<Course> getCourses() {
@@ -65,6 +65,9 @@ public class Student {
 	private String coursesToString() {
 
 		StringBuilder sb = new StringBuilder();
+		if (!courses.isEmpty()) {
+			sb.append(", Courses List : ");
+		}
 		for (Course course : courses) {
 			sb.append(course.toString()).append(", ");
 		}

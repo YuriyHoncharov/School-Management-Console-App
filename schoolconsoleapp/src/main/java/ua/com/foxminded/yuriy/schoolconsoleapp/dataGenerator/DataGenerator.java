@@ -6,10 +6,10 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import ua.com.foxminded.yuriy.schoolconsoleapp.Util.FileHandler;
 import ua.com.foxminded.yuriy.schoolconsoleapp.config.ConnectionUtil;
 import ua.com.foxminded.yuriy.schoolconsoleapp.exception.FileReadException;
 import ua.com.foxminded.yuriy.schoolconsoleapp.exception.SqlRunException;
-import ua.com.foxminded.yuriy.schoolconsoleapp.reader.FileHandler;
 
 public class DataGenerator {
 

@@ -18,7 +18,6 @@ public class FindAllStudentsByCourseCommand implements Command {
 		System.out.println("Please enter the course name..");
 		Scanner sc = new Scanner(System.in);
 		String courseName = sc.nextLine();
-		sc.close();
 		List<Student> studentList = studentService.findAllByCourse(courseName);
 		for (Student student : studentList) {
 			System.out.println(student.getId() + ". " + student.getFirstName() + " " + student.getLastName());

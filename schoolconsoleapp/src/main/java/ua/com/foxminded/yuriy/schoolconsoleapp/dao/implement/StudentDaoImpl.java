@@ -14,6 +14,7 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.config.ConnectionUtil;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dataGenerator.RandomDataGenerator;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
+import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
 
@@ -110,9 +111,9 @@ public class StudentDaoImpl implements StudentDao {
 	}
 
 	@Override
-	public Student getInfo(int id) throws DaoException {
+	public Student getById(int id) throws DaoException {
 		String QUERY_GET_STUDENT_INFO = "SELECT * FROM students " + "WHERE student_id = ?";
-		Student student = new Student("", "");
+		Student student = new Student(null,null);
 		try (Connection connection = ConnectionUtil.getConnection()) {
 			PreparedStatement statement = connection.prepareStatement(QUERY_GET_STUDENT_INFO);
 			statement.setInt(1, id);
@@ -122,15 +123,59 @@ public class StudentDaoImpl implements StudentDao {
 				String firstName = rs.getString("first_name");
 				String lastName = rs.getString("last_name");
 				int studentId = rs.getInt("student_id");
-				student.setFirstName(firstName);
+				int groupId = rs.getInt("group_id");
+
 				student.setLastName(lastName);
+				student.setFirstName(firstName);
 				student.setId(studentId);
+				student.setGroupId(groupId);
 			}
 		} catch (SQLException e) {
 			throw new DaoException("Failed to find student: " + e.getMessage());
 		}
 		return student;
 
+	}
+
+	@Override
+	public void setGroupById(int id, Group group) {
+		String QUERY_SET_GROUP_ID = "UPDATE students SET group_id = ? WHERE student_id = ?";
+	try(Connection connection = ConnectionUtil.getConnection()){
+		PreparedStatement statement = connection.prepareStatement(QUERY_SET_GROUP_ID);
+		statement.setInt(1, group.getId());
+		statement.setInt(2, id);
+		statement.executeUpdate();
+	} catch (SQLException e) {
+		throw new DaoException("Failed to add group " + group.getName() + " to the student : " + id + " | ");
+	}
+		
+	}
+
+	@Override
+	public Student getByName(String firstName, String lastName) {
+		String QUERY_GET_STUDENT_INFO = "SELECT * FROM students " + "WHERE first_name = ? AND last_name = ?";
+		Student student = new Student(null,null);
+		try (Connection connection = ConnectionUtil.getConnection()) {
+			PreparedStatement statement = connection.prepareStatement(QUERY_GET_STUDENT_INFO);
+			statement.setString(1, firstName);
+			statement.setString(2, lastName);
+			ResultSet rs = statement.executeQuery();
+
+			while (rs.next()) {
+				String tmpfirstName = rs.getString("first_name");
+				String tmplastName = rs.getString("last_name");
+				int studentId = rs.getInt("student_id");
+				int groupId = rs.getInt("group_id");
+
+				student.setLastName(lastName);
+				student.setFirstName(firstName);
+				student.setId(studentId);
+				student.setGroupId(groupId);
+			}
+		} catch (SQLException e) {
+			throw new DaoException("Failed to find student: " + e.getMessage());
+		}
+		return student;
 	}
 
 }
