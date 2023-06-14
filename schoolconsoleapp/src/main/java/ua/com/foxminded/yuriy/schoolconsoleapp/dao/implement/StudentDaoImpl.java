@@ -7,12 +7,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
-
 import ua.com.foxminded.yuriy.schoolconsoleapp.config.ConnectionUtil;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentDao;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dataGenerator.RandomDataGenerator;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
@@ -52,18 +48,16 @@ public class StudentDaoImpl implements StudentDao {
 			statement.close();
 			coursesStatement.close();
 		} catch (SQLException e) {
-			throw new DaoException("Failed to add students: " + e.getMessage());
+			throw new DaoException("Failed to add students to Data Base: " + e.getMessage());
 		}
 	}
 
 	@Override
-	public List<Student> findAllByCourse(String courseName) throws DaoException {
+	public List<Student> getAllByCourse(String courseName) throws DaoException {
 
 		String QUERY_SELECT_STUDENTS_ON_COURSE = "SELECT students.student_id, students.first_name, students.last_name "
-				+ "FROM students "
-				+ "INNER JOIN students_courses ON students.student_id = students_courses.student_id "
-				+ "INNER JOIN courses ON students_courses.course_id = courses.course_id "
-				+ "WHERE courses.course_name = ?";
+				+ "FROM students " + "INNER JOIN students_courses ON students.student_id = students_courses.student_id "
+				+ "INNER JOIN courses ON students_courses.course_id = courses.course_id " + "WHERE courses.course_name = ?";
 		List<Student> studentsOfCourse = new ArrayList<>();
 
 		try (Connection connection = ConnectionUtil.getConnection()) {
@@ -79,7 +73,7 @@ public class StudentDaoImpl implements StudentDao {
 				studentsOfCourse.add(student);
 			}
 		} catch (SQLException e) {
-			throw new DaoException("Failed to find students" + e.getMessage());
+			throw new DaoException("Failed to find students that follow the course : " + courseName);
 		}
 		return studentsOfCourse;
 	}
@@ -93,7 +87,8 @@ public class StudentDaoImpl implements StudentDao {
 			statement.setString(2, student.getLastName());
 			statement.executeUpdate();
 		} catch (SQLException e) {
-			throw new DaoException("Failed to add new student" + e.getMessage());
+			throw new DaoException(
+					"Failed to add the new student : [" + student.getFirstName() + " " + student.getLastName() + "]");
 		}
 	}
 
@@ -106,14 +101,14 @@ public class StudentDaoImpl implements StudentDao {
 			statement.setInt(1, id);
 			statement.executeUpdate();
 		} catch (SQLException e) {
-			throw new DaoException("Failed to delete the student: " + e.getMessage());
+			throw new DaoException("Failed to delete the student with the following ID : " + id);
 		}
 	}
 
 	@Override
 	public Student getById(int id) throws DaoException {
-		String QUERY_GET_STUDENT_INFO = "SELECT * FROM students " + "WHERE student_id = ?";
-		Student student = new Student(null,null);
+		String QUERY_GET_STUDENT_INFO = "SELECT * FROM students WHERE student_id = ?";
+		Student student = new Student(null, null);
 		try (Connection connection = ConnectionUtil.getConnection()) {
 			PreparedStatement statement = connection.prepareStatement(QUERY_GET_STUDENT_INFO);
 			statement.setInt(1, id);
@@ -131,7 +126,7 @@ public class StudentDaoImpl implements StudentDao {
 				student.setGroupId(groupId);
 			}
 		} catch (SQLException e) {
-			throw new DaoException("Failed to find student: " + e.getMessage());
+			throw new DaoException("Failed to get student with the following ID : " + id);
 		}
 		return student;
 
@@ -140,21 +135,21 @@ public class StudentDaoImpl implements StudentDao {
 	@Override
 	public void setGroupById(int id, Group group) {
 		String QUERY_SET_GROUP_ID = "UPDATE students SET group_id = ? WHERE student_id = ?";
-	try(Connection connection = ConnectionUtil.getConnection()){
-		PreparedStatement statement = connection.prepareStatement(QUERY_SET_GROUP_ID);
-		statement.setInt(1, group.getId());
-		statement.setInt(2, id);
-		statement.executeUpdate();
-	} catch (SQLException e) {
-		throw new DaoException("Failed to add group " + group.getName() + " to the student : " + id + " | ");
-	}
-		
+		try (Connection connection = ConnectionUtil.getConnection()) {
+			PreparedStatement statement = connection.prepareStatement(QUERY_SET_GROUP_ID);
+			statement.setInt(1, group.getId());
+			statement.setInt(2, id);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			throw new DaoException("Failed to add group " + group.getName() + " to the student : " + id + " | ");
+		}
+
 	}
 
 	@Override
 	public Student getByName(String firstName, String lastName) {
-		String QUERY_GET_STUDENT_INFO = "SELECT * FROM students " + "WHERE first_name = ? AND last_name = ?";
-		Student student = new Student(null,null);
+		String QUERY_GET_STUDENT_INFO = "SELECT * FROM students WHERE first_name = ? AND last_name = ?";
+		Student student = new Student(null, null);
 		try (Connection connection = ConnectionUtil.getConnection()) {
 			PreparedStatement statement = connection.prepareStatement(QUERY_GET_STUDENT_INFO);
 			statement.setString(1, firstName);
@@ -173,7 +168,7 @@ public class StudentDaoImpl implements StudentDao {
 				student.setGroupId(groupId);
 			}
 		} catch (SQLException e) {
-			throw new DaoException("Failed to find student: " + e.getMessage());
+			throw new DaoException("Failed to find the following student : [" + firstName + " " + lastName + "]");
 		}
 		return student;
 	}

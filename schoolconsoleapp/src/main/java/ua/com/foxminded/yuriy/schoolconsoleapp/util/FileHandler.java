@@ -1,4 +1,4 @@
-package ua.com.foxminded.yuriy.schoolconsoleapp.Util;
+package ua.com.foxminded.yuriy.schoolconsoleapp.util;
 
 import java.io.IOException;
 import java.nio.file.Files;

@@ -1,15 +1,13 @@
 package ua.com.foxminded.yuriy.schoolconsoleapp.dataGenerator;
 
-import java.net.ConnectException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-
-import ua.com.foxminded.yuriy.schoolconsoleapp.Util.FileHandler;
 import ua.com.foxminded.yuriy.schoolconsoleapp.config.ConnectionUtil;
 import ua.com.foxminded.yuriy.schoolconsoleapp.exception.FileReadException;
 import ua.com.foxminded.yuriy.schoolconsoleapp.exception.SqlRunException;
+import ua.com.foxminded.yuriy.schoolconsoleapp.util.FileHandler;
 
 public class DataGenerator {
 
@@ -49,5 +47,14 @@ public class DataGenerator {
 		} catch (SQLException e) {
 			throw new SqlRunException("An error occured: " + e.getMessage());
 		}
+	}
+
+	public void initializeAndPopulateTestDatabase() throws FileReadException {
+		createDataBase();
+		createTables();
+		RandomDataGenerator randomDataGenerator = new RandomDataGenerator();
+		randomDataGenerator.generateStudents();
+		randomDataGenerator.generateGroups();
+		randomDataGenerator.generateCourses();
 	}
 }

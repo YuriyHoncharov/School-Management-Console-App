@@ -10,8 +10,6 @@ public interface CourseDao {
 
 	List<Course> getAvailableCourses(int studentId) throws DaoException;
 
-	List<Course> selectCourses(int studentId) throws DaoException;
-
 	List<Course> getCoursesByStudentId(int studentId) throws DaoException;
 
 	void addCourse(Course selectedCourse, int studentId) throws DaoException;

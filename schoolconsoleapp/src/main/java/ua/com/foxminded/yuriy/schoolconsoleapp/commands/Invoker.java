@@ -3,12 +3,12 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.commands;
 import java.util.HashMap;
 import java.util.Map;
 
-import ua.com.foxminded.yuriy.schoolconsoleapp.commands.GroupCommandsImpl.FindGroupsByStudentsNumberCommand;
+import ua.com.foxminded.yuriy.schoolconsoleapp.commands.GroupCommandsImpl.GetGroupsByStudentsNumberCommand;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl.AddCourseToStudentCommand;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl.AddStudentCommand;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl.DeleteStudentCommand;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl.DeleteStudentCourseCommand;
-import ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl.FindAllStudentsByCourseCommand;
+import ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl.GetAllStudentsByCourseCommand;
 
 public class Invoker {
 
@@ -17,10 +17,10 @@ public class Invoker {
 	public static void registerCommands() {
 		AddStudentCommand addStudentCommand = new AddStudentCommand();
 		DeleteStudentCommand deleteStudentCommand = new DeleteStudentCommand();
-		FindAllStudentsByCourseCommand findAllStudentsByCourseCommand = new FindAllStudentsByCourseCommand();
+		GetAllStudentsByCourseCommand findAllStudentsByCourseCommand = new GetAllStudentsByCourseCommand();
 		AddCourseToStudentCommand addCourseToStudentCommand = new AddCourseToStudentCommand();
 		DeleteStudentCourseCommand deleteStudentCourseCommand = new DeleteStudentCourseCommand();
-		FindGroupsByStudentsNumberCommand findGroupsByStudentsNumberCommand = new FindGroupsByStudentsNumberCommand();
+		GetGroupsByStudentsNumberCommand findGroupsByStudentsNumberCommand = new GetGroupsByStudentsNumberCommand();
 
 		commandMap.put(addStudentCommand.name(), addStudentCommand);
 		commandMap.put(deleteStudentCommand.name(), deleteStudentCommand);

@@ -4,16 +4,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import ua.com.foxminded.yuriy.schoolconsoleapp.config.ConnectionUtil;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.GroupDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
-import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
 
 public class GroupDaoImpl implements GroupDao {
@@ -33,12 +28,12 @@ public class GroupDaoImpl implements GroupDao {
 			}
 			statement.close();
 		} catch (SQLException e) {
-			throw new DaoException("Failed to add groups: " + e.getMessage());
+			throw new DaoException("Failed to add groups to data base : " + e.getMessage());
 		}
 	}
 
 	@Override
-	public List<Group> findAllLessOrEqual(int studentCount) throws DaoException {
+	public List<Group> getAllLessOrEqual(int studentCount) throws DaoException {
 
 		String QUERY_SELECT_LESS_OR_EQUAL_STUDENTS = "SELECT groups.group_id, groups.group_name, COUNT(students.student_id) AS student_count "
 				+ "FROM groups " + "LEFT JOIN students ON groups.group_id = students.group_id "
@@ -55,7 +50,7 @@ public class GroupDaoImpl implements GroupDao {
 				groups.add(group);
 			}
 		} catch (SQLException e) {
-			throw new DaoException("Failed to get groups list: " + e.getMessage());
+			throw new DaoException("Failed to get group list with the following count : " + studentCount);
 		}
 		return groups;
 	}
@@ -73,7 +68,7 @@ public class GroupDaoImpl implements GroupDao {
 				count = rs.getInt("student_count");
 			}
 		} catch (SQLException e) {
-			throw new DaoException("Failed to get groups list: " + e.getMessage());
+			throw new DaoException("Failed to get a student count of group with following ID : " + groupId);
 		}
 		return count;
 	}
@@ -101,17 +96,17 @@ public class GroupDaoImpl implements GroupDao {
 	public Group getById(int groupId) {
 		String QUERY_GET_GROUP_BY_ID = "SELECT * FROM groups WHERE group_id = ?";
 		Group group = new Group("", 0);
-		try(Connection connection = ConnectionUtil.getConnection()){
+		try (Connection connection = ConnectionUtil.getConnection()) {
 			PreparedStatement statement = connection.prepareStatement(QUERY_GET_GROUP_BY_ID);
 			statement.setInt(1, groupId);
 			ResultSet rs = statement.executeQuery();
-			if(rs.next()) {
-			int id = rs.getInt("group_id");
-			String name = rs.getString("group_name");
-			group.setId(id);
-			group.setName(name);
+			if (rs.next()) {
+				int id = rs.getInt("group_id");
+				String name = rs.getString("group_name");
+				group.setId(id);
+				group.setName(name);
 			}
-			
+
 		} catch (SQLException e) {
 			throw new DaoException("Failed to get group by following id :" + groupId);
 		}

@@ -3,7 +3,6 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl;
 import java.util.Scanner;
 
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
@@ -13,9 +12,8 @@ public class DeleteStudentCommand implements Command {
 	private StudentService studentService = new StudentServiceImpl();
 
 	@Override
-	public void execute() throws DaoException {
+	public void execute(Scanner sc) throws DaoException {
 		System.out.println("Enter student's ID you want to delete..");
-		Scanner sc = new Scanner(System.in);
 
 		while (!sc.hasNextInt()) {
 			sc.next();
@@ -28,7 +26,7 @@ public class DeleteStudentCommand implements Command {
 		if (student.getFirstName() == null) {
 			System.out.println("Student with following ID : " + "[ " + id + " ] is not found.");
 		} else {
-			System.out.println("Are you sure that you want to delete: " + studentService.getById(id).toString());
+			System.out.println("Are you sure that you want to delete: " + student.toString());
 			System.out.println("Enter - 1 to confirm and - 2 to cancel.");
 			while (!sc.hasNextInt()) {
 				sc.next();

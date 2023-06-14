@@ -31,7 +31,7 @@ public class CourseDaoImpl implements CourseDao {
 			}
 			statement.close();
 		} catch (SQLException e) {
-			throw new DaoException("Adding courses failed: " + e.getMessage());
+			throw new DaoException("Failed to add course list to Data Base : " + e.getMessage());
 		}
 	}
 
@@ -55,7 +55,7 @@ public class CourseDaoImpl implements CourseDao {
 				allCourses.add(course);
 			}
 		} catch (SQLException e) {
-			throw new DaoException("Failed to add a course");
+			throw new DaoException("Failed to retrieve available courses for student with ID : " + studentId);
 		}
 		return allCourses;
 	}
@@ -65,11 +65,11 @@ public class CourseDaoImpl implements CourseDao {
 
 		List<Course> allCourses = new ArrayList<>();
 
-		String QUERY_SELECT_STUDENT_USING_ID = "SELECT * FROM courses WHERE (course_id) IN ( "
+		String QUERY_SELECT_COURSES_BY_STUDENT_ID = "SELECT * FROM courses WHERE (course_id) IN ( "
 				+ "SELECT course_id FROM students_courses WHERE student_id = ?)";
 		try (Connection connection = ConnectionUtil.getConnection()) {
 
-			PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_STUDENT_USING_ID);
+			PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_COURSES_BY_STUDENT_ID);
 			statement.setInt(1, studentId);
 			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {
@@ -80,7 +80,7 @@ public class CourseDaoImpl implements CourseDao {
 				allCourses.add(course);
 			}
 		} catch (SQLException e) {
-			throw new DaoException("Failed to add a course");
+			throw new DaoException("Failed to retrieve courses of student with ID : " + studentId);
 		}
 		return allCourses;
 	}
@@ -95,33 +95,9 @@ public class CourseDaoImpl implements CourseDao {
 			statement.setInt(2, studentId);
 			statement.executeUpdate();
 		} catch (SQLException e) {
-			throw new DaoException("Failed to add the new course");
+			throw new DaoException(
+					"Failed to add course : [" + selectedCourse.toString() + "] to the student with ID : " + studentId);
 		}
-	}
-
-	@Override
-	public List<Course> selectCourses(int studentId) throws DaoException {
-
-		List<Course> actualCourses = new ArrayList<>();
-		String SQL_QUERY_GET_COURSES = "SELECT * FROM courses " + "WHERE (course_id) IN ( " + "SELECT course_id "
-				+ "FROM students_courses " + "WHERE student_id = ?)";
-		try (Connection connection = ConnectionUtil.getConnection()) {
-			PreparedStatement statement = connection.prepareStatement(SQL_QUERY_GET_COURSES);
-			statement.setInt(1, studentId);
-			ResultSet coursesList = statement.executeQuery();
-
-			while (coursesList.next()) {
-				int id = coursesList.getInt("course_id");
-				String courseName = coursesList.getString("course_name");
-				String courseDescription = coursesList.getString("course_description");
-				Course course = new Course(courseName, courseDescription, id);
-				actualCourses.add(course);
-			}
-
-		} catch (SQLException e1) {
-			throw new DaoException("Failed to remove course from student's course list.");
-		}
-		return actualCourses;
 	}
 
 	@Override
@@ -137,7 +113,8 @@ public class CourseDaoImpl implements CourseDao {
 			statement.setInt(2, courseId);
 			statement.executeUpdate();
 		} catch (SQLException e) {
-			throw new DaoException("Failed to delete course: " + e.getMessage());
+			throw new DaoException(
+					"Failed to delete a course with ID : " + courseId + " from student with ID : " + studentId);
 		}
 	}
 }

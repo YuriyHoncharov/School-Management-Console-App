@@ -18,10 +18,9 @@ public class AddStudentCommand implements Command {
 	private GroupService groupService = new GroupServiceImpl();
 
 	@Override
-	public void execute() throws DaoException {
+	public void execute(Scanner sc) throws DaoException {
 		Pattern namePattern = Pattern.compile("[A-Za-z]+");
 		System.out.println("Enter student name..");
-		Scanner sc = new Scanner(System.in);
 
 		String name = sc.nextLine();
 		while (!namePattern.matcher(name).matches()) {

@@ -9,20 +9,19 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.GroupService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.implement.GroupServiceImpl;
 
-public class FindGroupsByStudentsNumberCommand implements Command {
+public class GetGroupsByStudentsNumberCommand implements Command {
 	private GroupService groupService = new GroupServiceImpl();
 
 	@Override
-	public void execute() throws DaoException {
+	public void execute(Scanner sc) throws DaoException {
 		System.out.println("Please enter the number..");
-		Scanner sc = new Scanner(System.in);
 		int count = 0;
 		while (!sc.hasNextInt()) {
 			sc.next();
 			System.out.println("You should enter a numeric value, please retry.");
 		}
 		count = sc.nextInt();
-		List<Group> result = groupService.findAllLessOrEqual(count);
+		List<Group> result = groupService.getAllLessOrEqual(count);
 		if (result.isEmpty()) {
 			System.out.println("No one group has " + count + " or less students.");
 		} else {
