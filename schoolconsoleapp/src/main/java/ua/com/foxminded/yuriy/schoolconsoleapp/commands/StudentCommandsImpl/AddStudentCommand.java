@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
+import ua.com.foxminded.yuriy.schoolconsoleapp.exception.CommandException;
 import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.GroupService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
@@ -60,12 +61,15 @@ public class AddStudentCommand implements Command {
 				System.out.println("You should enter a numeric value, please retry.");
 			}
 			int groupId = sc.nextInt();
-
-			Group group = groupService.getById(groupId);
-			int studentId = (studentService.getByName(name, lastName)).getId();
-			studentService.setGroupById(studentId, group);
-			System.out.println("Group has been succesfully added.");
-
+			boolean groupExist = allGroups.stream().anyMatch(group -> group.getId() == groupId);
+			if (!groupExist) {
+				throw new CommandException("The group with ID : " + groupId + " does now exist. Please retry");
+			} else {
+				Group group = groupService.getById(groupId);
+				int studentId = (studentService.getByName(name, lastName)).getId();
+				studentService.setGroupById(studentId, group);
+				System.out.println("Group has been succesfully added.");
+			}
 		}
 	}
 

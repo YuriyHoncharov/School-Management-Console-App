@@ -33,4 +33,10 @@ public class CourseServiceImpl implements CourseService {
 
 	}
 
+	@Override
+	public Course getById(int courseId) {
+		Course course = courseDao.getById(courseId);
+		return course;
+	}
+
 }

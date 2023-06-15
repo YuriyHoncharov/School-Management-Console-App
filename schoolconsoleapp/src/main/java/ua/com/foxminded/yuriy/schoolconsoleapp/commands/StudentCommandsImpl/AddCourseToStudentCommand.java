@@ -34,7 +34,7 @@ public class AddCourseToStudentCommand implements Command {
 
 			List<Course> availableCourses = courseService.availableCourses(studentId);
 
-			System.out.println("Please select the course to add...");
+			System.out.println("Please enter Course ID you want to add...");
 
 			for (int i = 0; i < availableCourses.size(); i++) {
 				Course course = availableCourses.get(i);
@@ -47,8 +47,10 @@ public class AddCourseToStudentCommand implements Command {
 			}
 
 			int choosenCourse = sc.nextInt();
+			
+			boolean courseExist = availableCourses.stream().anyMatch(course -> course.getId() == choosenCourse);
 
-			if (choosenCourse - 1 >= availableCourses.size()) {
+			if (!courseExist) {
 				throw new DaoException("This number is missing, please choose the course from the list");
 			}
 			Course selectedCourse = availableCourses.get(choosenCourse - 1);

@@ -6,13 +6,16 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
 
 public interface CourseDao {
 
-	void addAll(List<Course> courses) throws DaoException;
+	void addAll(List<Course> courses);
 
-	List<Course> getAvailableCourses(int studentId) throws DaoException;
+	List<Course> getAvailableCourses(int studentId);
 
-	List<Course> getCoursesByStudentId(int studentId) throws DaoException;
+	List<Course> getCoursesByStudentId(int studentId);
 
-	void addCourse(Course selectedCourse, int studentId) throws DaoException;
+	void addCourse(Course selectedCourse, int studentId);
 
-	void deleteCourse(int studentId, int courseId) throws DaoException;
+	void deleteCourse(int studentId, int courseId);
+	
+	Course getById(int courseId);
+	
 }

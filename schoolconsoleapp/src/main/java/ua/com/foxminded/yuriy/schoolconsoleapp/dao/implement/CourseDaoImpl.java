@@ -86,17 +86,17 @@ public class CourseDaoImpl implements CourseDao {
 	}
 
 	@Override
-	public void addCourse(Course selectedCourse, int studentId) throws DaoException {
+	public void addCourse(Course course, int studentId) throws DaoException {
 
 		try (Connection connection = ConnectionUtil.getConnection()) {
 			String QUERY_ADD_COURSE = "INSERT INTO students_courses (course_id, student_id) VALUES (?, ?)";
 			PreparedStatement statement = connection.prepareStatement(QUERY_ADD_COURSE);
-			statement.setInt(1, selectedCourse.getId());
+			statement.setInt(1, course.getId());
 			statement.setInt(2, studentId);
 			statement.executeUpdate();
 		} catch (SQLException e) {
 			throw new DaoException(
-					"Failed to add course : [" + selectedCourse.toString() + "] to the student with ID : " + studentId);
+					"Failed to add course : [" + course.toString() + "] to the student with ID : " + studentId);
 		}
 	}
 
@@ -116,5 +116,27 @@ public class CourseDaoImpl implements CourseDao {
 			throw new DaoException(
 					"Failed to delete a course with ID : " + courseId + " from student with ID : " + studentId);
 		}
+	}
+
+	@Override
+	public Course getById(int courseId) {
+		String QUERY_GET_COURSE_BY_ID = "SELECT * FROM courses WHERE course_id = ?";
+		Course course;
+		try (Connection connection = ConnectionUtil.getConnection()) {
+			PreparedStatement statement = connection.prepareStatement(QUERY_GET_COURSE_BY_ID);
+			statement.setInt(1, courseId);
+			ResultSet rs = statement.executeQuery();
+			if (rs.next()) {
+				String name = rs.getString("course_name");
+				String description = rs.getString("course_description");
+				int id = rs.getInt("course_id");
+				course = new Course(name, description, id);
+			} else {
+				throw new DaoException("Course was not found with the following ID : " + courseId);
+			}
+		} catch (SQLException e) {
+			throw new DaoException("Failed to get Course with the following ID : " + courseId);
+		}
+		return course;
 	}
 }

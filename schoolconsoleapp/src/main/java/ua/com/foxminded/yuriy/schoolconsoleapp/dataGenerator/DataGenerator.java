@@ -4,7 +4,14 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+
 import ua.com.foxminded.yuriy.schoolconsoleapp.config.ConnectionUtil;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.CourseDao;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.GroupDao;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentDao;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.implement.CourseDaoImpl;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.implement.GroupDaoImpl;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.implement.StudentDaoImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.exception.FileReadException;
 import ua.com.foxminded.yuriy.schoolconsoleapp.exception.SqlRunException;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.FileHandler;
@@ -53,8 +60,11 @@ public class DataGenerator {
 		createDataBase();
 		createTables();
 		RandomDataGenerator randomDataGenerator = new RandomDataGenerator();
-		randomDataGenerator.generateStudents();
-		randomDataGenerator.generateGroups();
-		randomDataGenerator.generateCourses();
+		StudentDao studentDao = new StudentDaoImpl();
+		GroupDao groupDao = new GroupDaoImpl();
+		CourseDao courseDao = new CourseDaoImpl();
+		groupDao.addAll(randomDataGenerator.generateGroups());
+		courseDao.addAll(randomDataGenerator.generateCourses());
+		studentDao.addAll(randomDataGenerator.generateStudents());
 	}
 }

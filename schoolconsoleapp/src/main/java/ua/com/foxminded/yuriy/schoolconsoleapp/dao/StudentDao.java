@@ -20,5 +20,7 @@ public interface StudentDao {
 	
 	void setGroupById(int id, Group group);
 	
+	void addAll(List<Student> students);
+	
 
 }
