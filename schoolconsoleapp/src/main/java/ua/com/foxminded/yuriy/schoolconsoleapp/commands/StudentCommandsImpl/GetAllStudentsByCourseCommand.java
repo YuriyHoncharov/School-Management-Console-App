@@ -5,7 +5,6 @@ import java.util.Scanner;
 
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
-import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.implement.StudentServiceImpl;
 
@@ -13,7 +12,7 @@ public class GetAllStudentsByCourseCommand implements Command {
 	private StudentService studentService = new StudentServiceImpl();
 
 	@Override
-	public void execute(Scanner sc) throws DaoException {
+	public void execute(Scanner sc) {
 		System.out.println("Please enter the course name..");
 		String courseName = sc.nextLine();
 		List<Student> studentList = studentService.getAllByCourse(courseName);

@@ -5,7 +5,6 @@ import java.util.Scanner;
 
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
-import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.GroupService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.implement.GroupServiceImpl;
 
@@ -13,7 +12,7 @@ public class GetGroupsByStudentsNumberCommand implements Command {
 	private GroupService groupService = new GroupServiceImpl();
 
 	@Override
-	public void execute(Scanner sc) throws DaoException {
+	public void execute(Scanner sc) {
 		System.out.println("Please enter the number..");
 		int count = 0;
 		while (!sc.hasNextInt()) {

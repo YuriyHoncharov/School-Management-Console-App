@@ -6,6 +6,7 @@ import java.util.Scanner;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
+import ua.com.foxminded.yuriy.schoolconsoleapp.exception.CommandException;
 import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.CourseService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
@@ -17,7 +18,7 @@ public class AddCourseToStudentCommand implements Command {
 	private StudentService studentService = new StudentServiceImpl();
 
 	@Override
-	public void execute(Scanner sc) throws DaoException {
+	public void execute(Scanner sc) {
 		System.out.println("Please enter the student's id...");
 
 		while (!sc.hasNextInt()) {
@@ -51,7 +52,7 @@ public class AddCourseToStudentCommand implements Command {
 			boolean courseExist = availableCourses.stream().anyMatch(course -> course.getId() == choosenCourse);
 
 			if (!courseExist) {
-				throw new DaoException("This number is missing, please choose the course from the list");
+				throw new CommandException("This number is missing, please choose the course from the list");
 			}
 			Course selectedCourse = availableCourses.get(choosenCourse - 1);
 			courseService.addCourse(selectedCourse, studentId);

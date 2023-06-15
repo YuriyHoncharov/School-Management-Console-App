@@ -2,6 +2,7 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl;
 
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
@@ -60,6 +61,7 @@ public class AddStudentCommand implements Command {
 				sc.next();
 				System.out.println("You should enter a numeric value, please retry.");
 			}
+
 			int groupId = sc.nextInt();
 			boolean groupExist = allGroups.stream().anyMatch(group -> group.getId() == groupId);
 			if (!groupExist) {
@@ -68,7 +70,7 @@ public class AddStudentCommand implements Command {
 				Group group = groupService.getById(groupId);
 				int studentId = (studentService.getByName(name, lastName)).getId();
 				studentService.setGroupById(studentId, group);
-				System.out.println("Group has been succesfully added.");
+				System.out.println("Group has been succesfully added to the student.");
 			}
 		}
 	}
