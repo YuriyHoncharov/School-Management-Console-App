@@ -8,16 +8,25 @@ import java.util.ArrayList;
 import java.util.List;
 import ua.com.foxminded.yuriy.schoolconsoleapp.config.ConnectionUtil;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.GroupDao;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.sqlqueries.SqlGroupQueries;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.sqlqueries.implement.SqlGroupQueriesImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
 
 public class GroupDaoImpl implements GroupDao {
 
-	public void addAll(List<Group> groups) throws DaoException {
+	SqlGroupQueries groupQueries = new SqlGroupQueriesImpl();
 
-		String sqlQuery = "INSERT INTO groups (group_id, group_name) VALUES (?, ?)";
+	String QUERY_ADD_ALL = groupQueries.QUERY_ADD_ALL();
+	String QUERY_GET_BY_LESS_OR_EQUAL_STUDENTS = groupQueries.QUERY_GET_BY_LESS_OR_EQUAL_STUDENTS();
+	String QUERY_GET_BY_STUDENTS_COUNT = groupQueries.QUERY_GET_BY_STUDENTS_COUNT();
+	String QUURY_GET_ALL_GROUPS = groupQueries.QUURY_GET_ALL_GROUPS();
+	String QUERY_GET_BY_ID = groupQueries.QUERY_GET_BY_ID();
+
+	public void addAll(List<Group> groups) {
+
 		try (Connection connection = ConnectionUtil.getConnection()) {
-			PreparedStatement statement = connection.prepareStatement(sqlQuery);
+			PreparedStatement statement = connection.prepareStatement(QUERY_ADD_ALL);
 
 			for (int i = 0; i < groups.size(); i++) {
 				int id = groups.get(i).getId();
@@ -26,21 +35,17 @@ public class GroupDaoImpl implements GroupDao {
 				statement.setString(2, name);
 				statement.executeUpdate();
 			}
-			statement.close();
 		} catch (SQLException e) {
 			throw new DaoException("Failed to add groups to data base : " + e.getMessage());
 		}
 	}
 
 	@Override
-	public List<Group> getAllLessOrEqual(int studentCount) throws DaoException {
+	public List<Group> getAllLessOrEqual(int studentCount) {
 
-		String QUERY_SELECT_LESS_OR_EQUAL_STUDENTS = "SELECT groups.group_id, groups.group_name, COUNT(students.student_id) AS student_count "
-				+ "FROM groups " + "LEFT JOIN students ON groups.group_id = students.group_id "
-				+ "GROUP BY groups.group_id, groups.group_name " + "HAVING COUNT(students.student_id) <= ?";
 		List<Group> groups = new ArrayList<>();
 		try (Connection connection = ConnectionUtil.getConnection()) {
-			PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_LESS_OR_EQUAL_STUDENTS);
+			PreparedStatement statement = connection.prepareStatement(QUERY_GET_BY_LESS_OR_EQUAL_STUDENTS);
 			statement.setInt(1, studentCount);
 			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {
@@ -56,12 +61,11 @@ public class GroupDaoImpl implements GroupDao {
 	}
 
 	@Override
-	public int studentsCountByGroupId(int groupId) throws DaoException {
-		String QUERY_SELECT_STUDENTS_COUNT = "SELECT COUNT(students.student_id) AS student_count " + "FROM groups "
-				+ "LEFT JOIN students ON groups.group_id = students.group_id " + "WHERE groups.group_id = ? ";
+	public int studentsCountByGroupId(int groupId) {
+
 		int count = 0;
 		try (Connection connection = ConnectionUtil.getConnection()) {
-			PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_STUDENTS_COUNT);
+			PreparedStatement statement = connection.prepareStatement(QUERY_GET_BY_STUDENTS_COUNT);
 			statement.setInt(1, groupId);
 			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {
@@ -75,10 +79,10 @@ public class GroupDaoImpl implements GroupDao {
 
 	@Override
 	public List<Group> getAll() {
-		String QUURY_SELECT_ALL_GROUPS = "SELECT * FROM groups";
+
 		List<Group> allGroups = new ArrayList<>();
 		try (Connection connection = ConnectionUtil.getConnection()) {
-			PreparedStatement statement = connection.prepareStatement(QUURY_SELECT_ALL_GROUPS);
+			PreparedStatement statement = connection.prepareStatement(QUURY_GET_ALL_GROUPS);
 			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {
 				int group_id = rs.getInt("group_id");
@@ -94,19 +98,17 @@ public class GroupDaoImpl implements GroupDao {
 
 	@Override
 	public Group getById(int groupId) {
-		String QUERY_GET_GROUP_BY_ID = "SELECT * FROM groups WHERE group_id = ?";
-		Group group = new Group("", 0);
+
+		Group group = null;
 		try (Connection connection = ConnectionUtil.getConnection()) {
-			PreparedStatement statement = connection.prepareStatement(QUERY_GET_GROUP_BY_ID);
+			PreparedStatement statement = connection.prepareStatement(QUERY_GET_BY_ID);
 			statement.setInt(1, groupId);
 			ResultSet rs = statement.executeQuery();
 			if (rs.next()) {
 				int id = rs.getInt("group_id");
 				String name = rs.getString("group_name");
-				group.setId(id);
-				group.setName(name);
+				group = new Group(name, id);
 			}
-
 		} catch (SQLException e) {
 			throw new DaoException("Failed to get group by following id :" + groupId);
 		}

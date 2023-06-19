@@ -5,13 +5,12 @@ import java.util.Map;
 import java.util.Scanner;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Invoker;
-import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
 
 public class ConsoleMenu {
 
 	public static final String LINE = " - ";
 
-	public void run() throws DaoException {
+	public void run() {
 
 		PrintStream printStream = System.out;
 

@@ -5,7 +5,6 @@ import java.util.List;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.CourseDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.implement.CourseDaoImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
-import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.CourseService;
 
 public class CourseServiceImpl implements CourseService {
@@ -13,30 +12,27 @@ public class CourseServiceImpl implements CourseService {
 	private CourseDao courseDao = new CourseDaoImpl();
 
 	@Override
-	public List<Course> availableCourses(int studentId) throws DaoException {
+	public List<Course> availableCourses(int studentId) {
 		return courseDao.getAvailableCourses(studentId);
 	}
 
 	@Override
-	public void addCourse(Course selectedCourse, int studentId) throws DaoException {
+	public void addCourse(Course selectedCourse, int studentId) {
 		courseDao.addCourse(selectedCourse, studentId);
 	}
 
 	@Override
-	public List<Course> actualCourses(int studentId) throws DaoException {
+	public List<Course> actualCourses(int studentId) {
 		return courseDao.getCoursesByStudentId(studentId);
 	}
 
 	@Override
-	public void deleteCourse(int studentId, int courseId) throws DaoException {
+	public void deleteCourse(int studentId, int courseId) {
 		courseDao.deleteCourse(studentId, courseId);
-
 	}
 
 	@Override
 	public Course getById(int courseId) {
-		Course course = courseDao.getById(courseId);
-		return course;
+		return courseDao.getById(courseId);
 	}
-
 }

@@ -5,7 +5,6 @@ import java.util.List;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 
-
 public interface StudentDao {
 
 	List<Student> getAllByCourse(String courseName);
@@ -15,12 +14,11 @@ public interface StudentDao {
 	void delete(int id);
 
 	Student getById(int id);
-	
-	Student getByName (String firstName, String lastName);
-	
+
+	Student getByName(String firstName, String lastName);
+
 	void setGroupById(int id, Group group);
-	
+
 	void addAll(List<Student> students);
-	
 
 }

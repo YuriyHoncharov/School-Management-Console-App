@@ -5,32 +5,29 @@ import java.util.List;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.GroupDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.implement.GroupDaoImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
-import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.GroupService;
 
 public class GroupServiceImpl implements GroupService {
 	private GroupDao groupDao = new GroupDaoImpl();
 
 	@Override
-	public List<Group> getAllLessOrEqual(int studentsCount) throws DaoException {
+	public List<Group> getAllLessOrEqual(int studentsCount) {
 		return groupDao.getAllLessOrEqual(studentsCount);
 	}
 
 	@Override
-	public int studentsCountByGroupId(int groupId) throws DaoException {
+	public int studentsCountByGroupId(int groupId) {
 		return groupDao.studentsCountByGroupId(groupId);
 	}
 
 	@Override
 	public List<Group> getAll() {
-		List<Group> allGroups = new ArrayList<>(groupDao.getAll());
-		return allGroups;
+		return new ArrayList<>(groupDao.getAll());
 	}
 
 	@Override
 	public Group getById(int groupId) {
-		Group group = groupDao.getById(groupId);
-		return group;
+		return groupDao.getById(groupId);
 	}
 
 }

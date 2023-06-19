@@ -2,14 +2,12 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl;
 
 import java.util.List;
 import java.util.Scanner;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
-import ua.com.foxminded.yuriy.schoolconsoleapp.exception.CommandException;
-import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
+import ua.com.foxminded.yuriy.schoolconsoleapp.input.InputValidator;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.GroupService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.implement.GroupServiceImpl;
@@ -20,34 +18,17 @@ public class AddStudentCommand implements Command {
 	private GroupService groupService = new GroupServiceImpl();
 
 	@Override
-	public void execute(Scanner sc) throws DaoException {
-		Pattern namePattern = Pattern.compile("[A-Za-z]+");
+	public void execute(Scanner sc) {
+
 		System.out.println("Enter student name..");
-
-		String name = sc.nextLine();
-		while (!namePattern.matcher(name).matches()) {
-			System.out.println("Please enter a valid name using alpahbetic characters.");
-			name = sc.nextLine();
-		}
+		String name = InputValidator.isAlphabeticalInput(sc);
 		System.out.println("Enter student lastname..");
-
-		String lastName = sc.nextLine();
-		while (!namePattern.matcher(lastName).matches()) {
-			System.out.println("Please enter a valid name using alpahbetic characters.");
-			lastName = sc.nextLine();
-		}
+		String lastName = InputValidator.isAlphabeticalInput(sc);
 		Student newStudent = new Student(name, lastName);
 		studentService.add(newStudent);
 		System.out.println("New student has been added to database.");
 		System.out.println("Would you want to insert this student to an exist Group? [ 1 - YES | 2 - NO ]");
-
-		String input = sc.nextLine();
-
-		while (!input.equals("1") && !input.equals("2")) {
-			System.out.println("Invalid input. Please enter either 1 or 2:");
-			input = sc.nextLine();
-		}
-		int answer = Integer.parseInt(input);
+		int answer = InputValidator.getValidChoice(sc);
 
 		if (answer == 2) {
 			System.out.println(
@@ -56,16 +37,10 @@ public class AddStudentCommand implements Command {
 			System.out.println("Please insert the Group ID you want to assign to your student..");
 			List<Group> allGroups = groupService.getAll();
 			allGroups.forEach(g -> System.out.println(g.toString()));
-
-			while (!sc.hasNextInt()) {
-				sc.next();
-				System.out.println("You should enter a numeric value, please retry.");
-			}
-
-			int groupId = sc.nextInt();
+			int groupId = InputValidator.getNextInt(sc);
 			boolean groupExist = allGroups.stream().anyMatch(group -> group.getId() == groupId);
 			if (!groupExist) {
-				throw new CommandException("The group with ID : " + groupId + " does now exist. Please retry");
+				System.out.println("The group with ID : " + groupId + " does now exist. Please retry");
 			} else {
 				Group group = groupService.getById(groupId);
 				int studentId = (studentService.getByName(name, lastName)).getId();

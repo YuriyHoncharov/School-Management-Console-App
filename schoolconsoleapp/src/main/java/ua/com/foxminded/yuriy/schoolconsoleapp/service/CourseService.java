@@ -12,7 +12,7 @@ public interface CourseService {
 	List<Course> actualCourses(int studentId);
 
 	void deleteCourse(int studentId, int courseId);
-	
+
 	Course getById(int courseId);
 
 }

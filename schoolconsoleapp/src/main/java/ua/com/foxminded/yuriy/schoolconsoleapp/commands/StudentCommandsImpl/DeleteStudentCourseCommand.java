@@ -7,6 +7,7 @@ import java.util.Scanner;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
+import ua.com.foxminded.yuriy.schoolconsoleapp.input.InputValidator;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.CourseService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.implement.CourseServiceImpl;
@@ -19,36 +20,20 @@ public class DeleteStudentCourseCommand implements Command {
 	@Override
 	public void execute(Scanner sc) {
 		System.out.println("Please enter student ID..");
-
-		while (!sc.hasNextInt()) {
-			sc.next();
-			System.out.println("You should enter a numeric value, please retry.");
-		}
-		int studentId = sc.nextInt();
+		int studentId = InputValidator.getNextInt(sc);
 		Student student = studentService.getById(studentId);
 		List<Course> actualCourses = courseService.actualCourses(studentId);
-
 		if (student.getFirstName() == null) {
 			System.out.println("Student with following ID : " + "[ " + studentId + " ] is not found.");
 		} else {
 			for (int i = 0; i < actualCourses.size(); i++) {
 				Course course = actualCourses.get(i);
 				System.out.println((i + 1) + ". " + course.toString());
-
 			}
-
 			System.out.println("Please enter the course ID from which you wish to remove the student.");
-
-			while (!sc.hasNextInt()) {
-				sc.next();
-				System.out.println("You should enter a numeric value, please retry.");
-			}
-
-			int choosenCourse = sc.nextInt();
-
+			int choosenCourse = InputValidator.getNextInt(sc);
 			Optional<Course> desiredCourse = actualCourses.stream().filter(course -> course.getId() == choosenCourse)
 					.findFirst();
-
 			if (desiredCourse.isPresent()) {
 				courseService.deleteCourse(studentId, choosenCourse);
 				System.out.println("Course has been succesfully removed.");

@@ -15,7 +15,7 @@ public interface CourseDao {
 	void addCourse(Course selectedCourse, int studentId);
 
 	void deleteCourse(int studentId, int courseId);
-	
+
 	Course getById(int courseId);
-	
+
 }

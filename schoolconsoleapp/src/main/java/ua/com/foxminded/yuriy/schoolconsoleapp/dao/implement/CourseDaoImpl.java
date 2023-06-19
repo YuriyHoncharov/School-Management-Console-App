@@ -9,42 +9,49 @@ import java.util.List;
 
 import ua.com.foxminded.yuriy.schoolconsoleapp.config.ConnectionUtil;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.CourseDao;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.sqlqueries.SqlCourseQueries;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.sqlqueries.implement.SqlCourseQueriesImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
 
 public class CourseDaoImpl implements CourseDao {
 
-	@Override
-	public void addAll(List<Course> courses) throws DaoException {
-		String sqlQuery = "INSERT INTO courses (course_id, course_name, course_description) VALUES (?, ?, ?)";
-		try (Connection connection = ConnectionUtil.getConnection()) {
-			PreparedStatement statement = connection.prepareStatement(sqlQuery);
+	SqlCourseQueries courseQueries = new SqlCourseQueriesImpl();
 
-			for (int i = 0; i < courses.size(); i++) {
-				int id = courses.get(i).getId();
-				statement.setInt(1, id);
-				String name = courses.get(i).getName();
-				statement.setString(2, name);
-				String description = courses.get(i).getDescription();
-				statement.setString(3, description);
-				statement.executeUpdate();
-			}
-			statement.close();
+	String QUERY_GET_BY_ID = courseQueries.QUERY_GET_BY_ID();
+	String QUERY_DELETE_FROM_STUDENT = courseQueries.QUERY_DELETE_FROM_STUDENT();
+	String QUERY_ADD_TO_STUDENT_BY_ID = courseQueries.QUERY_ADD_TO_STUDENT_BY_ID();
+	String QUERY_GET_COURSES_BY_STUDENT_ID = courseQueries.QUERY_GET_COURSES_BY_STUDENT_ID();
+	String QUERY_GET_AVAILABLE_BY_STUDENT_ID = courseQueries.QUERY_GET_AVAILABLE_BY_STUDENT_ID();
+	String QUERY_ADD_ALL = courseQueries.QUERY_ADD_ALL();
+
+	@Override
+	public void addAll(List<Course> courses) {
+		try (Connection connection = ConnectionUtil.getConnection()) {
+			PreparedStatement statement = connection.prepareStatement(QUERY_ADD_ALL);
+			courses.stream().forEach(course -> {
+				try {
+					statement.setInt(1, course.getId());
+					statement.setString(2, course.getName());
+					statement.setString(3, course.getDescription());
+					statement.executeUpdate();
+				} catch (SQLException e) {
+					throw new DaoException(
+							"Failed to add course [" + course.getName() + "] to Data Base : " + e.getMessage());
+				}
+			});
 		} catch (SQLException e) {
-			throw new DaoException("Failed to add course list to Data Base : " + e.getMessage());
+			throw new DaoException(
+					"Failed to establish connection or execute query while adding course list to the database: "
+							+ e.getMessage());
 		}
 	}
 
 	@Override
-	public List<Course> getAvailableCourses(int studentId) throws DaoException {
-
+	public List<Course> getAvailableCourses(int studentId) {
 		List<Course> allCourses = new ArrayList<>();
-
-		String QUERY_SELECT_STUDENT_USING_ID = "SELECT * FROM courses WHERE (course_id) NOT IN ( "
-				+ "SELECT course_id FROM students_courses WHERE student_id = ?)";
 		try (Connection connection = ConnectionUtil.getConnection()) {
-
-			PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_STUDENT_USING_ID);
+			PreparedStatement statement = connection.prepareStatement(QUERY_GET_AVAILABLE_BY_STUDENT_ID);
 			statement.setInt(1, studentId);
 			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {
@@ -61,15 +68,10 @@ public class CourseDaoImpl implements CourseDao {
 	}
 
 	@Override
-	public List<Course> getCoursesByStudentId(int studentId) throws DaoException {
-
+	public List<Course> getCoursesByStudentId(int studentId) {
 		List<Course> allCourses = new ArrayList<>();
-
-		String QUERY_SELECT_COURSES_BY_STUDENT_ID = "SELECT * FROM courses WHERE (course_id) IN ( "
-				+ "SELECT course_id FROM students_courses WHERE student_id = ?)";
 		try (Connection connection = ConnectionUtil.getConnection()) {
-
-			PreparedStatement statement = connection.prepareStatement(QUERY_SELECT_COURSES_BY_STUDENT_ID);
+			PreparedStatement statement = connection.prepareStatement(QUERY_GET_COURSES_BY_STUDENT_ID);
 			statement.setInt(1, studentId);
 			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {
@@ -86,11 +88,9 @@ public class CourseDaoImpl implements CourseDao {
 	}
 
 	@Override
-	public void addCourse(Course course, int studentId) throws DaoException {
-
+	public void addCourse(Course course, int studentId) {
 		try (Connection connection = ConnectionUtil.getConnection()) {
-			String QUERY_ADD_COURSE = "INSERT INTO students_courses (course_id, student_id) VALUES (?, ?)";
-			PreparedStatement statement = connection.prepareStatement(QUERY_ADD_COURSE);
+			PreparedStatement statement = connection.prepareStatement(QUERY_ADD_TO_STUDENT_BY_ID);
 			statement.setInt(1, course.getId());
 			statement.setInt(2, studentId);
 			statement.executeUpdate();
@@ -101,14 +101,9 @@ public class CourseDaoImpl implements CourseDao {
 	}
 
 	@Override
-	public void deleteCourse(int courseId, int studentId) throws DaoException {
-
-		String QUERY_DELETE_COURSE = "DELETE FROM students_courses " + "WHERE (course_id, student_id) IN ( "
-				+ "SELECT course_id, student_id " + "FROM students_courses " + "WHERE student_id = ? "
-				+ "GROUP BY course_id, student_id " + "HAVING course_id = ?" + ")";
-
+	public void deleteCourse(int courseId, int studentId) {
 		try (Connection connection = ConnectionUtil.getConnection()) {
-			PreparedStatement statement = connection.prepareStatement(QUERY_DELETE_COURSE);
+			PreparedStatement statement = connection.prepareStatement(QUERY_DELETE_FROM_STUDENT);
 			statement.setInt(1, studentId);
 			statement.setInt(2, courseId);
 			statement.executeUpdate();
@@ -120,10 +115,9 @@ public class CourseDaoImpl implements CourseDao {
 
 	@Override
 	public Course getById(int courseId) {
-		String QUERY_GET_COURSE_BY_ID = "SELECT * FROM courses WHERE course_id = ?";
-		Course course;
+		Course course = null;
 		try (Connection connection = ConnectionUtil.getConnection()) {
-			PreparedStatement statement = connection.prepareStatement(QUERY_GET_COURSE_BY_ID);
+			PreparedStatement statement = connection.prepareStatement(QUERY_GET_BY_ID);
 			statement.setInt(1, courseId);
 			ResultSet rs = statement.executeQuery();
 			if (rs.next()) {
