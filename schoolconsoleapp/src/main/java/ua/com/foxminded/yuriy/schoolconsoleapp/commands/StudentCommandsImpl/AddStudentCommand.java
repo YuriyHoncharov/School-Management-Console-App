@@ -59,5 +59,4 @@ public class AddStudentCommand implements Command {
 	public String description() {
 		return "Add new student.";
 	}
-
 }

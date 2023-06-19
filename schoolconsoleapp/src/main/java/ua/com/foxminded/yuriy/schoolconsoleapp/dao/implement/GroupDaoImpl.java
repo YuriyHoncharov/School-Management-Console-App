@@ -16,7 +16,6 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
 public class GroupDaoImpl implements GroupDao {
 
 	SqlGroupQueries groupQueries = new SqlGroupQueriesImpl();
-
 	String QUERY_ADD_ALL = groupQueries.QUERY_ADD_ALL();
 	String QUERY_GET_BY_LESS_OR_EQUAL_STUDENTS = groupQueries.QUERY_GET_BY_LESS_OR_EQUAL_STUDENTS();
 	String QUERY_GET_BY_STUDENTS_COUNT = groupQueries.QUERY_GET_BY_STUDENTS_COUNT();
@@ -27,7 +26,6 @@ public class GroupDaoImpl implements GroupDao {
 
 		try (Connection connection = ConnectionUtil.getConnection()) {
 			PreparedStatement statement = connection.prepareStatement(QUERY_ADD_ALL);
-
 			for (int i = 0; i < groups.size(); i++) {
 				int id = groups.get(i).getId();
 				statement.setInt(1, id);

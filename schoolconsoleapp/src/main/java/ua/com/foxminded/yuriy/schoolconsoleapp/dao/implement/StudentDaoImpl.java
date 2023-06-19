@@ -19,7 +19,6 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
 public class StudentDaoImpl implements StudentDao {
 
 	private final SqlStudentQueries studentsQueries = new SqlStudentQueriesImpl();
-
 	private final String QUERY_ADD_ALL = studentsQueries.QUERY_ADD_ALL();
 	private final String QUERY_ADD_COURSES = studentsQueries.QUERY_ADD_COURSES();
 	private final String QUERY_GET_STUDENTS_ON_COURSE = studentsQueries.QUERY_GET_STUDENTS_ON_COURSE();
@@ -136,7 +135,6 @@ public class StudentDaoImpl implements StudentDao {
 			throw new DaoException("Failed to get student with the following ID : " + id);
 		}
 		return student;
-
 	}
 
 	@Override
@@ -150,7 +148,6 @@ public class StudentDaoImpl implements StudentDao {
 		} catch (SQLException e) {
 			throw new DaoException("Failed to add group " + group.getName() + " to the student : " + id + " | ");
 		}
-
 	}
 
 	@Override
@@ -175,5 +172,4 @@ public class StudentDaoImpl implements StudentDao {
 		}
 		return student;
 	}
-
 }

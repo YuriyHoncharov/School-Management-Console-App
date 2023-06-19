@@ -29,7 +29,6 @@ public class DataGenerator {
 		String urlCreateDataBase = "jdbc:postgresql://localhost:5432/";
 		String user = "postgres";
 		String password = "1234";
-
 		try (Connection connection = DriverManager.getConnection(urlCreateDataBase, user, password)) {
 			PreparedStatement statement = connection.prepareStatement(FileHandler.readFile(DATA_BASE_FILE_PATH));
 			statement.execute();
@@ -38,7 +37,6 @@ public class DataGenerator {
 					"Failed to create database, connection error: " + e.getMessage());
 		}
 		System.out.println("Database created.");
-
 	}
 
 	public void createTables() throws FileReadException {
@@ -46,7 +44,6 @@ public class DataGenerator {
 		runSQLScript(FileHandler.readFile(TABLE_FILE_PATH));
 		System.out.println("Tables were created.");
 	}
-
 	public void runSQLScript(String sqlQuery) {
 		try (Connection connection = ConnectionUtil.getConnection();
 				PreparedStatement statement = connection.prepareStatement(sqlQuery)) {

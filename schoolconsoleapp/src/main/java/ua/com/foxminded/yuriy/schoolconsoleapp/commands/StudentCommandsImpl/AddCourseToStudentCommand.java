@@ -50,5 +50,4 @@ public class AddCourseToStudentCommand implements Command {
 	public String description() {
 		return "Add course to the student.";
 	}
-
 }

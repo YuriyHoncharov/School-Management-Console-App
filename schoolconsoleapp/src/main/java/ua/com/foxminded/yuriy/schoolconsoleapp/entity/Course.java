@@ -9,7 +9,6 @@ public class Course {
 	private String description;
 
 	public Course(String name, String description, int id) {
-
 		this.name = name;
 		this.description = description;
 		this.id = id;
@@ -48,5 +47,4 @@ public class Course {
 		Course other = (Course) obj;
 		return Objects.equals(description, other.description) && id == other.id && Objects.equals(name, other.name);
 	}
-
 }

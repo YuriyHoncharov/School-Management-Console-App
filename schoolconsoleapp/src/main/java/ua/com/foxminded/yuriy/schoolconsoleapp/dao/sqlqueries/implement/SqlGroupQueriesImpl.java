@@ -28,5 +28,4 @@ public class SqlGroupQueriesImpl implements SqlGroupQueries {
 	public String QUERY_GET_BY_ID() {
 		return "SELECT * FROM groups WHERE group_id = ?";
 	}
-
 }

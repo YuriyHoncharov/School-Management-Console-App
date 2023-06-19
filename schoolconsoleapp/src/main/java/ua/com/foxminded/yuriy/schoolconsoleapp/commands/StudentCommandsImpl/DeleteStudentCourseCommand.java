@@ -53,5 +53,4 @@ public class DeleteStudentCourseCommand implements Command {
 	public String description() {
 		return "Deregister student from a course.";
 	}
-
 }

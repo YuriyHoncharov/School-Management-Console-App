@@ -17,7 +17,6 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
 public class CourseDaoImpl implements CourseDao {
 
 	SqlCourseQueries courseQueries = new SqlCourseQueriesImpl();
-
 	String QUERY_GET_BY_ID = courseQueries.QUERY_GET_BY_ID();
 	String QUERY_DELETE_FROM_STUDENT = courseQueries.QUERY_DELETE_FROM_STUDENT();
 	String QUERY_ADD_TO_STUDENT_BY_ID = courseQueries.QUERY_ADD_TO_STUDENT_BY_ID();

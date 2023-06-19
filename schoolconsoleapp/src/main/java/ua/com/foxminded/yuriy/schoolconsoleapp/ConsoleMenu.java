@@ -13,9 +13,7 @@ public class ConsoleMenu {
 	public void run() {
 
 		PrintStream printStream = System.out;
-
 		Invoker.registerCommands();
-
 		Map<String, Command> commands = Invoker.commandMap;
 
 		while (true) {
@@ -34,10 +32,7 @@ public class ConsoleMenu {
 				commands.get(command).execute(sc);
 			} else {
 				printStream.println("Invalid command, please try again.");
-
 			}
 		}
-
 	}
-
 }

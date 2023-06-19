@@ -37,5 +37,4 @@ public class GetGroupsByStudentsNumberCommand implements Command {
 	public String description() {
 		return "Find groups with the amount of students you enter";
 	}
-
 }

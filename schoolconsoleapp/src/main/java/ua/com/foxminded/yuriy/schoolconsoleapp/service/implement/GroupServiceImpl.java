@@ -29,5 +29,4 @@ public class GroupServiceImpl implements GroupService {
 	public Group getById(int groupId) {
 		return groupDao.getById(groupId);
 	}
-
 }

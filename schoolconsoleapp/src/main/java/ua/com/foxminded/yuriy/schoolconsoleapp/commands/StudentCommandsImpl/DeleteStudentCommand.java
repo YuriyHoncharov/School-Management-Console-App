@@ -40,8 +40,6 @@ public class DeleteStudentCommand implements Command {
 
 	@Override
 	public String description() {
-
 		return "Delete student by student's ID.";
 	}
-
 }

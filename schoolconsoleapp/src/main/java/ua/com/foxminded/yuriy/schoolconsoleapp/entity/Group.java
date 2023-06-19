@@ -30,5 +30,4 @@ public class Group {
 	public String toString() {
 		return "[Group ID: " + id + " |  Group Name : " + name + "]";
 	}
-
 }

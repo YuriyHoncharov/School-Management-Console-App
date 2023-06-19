@@ -30,5 +30,4 @@ public class GetAllStudentsByCourseCommand implements Command {
 	public String description() {
 		return "Find students by course name.";
 	}
-
 }

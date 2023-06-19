@@ -29,5 +29,4 @@ public class Invoker {
 		commandMap.put(deleteStudentCourseCommand.name(), deleteStudentCourseCommand);
 		commandMap.put(findGroupsByStudentsNumberCommand.name(), findGroupsByStudentsNumberCommand);
 	}
-
 }

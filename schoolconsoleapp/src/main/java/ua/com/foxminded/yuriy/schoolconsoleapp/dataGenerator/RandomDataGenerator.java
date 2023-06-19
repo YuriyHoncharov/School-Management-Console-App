@@ -55,19 +55,15 @@ public class RandomDataGenerator {
 		int studentsCount = 1;
 		int groupId = 1;
 		List<Course> courses = generateCourses();
-
 		String[] firstName = { "Emma", "Noah", "Olivia", "Liam", "Ava", "William", "Sophia", "Mason", "Isabella", "James",
 				"Mia", "Benjamin", "Charlotte", "Jacob", "Amelia", "Michael", "Harper", "Ethan", "Evelyn", "Daniel" };
 		String[] lastName = { "Smith", "Johnson", "Brown", "Taylor", "Miller", "Wilson", "Moore", "Clark", "Lee", "Hall",
 				"Gonzalez", "Martin", "White", "King", "Allen", "Wright", "Scott", "Green", "Baker", "Adams" };
 		for (int i = 0; i < studentCount; i++) {
-
 			String name = firstName[random.nextInt(firstName.length)];
 			String surname = lastName[random.nextInt(lastName.length)];
-
 			int coursesCount = random.nextInt(3) + 1;
 			Set<Course> assignedCourse = new HashSet<>();
-
 			while (assignedCourse.size() < coursesCount) {
 				Course randomCourse = courses.get(random.nextInt(courses.size()));
 				assignedCourse.add(randomCourse);
@@ -81,7 +77,6 @@ public class RandomDataGenerator {
 			student.setGroupId(groupId);
 			student.setCourse(new ArrayList<>(assignedCourse));
 			students.add(student);
-
 			studentsCount++;
 		}
 		return students;

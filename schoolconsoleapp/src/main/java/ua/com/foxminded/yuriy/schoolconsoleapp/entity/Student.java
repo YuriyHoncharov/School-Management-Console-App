@@ -12,7 +12,6 @@ public class Student {
 	private List<Course> courses = new ArrayList<>();
 
 	public Student(String firstName, String lastName) {
-
 		this.firstName = firstName;
 		this.lastName = lastName;
 	}
