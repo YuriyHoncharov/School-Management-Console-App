@@ -10,6 +10,7 @@ import java.util.List;
 import ua.com.foxminded.yuriy.schoolconsoleapp.config.ConnectionUtil;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.sqlqueries.SqlStudentQueries;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.tables.StudentsColumns;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
@@ -53,8 +54,9 @@ public class StudentDaoImpl implements StudentDao {
 			statement.setString(1, courseName);
 			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {
-				Student student = new Student(rs.getString("first_name"), rs.getString("last_name"));
-				student.setId(rs.getInt("student_id"));
+				Student student = new Student(rs.getString(StudentsColumns.FIRST_NAME),
+						rs.getString(StudentsColumns.LAST_NAME));
+				student.setId(rs.getInt(StudentsColumns.STUDENT_ID));
 				studentsOfCourse.add(student);
 			}
 		} catch (SQLException e) {
@@ -105,10 +107,10 @@ public class StudentDaoImpl implements StudentDao {
 			ResultSet rs = statement.executeQuery();
 
 			while (rs.next()) {
-				student.setLastName(rs.getString("last_name"));
-				student.setFirstName(rs.getString("first_name"));
-				student.setId(rs.getInt("student_id"));
-				student.setGroupId(rs.getInt("group_id"));
+				student.setLastName(rs.getString(StudentsColumns.LAST_NAME));
+				student.setFirstName(rs.getString(StudentsColumns.FIRST_NAME));
+				student.setId(rs.getInt(StudentsColumns.STUDENT_ID));
+				student.setGroupId(rs.getInt(StudentsColumns.GROUP_ID));
 			}
 		} catch (SQLException e) {
 			throw new DaoException("Failed to get student with the following ID : " + id);
@@ -141,8 +143,8 @@ public class StudentDaoImpl implements StudentDao {
 
 			while (rs.next()) {
 				student = new Student(firstName, lastName);
-				student.setId(rs.getInt("student_id"));
-				student.setGroupId(rs.getInt("group_id"));
+				student.setId(rs.getInt(StudentsColumns.STUDENT_ID));
+				student.setGroupId(rs.getInt(StudentsColumns.GROUP_ID));
 			}
 		} catch (SQLException e) {
 			throw new DaoException("Failed to find the following student : [" + firstName + " " + lastName + "]");

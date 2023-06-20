@@ -9,6 +9,7 @@ import java.util.List;
 import ua.com.foxminded.yuriy.schoolconsoleapp.config.ConnectionUtil;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.GroupDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.sqlqueries.SqlGroupQueries;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.tables.GroupsColumns;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
 
@@ -37,7 +38,7 @@ public class GroupDaoImpl implements GroupDao {
 			statement.setInt(1, studentCount);
 			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {
-				Group group = new Group(rs.getString("group_name"), rs.getInt("group_id"));
+				Group group = new Group(rs.getString(GroupsColumns.GROUP_NAME), rs.getInt(GroupsColumns.GROUP_ID));
 				groups.add(group);
 			}
 		} catch (SQLException e) {
@@ -71,7 +72,7 @@ public class GroupDaoImpl implements GroupDao {
 			PreparedStatement statement = connection.prepareStatement(SqlGroupQueries.GET_ALL_GROUPS);
 			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {
-				Group group = new Group(rs.getString("group_name"), rs.getInt("group_id"));
+				Group group = new Group(rs.getString(GroupsColumns.GROUP_NAME), rs.getInt(GroupsColumns.GROUP_ID));
 				allGroups.add(group);
 			}
 		} catch (SQLException e) {
@@ -89,7 +90,7 @@ public class GroupDaoImpl implements GroupDao {
 			statement.setInt(1, groupId);
 			ResultSet rs = statement.executeQuery();
 			if (rs.next()) {
-				group = new Group(rs.getString("group_name"), rs.getInt("group_id"));
+				group = new Group(rs.getString(GroupsColumns.GROUP_NAME), rs.getInt(GroupsColumns.GROUP_ID));
 			}
 		} catch (SQLException e) {
 			throw new DaoException("Failed to get group by following id :" + groupId);

@@ -10,6 +10,7 @@ import java.util.List;
 import ua.com.foxminded.yuriy.schoolconsoleapp.config.ConnectionUtil;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.CourseDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.sqlqueries.SqlCourseQueries;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.tables.CoursesColumns;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
 
@@ -45,8 +46,8 @@ public class CourseDaoImpl implements CourseDao {
 			statement.setInt(1, studentId);
 			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {
-				Course course = new Course(rs.getString("course_name"), rs.getString("course_description"),
-						rs.getInt("course_id"));
+				Course course = new Course(rs.getString(CoursesColumns.COURSE_NAME),
+						rs.getString(CoursesColumns.COURSE_DESCRIPTION), rs.getInt(CoursesColumns.COURSE_ID));
 				allCourses.add(course);
 			}
 		} catch (SQLException e) {
@@ -63,8 +64,8 @@ public class CourseDaoImpl implements CourseDao {
 			statement.setInt(1, studentId);
 			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {
-				Course course = new Course(rs.getString("course_name"), rs.getString("course_description"),
-						rs.getInt("course_id"));
+				Course course = new Course(rs.getString(CoursesColumns.COURSE_NAME), rs.getString(CoursesColumns.COURSE_DESCRIPTION),
+						rs.getInt(CoursesColumns.COURSE_ID));
 				allCourses.add(course);
 			}
 		} catch (SQLException e) {
@@ -107,8 +108,8 @@ public class CourseDaoImpl implements CourseDao {
 			statement.setInt(1, courseId);
 			ResultSet rs = statement.executeQuery();
 			if (rs.next()) {
-				course = new Course(rs.getString("course_name"), rs.getString("course_description"),
-						rs.getInt("course_id"));
+				course = new Course(rs.getString(CoursesColumns.COURSE_NAME), rs.getString(CoursesColumns.COURSE_DESCRIPTION),
+						rs.getInt(CoursesColumns.COURSE_ID));
 			} else {
 				throw new DaoException("Course was not found with the following ID : " + courseId);
 			}
