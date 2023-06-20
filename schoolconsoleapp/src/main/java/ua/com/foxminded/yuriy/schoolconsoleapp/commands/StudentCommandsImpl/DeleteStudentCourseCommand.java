@@ -42,14 +42,13 @@ public class DeleteStudentCourseCommand implements Command {
 	}
 
 	private int choiceCourseToDelete(Scanner sc, Student student) {
+		
 		List<Course> actualCourses = courseService.actualCourses(student.getId());
-
 		for (int i = 0; i < actualCourses.size(); i++) {
 			Course course = actualCourses.get(i);
 			System.out.println((i + 1) + ". " + course.toString());
 		}
 		System.out.println("Please enter the course ID from which you wish to remove the student.");
-
 		return InputValidator.getNextInt(sc);
 	}
 

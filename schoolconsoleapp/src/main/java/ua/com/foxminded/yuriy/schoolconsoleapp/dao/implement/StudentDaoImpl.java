@@ -30,7 +30,6 @@ public class StudentDaoImpl implements StudentDao {
 				statement.executeUpdate();
 				ResultSet generatedKeys = statement.getGeneratedKeys();
 				if (generatedKeys.next()) {
-
 					student.setId(generatedKeys.getInt(1));
 				}
 				generatedKeys.close();
@@ -41,7 +40,6 @@ public class StudentDaoImpl implements StudentDao {
 					coursesStatement.executeUpdate();
 				}
 			}
-
 		} catch (SQLException e) {
 			throw new DaoException("Failed to add students to Data Base: " + e.getMessage());
 		}
@@ -49,9 +47,7 @@ public class StudentDaoImpl implements StudentDao {
 
 	@Override
 	public List<Student> getAllByCourse(String courseName) {
-
 		List<Student> studentsOfCourse = new ArrayList<>();
-
 		try (Connection connection = ConnectionUtil.getConnection()) {
 			PreparedStatement statement = connection.prepareStatement(SqlStudentQueries.GET_STUDENTS_ON_COURSE);
 			statement.setString(1, courseName);
@@ -71,7 +67,6 @@ public class StudentDaoImpl implements StudentDao {
 	public int add(Student student) {
 		int id = 0;
 		try (Connection connection = ConnectionUtil.getConnection()) {
-
 			PreparedStatement statement = connection.prepareStatement(SqlStudentQueries.ADD_NEW,
 					Statement.RETURN_GENERATED_KEYS);
 			statement.setString(1, student.getFirstName());
