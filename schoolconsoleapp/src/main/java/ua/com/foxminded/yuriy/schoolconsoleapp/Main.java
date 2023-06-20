@@ -4,7 +4,7 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.dataGenerator.DataGenerator;
 
 public class Main {
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 		DataGenerator dataGenerator = new DataGenerator();
 		dataGenerator.initializeAndPopulateTestDatabase();
 		ConsoleMenu consoleMenu = new ConsoleMenu();

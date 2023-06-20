@@ -10,7 +10,7 @@ public class FileHandler {
 
 	private static final String NEW_LINE = "\n";
 
-	public static String readFile(String filePath) throws FileReadException {
+	public static String readFile(String filePath) {
 
 		try {
 			List<String> lines = Files.readAllLines(Paths.get(filePath));

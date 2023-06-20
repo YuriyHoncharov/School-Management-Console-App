@@ -9,9 +9,9 @@ public interface StudentDao {
 
 	List<Student> getAllByCourse(String courseName);
 
-	void add(Student student);
+	int add(Student student);
 
-	void delete(int id);
+	void deleteById(int id);
 
 	Student getById(int id);
 

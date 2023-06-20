@@ -8,9 +8,9 @@ public interface StudentService {
 
 	List<Student> getAllByCourse(String courseName);
 
-	void delete(int id);
+	void deleteById(int id);
 
-	void add(Student student);
+	int add(Student student);
 
 	Student getById(int id);
 

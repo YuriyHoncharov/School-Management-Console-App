@@ -39,7 +39,7 @@ public class DataGenerator {
 		System.out.println("Database created.");
 	}
 
-	public void createTables() throws FileReadException {
+	public void createTables() {
 
 		runSQLScript(FileHandler.readFile(TABLE_FILE_PATH));
 		System.out.println("Tables were created.");
@@ -53,7 +53,7 @@ public class DataGenerator {
 		}
 	}
 
-	public void initializeAndPopulateTestDatabase() throws FileReadException {
+	public void initializeAndPopulateTestDatabase() {
 		createDataBase();
 		createTables();
 		RandomDataGenerator randomDataGenerator = new RandomDataGenerator();

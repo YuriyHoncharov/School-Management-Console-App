@@ -10,7 +10,6 @@ import java.util.List;
 import ua.com.foxminded.yuriy.schoolconsoleapp.config.ConnectionUtil;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.sqlqueries.SqlStudentQueries;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.sqlqueries.implement.SqlStudentQueriesImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
@@ -18,41 +17,27 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
 
 public class StudentDaoImpl implements StudentDao {
 
-	private final SqlStudentQueries studentsQueries = new SqlStudentQueriesImpl();
-	private final String QUERY_ADD_ALL = studentsQueries.QUERY_ADD_ALL();
-	private final String QUERY_ADD_COURSES = studentsQueries.QUERY_ADD_COURSES();
-	private final String QUERY_GET_STUDENTS_ON_COURSE = studentsQueries.QUERY_GET_STUDENTS_ON_COURSE();
-	private final String QUERY_ADD_NEW = studentsQueries.QUERY_ADD_NEW();
-	private final String QUERY_DELETE = studentsQueries.QUERY_DELETE();
-	private final String QUERY_GET_INFO_BY_ID = studentsQueries.QUERY_GET_INFO_BY_ID();
-	private final String QUERY_SET_GROUP_ID = studentsQueries.QUERY_SET_GROUP_ID();
-	private final String QUERY_GET_INFO_BY_NAME_LASTNAME = studentsQueries.QUERY_GET_INFO_BY_NAME_LASTNAME();
-
 	public void addAll(List<Student> students) {
 
 		try (Connection connection = ConnectionUtil.getConnection()) {
-			PreparedStatement statement = connection.prepareStatement(QUERY_ADD_ALL, Statement.RETURN_GENERATED_KEYS);
-			PreparedStatement coursesStatement = connection.prepareStatement(QUERY_ADD_COURSES);
-			for (int i = 0; i < students.size(); i++) {
-				int groupId = students.get(i).getGroupId();
-				String FirstName = students.get(i).getFirstName();
-				String LastName = students.get(i).getLastName();
-				statement.setInt(1, groupId);
-				statement.setString(2, FirstName);
-				statement.setString(3, LastName);
+			PreparedStatement statement = connection.prepareStatement(SqlStudentQueries.ADD_ALL,
+					Statement.RETURN_GENERATED_KEYS);
+			PreparedStatement coursesStatement = connection.prepareStatement(SqlStudentQueries.ADD_COURSES);
+			for (Student student : students) {
+				statement.setInt(1, student.getGroupId());
+				statement.setString(2, student.getFirstName());
+				statement.setString(3, student.getLastName());
 				statement.executeUpdate();
 				ResultSet generatedKeys = statement.getGeneratedKeys();
 				if (generatedKeys.next()) {
-					int studentId = generatedKeys.getInt(1);
-					students.get(i).setId(studentId);
+
+					student.setId(generatedKeys.getInt(1));
 				}
 				generatedKeys.close();
-				List<Course> courses = students.get(i).getCourses();
+				List<Course> courses = student.getCourses();
 				for (Course course : courses) {
-					int courseId = course.getId();
-					int studentId = students.get(i).getId();
-					coursesStatement.setInt(1, courseId);
-					coursesStatement.setInt(2, studentId);
+					coursesStatement.setInt(1, course.getId());
+					coursesStatement.setInt(2, student.getId());
 					coursesStatement.executeUpdate();
 				}
 			}
@@ -68,15 +53,12 @@ public class StudentDaoImpl implements StudentDao {
 		List<Student> studentsOfCourse = new ArrayList<>();
 
 		try (Connection connection = ConnectionUtil.getConnection()) {
-			PreparedStatement statement = connection.prepareStatement(QUERY_GET_STUDENTS_ON_COURSE);
+			PreparedStatement statement = connection.prepareStatement(SqlStudentQueries.GET_STUDENTS_ON_COURSE);
 			statement.setString(1, courseName);
 			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {
-				String firstName = rs.getString("first_name");
-				String lastName = rs.getString("last_name");
-				int id = rs.getInt("student_id");
-				Student student = new Student(firstName, lastName);
-				student.setId(id);
+				Student student = new Student(rs.getString("first_name"), rs.getString("last_name"));
+				student.setId(rs.getInt("student_id"));
 				studentsOfCourse.add(student);
 			}
 		} catch (SQLException e) {
@@ -86,24 +68,31 @@ public class StudentDaoImpl implements StudentDao {
 	}
 
 	@Override
-	public void add(Student student) {
-
+	public int add(Student student) {
+		int id = 0;
 		try (Connection connection = ConnectionUtil.getConnection()) {
-			PreparedStatement statement = connection.prepareStatement(QUERY_ADD_NEW);
+
+			PreparedStatement statement = connection.prepareStatement(SqlStudentQueries.ADD_NEW,
+					Statement.RETURN_GENERATED_KEYS);
 			statement.setString(1, student.getFirstName());
 			statement.setString(2, student.getLastName());
 			statement.executeUpdate();
+			ResultSet rs = statement.getGeneratedKeys();
+			while (rs.next()) {
+				id = rs.getInt(1);
+			}
 		} catch (SQLException e) {
 			throw new DaoException(
 					"Failed to add the new student : [" + student.getFirstName() + " " + student.getLastName() + "]");
 		}
+		return id;
 	}
 
 	@Override
-	public void delete(int id) {
+	public void deleteById(int id) {
 
 		try (Connection connection = ConnectionUtil.getConnection()) {
-			PreparedStatement statement = connection.prepareStatement(QUERY_DELETE);
+			PreparedStatement statement = connection.prepareStatement(SqlStudentQueries.DELETE);
 			statement.setInt(1, id);
 			statement.executeUpdate();
 		} catch (SQLException e) {
@@ -116,20 +105,15 @@ public class StudentDaoImpl implements StudentDao {
 
 		Student student = new Student(null, null);
 		try (Connection connection = ConnectionUtil.getConnection()) {
-			PreparedStatement statement = connection.prepareStatement(QUERY_GET_INFO_BY_ID);
+			PreparedStatement statement = connection.prepareStatement(SqlStudentQueries.GET_INFO_BY_ID);
 			statement.setInt(1, id);
 			ResultSet rs = statement.executeQuery();
 
 			while (rs.next()) {
-				String firstName = rs.getString("first_name");
-				String lastName = rs.getString("last_name");
-				int studentId = rs.getInt("student_id");
-				int groupId = rs.getInt("group_id");
-
-				student.setLastName(lastName);
-				student.setFirstName(firstName);
-				student.setId(studentId);
-				student.setGroupId(groupId);
+				student.setLastName(rs.getString("last_name"));
+				student.setFirstName(rs.getString("first_name"));
+				student.setId(rs.getInt("student_id"));
+				student.setGroupId(rs.getInt("group_id"));
 			}
 		} catch (SQLException e) {
 			throw new DaoException("Failed to get student with the following ID : " + id);
@@ -141,7 +125,7 @@ public class StudentDaoImpl implements StudentDao {
 	public void setGroupById(int id, Group group) {
 
 		try (Connection connection = ConnectionUtil.getConnection()) {
-			PreparedStatement statement = connection.prepareStatement(QUERY_SET_GROUP_ID);
+			PreparedStatement statement = connection.prepareStatement(SqlStudentQueries.SET_GROUP_ID);
 			statement.setInt(1, group.getId());
 			statement.setInt(2, id);
 			statement.executeUpdate();
@@ -155,17 +139,15 @@ public class StudentDaoImpl implements StudentDao {
 
 		Student student = null;
 		try (Connection connection = ConnectionUtil.getConnection()) {
-			PreparedStatement statement = connection.prepareStatement(QUERY_GET_INFO_BY_NAME_LASTNAME);
+			PreparedStatement statement = connection.prepareStatement(SqlStudentQueries.GET_INFO_BY_NAME_LASTNAME);
 			statement.setString(1, firstName);
 			statement.setString(2, lastName);
 			ResultSet rs = statement.executeQuery();
 
 			while (rs.next()) {
-				int studentId = rs.getInt("student_id");
-				int groupId = rs.getInt("group_id");
 				student = new Student(firstName, lastName);
-				student.setId(studentId);
-				student.setGroupId(groupId);
+				student.setId(rs.getInt("student_id"));
+				student.setGroupId(rs.getInt("group_id"));
 			}
 		} catch (SQLException e) {
 			throw new DaoException("Failed to find the following student : [" + firstName + " " + lastName + "]");

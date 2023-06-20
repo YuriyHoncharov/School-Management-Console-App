@@ -1,4 +1,4 @@
-package ua.com.foxminded.yuriy.schoolconsoleapp.input;
+package ua.com.foxminded.yuriy.schoolconsoleapp.util;
 
 import java.util.Scanner;
 import java.util.regex.Pattern;

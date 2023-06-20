@@ -5,18 +5,17 @@ import java.util.Scanner;
 
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
-import ua.com.foxminded.yuriy.schoolconsoleapp.input.InputValidator;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.GroupService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.implement.GroupServiceImpl;
+import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
 
 public class GetGroupsByStudentsNumberCommand implements Command {
 	private GroupService groupService = new GroupServiceImpl();
-	
+
 	@Override
 	public void execute(Scanner sc) {
 		System.out.println("Please enter the number..");
-		int count = 0;
-		count = InputValidator.getNextInt(sc);
+		int count = InputValidator.getNextInt(sc);
 		List<Group> result = groupService.getAllLessOrEqual(count);
 		if (result.isEmpty()) {
 			System.out.println("No one group has " + count + " or less students.");

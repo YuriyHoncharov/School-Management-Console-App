@@ -10,24 +10,15 @@ import java.util.List;
 import ua.com.foxminded.yuriy.schoolconsoleapp.config.ConnectionUtil;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.CourseDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.sqlqueries.SqlCourseQueries;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.sqlqueries.implement.SqlCourseQueriesImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
 
 public class CourseDaoImpl implements CourseDao {
 
-	SqlCourseQueries courseQueries = new SqlCourseQueriesImpl();
-	String QUERY_GET_BY_ID = courseQueries.QUERY_GET_BY_ID();
-	String QUERY_DELETE_FROM_STUDENT = courseQueries.QUERY_DELETE_FROM_STUDENT();
-	String QUERY_ADD_TO_STUDENT_BY_ID = courseQueries.QUERY_ADD_TO_STUDENT_BY_ID();
-	String QUERY_GET_COURSES_BY_STUDENT_ID = courseQueries.QUERY_GET_COURSES_BY_STUDENT_ID();
-	String QUERY_GET_AVAILABLE_BY_STUDENT_ID = courseQueries.QUERY_GET_AVAILABLE_BY_STUDENT_ID();
-	String QUERY_ADD_ALL = courseQueries.QUERY_ADD_ALL();
-
 	@Override
 	public void addAll(List<Course> courses) {
 		try (Connection connection = ConnectionUtil.getConnection()) {
-			PreparedStatement statement = connection.prepareStatement(QUERY_ADD_ALL);
+			PreparedStatement statement = connection.prepareStatement(SqlCourseQueries.ADD_ALL);
 			courses.stream().forEach(course -> {
 				try {
 					statement.setInt(1, course.getId());
@@ -50,14 +41,12 @@ public class CourseDaoImpl implements CourseDao {
 	public List<Course> getAvailableCourses(int studentId) {
 		List<Course> allCourses = new ArrayList<>();
 		try (Connection connection = ConnectionUtil.getConnection()) {
-			PreparedStatement statement = connection.prepareStatement(QUERY_GET_AVAILABLE_BY_STUDENT_ID);
+			PreparedStatement statement = connection.prepareStatement(SqlCourseQueries.GET_AVAILABLE_BY_STUDENT_ID);
 			statement.setInt(1, studentId);
 			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {
-				int id = rs.getInt("course_id");
-				String courseName = rs.getString("course_name");
-				String courseDescription = rs.getString("course_description");
-				Course course = new Course(courseName, courseDescription, id);
+				Course course = new Course(rs.getString("course_name"), rs.getString("course_description"),
+						rs.getInt("course_id"));
 				allCourses.add(course);
 			}
 		} catch (SQLException e) {
@@ -70,14 +59,12 @@ public class CourseDaoImpl implements CourseDao {
 	public List<Course> getCoursesByStudentId(int studentId) {
 		List<Course> allCourses = new ArrayList<>();
 		try (Connection connection = ConnectionUtil.getConnection()) {
-			PreparedStatement statement = connection.prepareStatement(QUERY_GET_COURSES_BY_STUDENT_ID);
+			PreparedStatement statement = connection.prepareStatement(SqlCourseQueries.GET_COURSES_BY_STUDENT_ID);
 			statement.setInt(1, studentId);
 			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {
-				int id = rs.getInt("course_id");
-				String courseName = rs.getString("course_name");
-				String courseDescription = rs.getString("course_description");
-				Course course = new Course(courseName, courseDescription, id);
+				Course course = new Course(rs.getString("course_name"), rs.getString("course_description"),
+						rs.getInt("course_id"));
 				allCourses.add(course);
 			}
 		} catch (SQLException e) {
@@ -89,7 +76,7 @@ public class CourseDaoImpl implements CourseDao {
 	@Override
 	public void addCourse(Course course, int studentId) {
 		try (Connection connection = ConnectionUtil.getConnection()) {
-			PreparedStatement statement = connection.prepareStatement(QUERY_ADD_TO_STUDENT_BY_ID);
+			PreparedStatement statement = connection.prepareStatement(SqlCourseQueries.ADD_TO_STUDENT_BY_ID);
 			statement.setInt(1, course.getId());
 			statement.setInt(2, studentId);
 			statement.executeUpdate();
@@ -102,7 +89,7 @@ public class CourseDaoImpl implements CourseDao {
 	@Override
 	public void deleteCourse(int courseId, int studentId) {
 		try (Connection connection = ConnectionUtil.getConnection()) {
-			PreparedStatement statement = connection.prepareStatement(QUERY_DELETE_FROM_STUDENT);
+			PreparedStatement statement = connection.prepareStatement(SqlCourseQueries.DELETE_FROM_STUDENT);
 			statement.setInt(1, studentId);
 			statement.setInt(2, courseId);
 			statement.executeUpdate();
@@ -116,14 +103,12 @@ public class CourseDaoImpl implements CourseDao {
 	public Course getById(int courseId) {
 		Course course = null;
 		try (Connection connection = ConnectionUtil.getConnection()) {
-			PreparedStatement statement = connection.prepareStatement(QUERY_GET_BY_ID);
+			PreparedStatement statement = connection.prepareStatement(SqlCourseQueries.GET_BY_ID);
 			statement.setInt(1, courseId);
 			ResultSet rs = statement.executeQuery();
 			if (rs.next()) {
-				String name = rs.getString("course_name");
-				String description = rs.getString("course_description");
-				int id = rs.getInt("course_id");
-				course = new Course(name, description, id);
+				course = new Course(rs.getString("course_name"), rs.getString("course_description"),
+						rs.getInt("course_id"));
 			} else {
 				throw new DaoException("Course was not found with the following ID : " + courseId);
 			}

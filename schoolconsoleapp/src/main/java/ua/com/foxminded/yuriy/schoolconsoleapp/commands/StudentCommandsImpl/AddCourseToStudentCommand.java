@@ -6,11 +6,11 @@ import java.util.Scanner;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
-import ua.com.foxminded.yuriy.schoolconsoleapp.input.InputValidator;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.CourseService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.implement.CourseServiceImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.implement.StudentServiceImpl;
+import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
 
 public class AddCourseToStudentCommand implements Command {
 	private CourseService courseService = new CourseServiceImpl();
@@ -18,27 +18,42 @@ public class AddCourseToStudentCommand implements Command {
 
 	@Override
 	public void execute(Scanner sc) {
+
+		Student student = getStudent(sc);
+		if (student.getFirstName() == null) {
+			System.out.println("Student with provided ID is not found.");
+		} else {
+			List<Course> courses = chooseCourse(sc, student);
+			int choosenCourse = InputValidator.getNextInt(sc);
+			boolean courseExist = courses.stream().anyMatch(course -> course.getId() == choosenCourse);
+			if (!courseExist) {
+				System.out.println("This number is missing, please choose the course from the list");
+			} else {
+				addCourse(student, choosenCourse);
+			}
+		}
+	}
+
+	private Student getStudent(Scanner sc) {
 		System.out.println("Please enter the student's id...");
 		int studentId = InputValidator.getNextInt(sc);
 		Student student = studentService.getById(studentId);
-		if (student.getFirstName() == null) {
-			System.out.println("Student with following ID : " + "[ " + studentId + " ] is not found.");
-		} else {
-			List<Course> availableCourses = courseService.availableCourses(studentId);
-			System.out.println("Please enter Course ID you want to add...");
-			for (int i = 0; i < availableCourses.size(); i++) {
-				Course course = availableCourses.get(i);
-				System.out.println((i + 1) + ". " + course.toString());
-			}
-			int choosenCourse = InputValidator.getNextInt(sc);
-			boolean courseExist = availableCourses.stream().anyMatch(course -> course.getId() == choosenCourse);
-			if (!courseExist) {
-				System.out.println("This number is missing, please choose the course from the list");
-			}
-			Course selectedCourse = availableCourses.get(choosenCourse - 1);
-			courseService.addCourse(selectedCourse, studentId);
-			System.out.println("Course has been succesfuly added to the student.");
+		return student;
+	}
+
+	private List<Course> chooseCourse(Scanner sc, Student student) {
+		List<Course> availableCourses = courseService.availableCourses(student.getId());
+		System.out.println("Please enter Course ID you want to add...");
+		for (Course course : availableCourses) {
+			System.out.println(course.toString());
 		}
+		return availableCourses;
+	}
+
+	private void addCourse(Student student, int choosenCourse) {
+		Course selectedCourse = courseService.getById(choosenCourse);
+		courseService.addCourse(selectedCourse, student.getId());
+		System.out.println("Course has been succesfuly added to the student.");
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.implement.StudentServiceImpl;
+import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
 
 public class GetAllStudentsByCourseCommand implements Command {
 	private StudentService studentService = new StudentServiceImpl();
@@ -14,7 +15,7 @@ public class GetAllStudentsByCourseCommand implements Command {
 	@Override
 	public void execute(Scanner sc) {
 		System.out.println("Please enter the course name..");
-		String courseName = sc.nextLine();
+		String courseName = InputValidator.isAlphabeticalInput(sc);
 		List<Student> studentList = studentService.getAllByCourse(courseName);
 		for (Student student : studentList) {
 			System.out.println(student.getId() + ". " + student.getFirstName() + " " + student.getLastName());

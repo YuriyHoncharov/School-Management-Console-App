@@ -1,15 +1,15 @@
 package ua.com.foxminded.yuriy.schoolconsoleapp.dao.sqlqueries;
 
-public interface SqlGroupQueries {
+public class SqlGroupQueries {
 
-	String QUERY_ADD_ALL();
+	public static String ADD_ALL = "INSERT INTO groups (group_id, group_name) VALUES (?, ?)";
 
-	String QUERY_GET_BY_LESS_OR_EQUAL_STUDENTS();
+	public static String GET_BY_LESS_OR_EQUAL_STUDENTS = "SELECT groups.group_id, groups.group_name, COUNT(students.student_id) AS student_count FROM groups LEFT JOIN students ON groups.group_id = students.group_id GROUP BY groups.group_id, groups.group_name HAVING COUNT(students.student_id) <= ?";
 
-	String QUERY_GET_BY_STUDENTS_COUNT();
+	public static String GET_BY_STUDENTS_COUNT = "SELECT COUNT(students.student_id) AS student_count FROM groups LEFT JOIN students ON groups.group_id = students.group_id WHERE groups.group_id = ? ";
 
-	String QUURY_GET_ALL_GROUPS();
+	public static String GET_ALL_GROUPS = "SELECT * FROM groups";
 
-	String QUERY_GET_BY_ID();
+	public static String GET_BY_ID = "SELECT * FROM groups WHERE group_id = ?";
 
 }
