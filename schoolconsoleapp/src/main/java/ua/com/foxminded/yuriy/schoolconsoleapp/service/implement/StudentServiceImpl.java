@@ -3,7 +3,7 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.service.implement;
 import java.util.List;
 
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentDao;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.implement.StudentDaoImpl;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.impl.StudentDaoImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;

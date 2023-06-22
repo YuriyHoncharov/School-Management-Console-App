@@ -59,7 +59,7 @@ public class DeleteStudentCourseCommand implements Command {
 	}
 
 	private void deleteCourse(Student student, int choosenCourse) {
-		courseService.deleteCourse(student.getId(), choosenCourse);
+		courseService.deregisterCourse(choosenCourse, student.getId());
 		System.out.println("Course has been succesfully removed.");
 	}
 

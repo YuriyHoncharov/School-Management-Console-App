@@ -1,4 +1,4 @@
-package ua.com.foxminded.yuriy.schoolconsoleapp.dao.implement;
+package ua.com.foxminded.yuriy.schoolconsoleapp.dao.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import ua.com.foxminded.yuriy.schoolconsoleapp.config.ConnectionUtil;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.GroupDao;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.sqlqueries.SqlGroupQueries;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.tables.GroupsColumns;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.sqlqueries.SqlGroupQueries;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.tables.GroupsColumns;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
 
@@ -22,11 +22,17 @@ public class GroupDaoImpl implements GroupDao {
 			for (Group group : groups) {
 				statement.setInt(1, group.getId());
 				statement.setString(2, group.getName());
-				statement.executeUpdate();
+				try {
+					statement.executeUpdate();
+				} catch (SQLException e) {
+					throw new DaoException("Failed to add " + group.toString() + " to data base : " + e.getMessage());
+				}
 			}
 		} catch (SQLException e) {
-			throw new DaoException("Failed to add groups to data base : " + e.getMessage());
+			throw new DaoException("Failed to establish connection or execute query while adding groups to the database: "
+					+ e.getMessage());
 		}
+
 	}
 
 	@Override

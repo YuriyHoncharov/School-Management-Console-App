@@ -3,7 +3,7 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.service.implement;
 import java.util.List;
 
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.CourseDao;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.implement.CourseDaoImpl;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.impl.CourseDaoImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.CourseService;
 
@@ -27,8 +27,8 @@ public class CourseServiceImpl implements CourseService {
 	}
 
 	@Override
-	public void deleteCourse(int studentId, int courseId) {
-		courseDao.deleteCourse(studentId, courseId);
+	public void deregisterCourse(int studentId, int courseId) {
+		courseDao.deregisterCourse(studentId, courseId);
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package ua.com.foxminded.yuriy.schoolconsoleapp.dao.sqlqueries;
+package ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.sqlqueries;
 
 public class SqlGroupQueries {
 

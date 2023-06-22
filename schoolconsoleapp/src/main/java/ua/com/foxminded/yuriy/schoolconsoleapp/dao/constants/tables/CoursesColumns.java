@@ -1,4 +1,4 @@
-package ua.com.foxminded.yuriy.schoolconsoleapp.dao.tables;
+package ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.tables;
 
 public class CoursesColumns {
 	public static String COURSE_ID = "course_id";

@@ -1,4 +1,4 @@
-package ua.com.foxminded.yuriy.schoolconsoleapp.dao.tables;
+package ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.tables;
 
 public class GroupsColumns {
 	public static String GROUP_ID = "group_id";

@@ -1,4 +1,4 @@
-package ua.com.foxminded.yuriy.schoolconsoleapp.dao.implement;
+package ua.com.foxminded.yuriy.schoolconsoleapp.dao.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import ua.com.foxminded.yuriy.schoolconsoleapp.config.ConnectionUtil;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentDao;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.sqlqueries.SqlStudentQueries;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.tables.StudentsColumns;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.sqlqueries.SqlStudentQueries;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.tables.StudentsColumns;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
@@ -28,7 +28,11 @@ public class StudentDaoImpl implements StudentDao {
 				statement.setInt(1, student.getGroupId());
 				statement.setString(2, student.getFirstName());
 				statement.setString(3, student.getLastName());
-				statement.executeUpdate();
+				try {
+					statement.executeUpdate();
+				} catch (SQLException e) {
+					throw new DaoException("Failed to add : " + student.toString() + " to database.");
+				}
 				ResultSet generatedKeys = statement.getGeneratedKeys();
 				if (generatedKeys.next()) {
 					student.setId(generatedKeys.getInt(1));
@@ -100,15 +104,14 @@ public class StudentDaoImpl implements StudentDao {
 	@Override
 	public Student getById(int id) {
 
-		Student student = new Student(null, null);
+		Student student = null;
 		try (Connection connection = ConnectionUtil.getConnection()) {
 			PreparedStatement statement = connection.prepareStatement(SqlStudentQueries.GET_INFO_BY_ID);
 			statement.setInt(1, id);
 			ResultSet rs = statement.executeQuery();
 
 			while (rs.next()) {
-				student.setLastName(rs.getString(StudentsColumns.LAST_NAME));
-				student.setFirstName(rs.getString(StudentsColumns.FIRST_NAME));
+				student = new Student(rs.getString(StudentsColumns.FIRST_NAME), rs.getString(StudentsColumns.LAST_NAME));
 				student.setId(rs.getInt(StudentsColumns.STUDENT_ID));
 				student.setGroupId(rs.getInt(StudentsColumns.GROUP_ID));
 			}
