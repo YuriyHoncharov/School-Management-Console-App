@@ -10,7 +10,7 @@ public interface CourseDao {
 
 	List<Course> getAvailableCourses(int studentId);
 
-	List<Course> getCoursesByStudentId(int studentId);
+	List<Course> getByStudentId(int studentId);
 
 	void addCourse(Course selectedCourse, int studentId);
 

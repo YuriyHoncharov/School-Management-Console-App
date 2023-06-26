@@ -5,11 +5,11 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 
 public interface CourseService {
 
-	List<Course> availableCourses(int studentId);
+	List<Course> getAvailableCourses(int studentId);
 
 	void addCourse(Course selectedCourse, int studentId);
 
-	List<Course> actualCourses(int studentId);
+	List<Course> getByStudentId(int studentId);
 
 	void deregisterCourse(int studentId, int courseId);
 

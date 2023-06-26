@@ -5,7 +5,7 @@ import java.util.Scanner;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
-import ua.com.foxminded.yuriy.schoolconsoleapp.service.implement.StudentServiceImpl;
+import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.StudentServiceImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
 
 public class DeleteStudentCommand implements Command {

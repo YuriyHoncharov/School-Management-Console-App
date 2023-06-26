@@ -8,7 +8,7 @@ import java.util.Scanner;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.GroupService;
-import ua.com.foxminded.yuriy.schoolconsoleapp.service.implement.GroupServiceImpl;
+import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.GroupServiceImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
 
 public class GetGroupsByStudentsNumberCommand implements Command {

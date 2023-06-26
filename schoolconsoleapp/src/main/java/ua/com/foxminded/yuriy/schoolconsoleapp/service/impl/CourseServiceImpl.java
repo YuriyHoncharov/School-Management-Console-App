@@ -1,4 +1,4 @@
-package ua.com.foxminded.yuriy.schoolconsoleapp.service.implement;
+package ua.com.foxminded.yuriy.schoolconsoleapp.service.impl;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ public class CourseServiceImpl implements CourseService {
 	private CourseDao courseDao = new CourseDaoImpl();
 
 	@Override
-	public List<Course> availableCourses(int studentId) {
+	public List<Course> getAvailableCourses(int studentId) {
 		return courseDao.getAvailableCourses(studentId);
 	}
 
@@ -22,8 +22,8 @@ public class CourseServiceImpl implements CourseService {
 	}
 
 	@Override
-	public List<Course> actualCourses(int studentId) {
-		return courseDao.getCoursesByStudentId(studentId);
+	public List<Course> getByStudentId(int studentId) {
+		return courseDao.getByStudentId(studentId);
 	}
 
 	@Override

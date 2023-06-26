@@ -58,7 +58,7 @@ public class CourseDaoImpl implements CourseDao {
 	}
 
 	@Override
-	public List<Course> getCoursesByStudentId(int studentId) {
+	public List<Course> getByStudentId(int studentId) {
 		List<Course> allCourses = new ArrayList<>();
 		try (Connection connection = ConnectionUtil.getConnection()) {
 			PreparedStatement statement = connection.prepareStatement(SqlCourseQueries.GET_COURSES_BY_STUDENT_ID);

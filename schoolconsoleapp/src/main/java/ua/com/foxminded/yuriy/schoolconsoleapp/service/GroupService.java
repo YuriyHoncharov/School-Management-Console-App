@@ -5,7 +5,7 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 
 public interface GroupService {
 
-	List<Group> getAllLessOrEqual(int courseId);
+	List<Group> getAllLessOrEqual(int studentsCount);
 
 	int studentsCountByGroupId(int groupId);
 

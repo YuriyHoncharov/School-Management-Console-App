@@ -9,8 +9,8 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.CourseService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
-import ua.com.foxminded.yuriy.schoolconsoleapp.service.implement.CourseServiceImpl;
-import ua.com.foxminded.yuriy.schoolconsoleapp.service.implement.StudentServiceImpl;
+import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.CourseServiceImpl;
+import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.StudentServiceImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
 
 public class DeleteStudentCourseCommand implements Command {
@@ -24,7 +24,7 @@ public class DeleteStudentCourseCommand implements Command {
 		if (student.getFirstName() == null) {
 			System.out.println("Student with provided ID is not found.");
 		} else {
-			List<Course> actualCourses = courseService.actualCourses(student.getId());
+			List<Course> actualCourses = courseService.getByStudentId(student.getId());
 			int choosenCourse = choiceCourseToDelete(sc, student);
 			if (studentFollowsCourse(actualCourses, choosenCourse)) {
 				deleteCourse(student, choosenCourse);
@@ -43,7 +43,7 @@ public class DeleteStudentCourseCommand implements Command {
 
 	private int choiceCourseToDelete(Scanner sc, Student student) {
 		
-		List<Course> actualCourses = courseService.actualCourses(student.getId());
+		List<Course> actualCourses = courseService.getByStudentId(student.getId());
 		for (int i = 0; i < actualCourses.size(); i++) {
 			Course course = actualCourses.get(i);
 			System.out.println((i + 1) + ". " + course.toString());

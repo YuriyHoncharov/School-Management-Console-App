@@ -1,4 +1,4 @@
-package ua.com.foxminded.yuriy.schoolconsoleapp.service.implement;
+package ua.com.foxminded.yuriy.schoolconsoleapp.service.impl;
 
 import java.util.List;
 
