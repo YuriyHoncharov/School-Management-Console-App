@@ -1,10 +1,10 @@
-package ua.com.foxminded.yuriy.schoolconsoleapp.utilTest;
+package ua.com.foxminded.yuriy.schoolconsoleapp.util;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-class FileHandlerTest {
+class InputValidatorTest {
 
 	@Test
 	void test() {

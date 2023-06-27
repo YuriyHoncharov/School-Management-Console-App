@@ -6,27 +6,44 @@
 	<name>School Console App</name>
 	<description>Managing school : classes, students, courses etc.</description>
 	<dependencies>
+		<!-- JUnit Jupiter -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
 			<version>5.8.2</version>
 			<scope>test</scope>
 		</dependency>
+		<!-- PostgreSQL JDBC driver -->
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>42.5.1</version>
 		</dependency>
+		<!-- Mockito -->
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
 			<version>4.11.0</version>
 			<scope>test</scope>
 		</dependency>
+		<!-- AssertJ -->
 		<dependency>
 			<groupId>org.assertj</groupId>
 			<artifactId>assertj-core</artifactId>
 			<version>3.23.1</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- Mockito inline mock maker -->
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-inline</artifactId>
+			<version>4.11.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-api-mockito2</artifactId>
+			<version>2.0.9</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
