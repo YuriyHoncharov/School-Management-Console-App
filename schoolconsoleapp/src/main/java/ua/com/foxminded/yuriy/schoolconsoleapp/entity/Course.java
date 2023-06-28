@@ -8,7 +8,7 @@ import jakarta.persistence.Entity;
 
 @Entity
 public class Course {
-	@Id
+	
 	private int id;
 	private String name;
 	private String description;

@@ -8,7 +8,7 @@ import org.springframework.data.annotation.Id;
 import jakarta.persistence.Entity;
 @Entity
 public class Student {
-	@Id
+	
 	private int id;
 	private int groupId;
 	private String firstName;
