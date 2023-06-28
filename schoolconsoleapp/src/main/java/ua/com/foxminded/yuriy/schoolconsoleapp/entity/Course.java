@@ -2,8 +2,13 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.entity;
 
 import java.util.Objects;
 
-public class Course {
+import org.springframework.data.annotation.Id;
 
+import jakarta.persistence.Entity;
+
+@Entity
+public class Course {
+	@Id
 	private int id;
 	private String name;
 	private String description;
