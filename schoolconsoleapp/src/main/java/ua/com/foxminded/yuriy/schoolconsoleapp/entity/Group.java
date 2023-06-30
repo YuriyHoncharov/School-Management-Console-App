@@ -1,10 +1,5 @@
 package ua.com.foxminded.yuriy.schoolconsoleapp.entity;
 
-import org.springframework.data.annotation.Id;
-
-import jakarta.persistence.Entity;
-
-@Entity
 public class Group {
 	
 	private int id;

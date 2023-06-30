@@ -6,7 +6,7 @@ public class SqlGroupQueries {
 
 	public static String GET_BY_LESS_OR_EQUAL_STUDENTS = "SELECT groups.group_id, groups.group_name, COUNT(students.student_id) AS student_count FROM groups LEFT JOIN students ON groups.group_id = students.group_id GROUP BY groups.group_id, groups.group_name HAVING COUNT(students.student_id) <= ?";
 
-	public static String GET_BY_STUDENTS_COUNT = "SELECT COUNT(students.student_id) AS student_count FROM groups LEFT JOIN students ON groups.group_id = students.group_id WHERE groups.group_id = ? ";
+	public static String GET_STUDENTS_COUNT_BY_GROUP_ID = "SELECT COUNT(students.student_id) AS student_count FROM groups LEFT JOIN students ON groups.group_id = students.group_id WHERE groups.group_id = ? ";
 
 	public static String GET_ALL_GROUPS = "SELECT * FROM groups";
 

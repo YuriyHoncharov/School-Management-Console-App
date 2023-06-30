@@ -29,7 +29,7 @@ public class AddCourseToStudentCommand implements Command {
 			if (!courseExist) {
 				System.out.println("This number is missing, please choose the course from the list");
 			} else {
-				addCourse(student, choosenCourse);
+				addCourseToStudent(student, choosenCourse);
 			}
 		}
 	}
@@ -50,9 +50,9 @@ public class AddCourseToStudentCommand implements Command {
 		return availableCourses;
 	}
 
-	private void addCourse(Student student, int choosenCourse) {
+	private void addCourseToStudent(Student student, int choosenCourse) {
 		Course selectedCourse = courseService.getById(choosenCourse);
-		courseService.addCourse(selectedCourse, student.getId());
+		courseService.addToStudent(selectedCourse, student.getId());
 		System.out.println("Course has been succesfuly added to the student.");
 	}
 

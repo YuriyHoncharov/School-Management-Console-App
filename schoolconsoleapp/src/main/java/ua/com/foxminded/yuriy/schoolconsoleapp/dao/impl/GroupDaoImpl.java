@@ -58,7 +58,7 @@ public class GroupDaoImpl implements GroupDao {
 
 		int count = 0;
 		try (Connection connection = ConnectionUtil.getConnection()) {
-			PreparedStatement statement = connection.prepareStatement(SqlGroupQueries.GET_BY_STUDENTS_COUNT);
+			PreparedStatement statement = connection.prepareStatement(SqlGroupQueries.GET_STUDENTS_COUNT_BY_GROUP_ID);
 			statement.setInt(1, groupId);
 			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {

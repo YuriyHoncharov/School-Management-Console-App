@@ -7,7 +7,7 @@ public interface CourseService {
 
 	List<Course> getAvailableCourses(int studentId);
 
-	void addCourse(Course selectedCourse, int studentId);
+	void addToStudent(Course selectedCourse, int studentId);
 
 	List<Course> getByStudentId(int studentId);
 

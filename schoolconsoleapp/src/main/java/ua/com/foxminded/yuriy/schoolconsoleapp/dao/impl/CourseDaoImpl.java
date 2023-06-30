@@ -76,7 +76,7 @@ public class CourseDaoImpl implements CourseDao {
 	}
 
 	@Override
-	public void addCourse(Course course, int studentId) {
+	public void addToStudent(Course course, int studentId) {
 		try (Connection connection = ConnectionUtil.getConnection()) {
 			PreparedStatement statement = connection.prepareStatement(SqlCourseQueries.ADD_TO_STUDENT_BY_ID);
 			statement.setInt(1, course.getId());

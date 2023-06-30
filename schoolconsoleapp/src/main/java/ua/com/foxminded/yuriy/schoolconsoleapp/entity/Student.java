@@ -3,10 +3,6 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.data.annotation.Id;
-
-import jakarta.persistence.Entity;
-@Entity
 public class Student {
 	
 	private int id;

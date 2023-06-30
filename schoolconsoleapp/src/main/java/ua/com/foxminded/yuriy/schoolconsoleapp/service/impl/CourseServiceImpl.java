@@ -17,8 +17,8 @@ public class CourseServiceImpl implements CourseService {
 	}
 
 	@Override
-	public void addCourse(Course selectedCourse, int studentId) {
-		courseDao.addCourse(selectedCourse, studentId);
+	public void addToStudent(Course selectedCourse, int studentId) {
+		courseDao.addToStudent(selectedCourse, studentId);
 	}
 
 	@Override

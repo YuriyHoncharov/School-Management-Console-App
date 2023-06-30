@@ -32,7 +32,7 @@ public class StudentDaoImpl implements StudentDao {
 					statement.executeUpdate();
 				} catch (SQLException e) {
 					throw new DaoException("Failed to add : " + student.toString() + " to database.");
-				}
+				}	
 				ResultSet generatedKeys = statement.getGeneratedKeys();
 				if (generatedKeys.next()) {
 					student.setId(generatedKeys.getInt(1));
