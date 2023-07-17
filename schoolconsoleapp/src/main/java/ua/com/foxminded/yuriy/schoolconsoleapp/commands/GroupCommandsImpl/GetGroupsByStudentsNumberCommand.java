@@ -14,6 +14,10 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
 public class GetGroupsByStudentsNumberCommand implements Command {
 	private GroupService groupService = new GroupServiceImpl();
 
+	public GetGroupsByStudentsNumberCommand(GroupService groupService) {
+		this.groupService = groupService;
+	}
+
 	@Override
 	public void execute(Scanner sc) {
 		System.out.println("Please enter the number..");

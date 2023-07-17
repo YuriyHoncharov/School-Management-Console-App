@@ -2,9 +2,28 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Student {
 	
+	@Override
+	public int hashCode() {
+		return Objects.hash(courses, firstName, groupId, id, lastName);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Student other = (Student) obj;
+		return Objects.equals(courses, other.courses) && Objects.equals(firstName, other.firstName)
+				&& groupId == other.groupId && id == other.id && Objects.equals(lastName, other.lastName);
+	}
+
 	private int id;
 	private int groupId;
 	private String firstName;

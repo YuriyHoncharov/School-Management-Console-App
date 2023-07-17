@@ -12,6 +12,10 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
 public class GetAllStudentsByCourseCommand implements Command {
 	private StudentService studentService = new StudentServiceImpl();
 
+	public GetAllStudentsByCourseCommand(StudentService studentService) {
+		this.studentService = studentService;
+	}
+
 	@Override
 	public void execute(Scanner sc) {
 		System.out.println("Please enter the course name..");

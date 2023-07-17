@@ -1,5 +1,7 @@
 package ua.com.foxminded.yuriy.schoolconsoleapp.entity;
 
+import java.util.Objects;
+
 public class Group {
 	
 	private int id;
@@ -29,5 +31,22 @@ public class Group {
 	@Override
 	public String toString() {
 		return "[Group ID: " + id + " |  Group Name : " + name + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, name);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Group other = (Group) obj;
+		return id == other.id && Objects.equals(name, other.name);
 	}
 }

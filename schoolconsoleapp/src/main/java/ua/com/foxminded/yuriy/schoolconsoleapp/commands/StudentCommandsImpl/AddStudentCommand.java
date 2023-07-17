@@ -12,9 +12,15 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.StudentServiceImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
 
 public class AddStudentCommand implements Command {
-
+	
 	private StudentService studentService = new StudentServiceImpl();
 	private GroupService groupService = new GroupServiceImpl();
+	
+	public AddStudentCommand(StudentService studentService, GroupService groupService) {
+		this.studentService = studentService;
+		this.groupService = groupService;
+	}
+	
 
 	@Override
 	public void execute(Scanner sc) {

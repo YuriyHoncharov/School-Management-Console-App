@@ -9,18 +9,28 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl.AddS
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl.DeleteStudentCommand;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl.DeleteStudentCourseCommand;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl.GetAllStudentsByCourseCommand;
+import ua.com.foxminded.yuriy.schoolconsoleapp.service.CourseService;
+import ua.com.foxminded.yuriy.schoolconsoleapp.service.GroupService;
+import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
+import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.CourseServiceImpl;
+import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.GroupServiceImpl;
+import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.StudentServiceImpl;
 
 public class Invoker {
 
 	public static final Map<String, Command> commandMap = new HashMap<>();
 
 	public static void registerCommands() {
-		AddStudentCommand addStudentCommand = new AddStudentCommand();
-		DeleteStudentCommand deleteStudentCommand = new DeleteStudentCommand();
-		GetAllStudentsByCourseCommand findAllStudentsByCourseCommand = new GetAllStudentsByCourseCommand();
-		AddCourseToStudentCommand addCourseToStudentCommand = new AddCourseToStudentCommand();
-		DeleteStudentCourseCommand deleteStudentCourseCommand = new DeleteStudentCourseCommand();
-		GetGroupsByStudentsNumberCommand findGroupsByStudentsNumberCommand = new GetGroupsByStudentsNumberCommand();
+		CourseService courseService = new CourseServiceImpl();
+		StudentService studentService = new StudentServiceImpl();
+		GroupService groupService = new GroupServiceImpl();
+		
+		AddStudentCommand addStudentCommand = new AddStudentCommand(studentService, groupService);
+		DeleteStudentCommand deleteStudentCommand = new DeleteStudentCommand(studentService);
+		GetAllStudentsByCourseCommand findAllStudentsByCourseCommand = new GetAllStudentsByCourseCommand(studentService);
+		AddCourseToStudentCommand addCourseToStudentCommand = new AddCourseToStudentCommand(courseService, studentService);
+		DeleteStudentCourseCommand deleteStudentCourseCommand = new DeleteStudentCourseCommand(courseService, studentService);
+		GetGroupsByStudentsNumberCommand findGroupsByStudentsNumberCommand = new GetGroupsByStudentsNumberCommand(groupService);
 
 		commandMap.put(addStudentCommand.name(), addStudentCommand);
 		commandMap.put(deleteStudentCommand.name(), deleteStudentCommand);

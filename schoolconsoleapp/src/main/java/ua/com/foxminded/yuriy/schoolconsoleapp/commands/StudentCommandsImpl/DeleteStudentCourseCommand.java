@@ -14,14 +14,20 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.StudentServiceImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
 
 public class DeleteStudentCourseCommand implements Command {
+
 	private CourseService courseService = new CourseServiceImpl();
 	private StudentService studentService = new StudentServiceImpl();
+
+	public DeleteStudentCourseCommand(CourseService courseService, StudentService studentService) {
+		this.courseService = courseService;
+		this.studentService = studentService;
+	}
 
 	@Override
 	public void execute(Scanner sc) {
 
 		Student student = getStudent(sc);
-		if (student.getFirstName() == null) {
+		if (student == null) {
 			System.out.println("Student with provided ID is not found.");
 		} else {
 			List<Course> actualCourses = courseService.getByStudentId(student.getId());
@@ -42,7 +48,7 @@ public class DeleteStudentCourseCommand implements Command {
 	}
 
 	private int choiceCourseToDelete(Scanner sc, Student student) {
-		
+
 		List<Course> actualCourses = courseService.getByStudentId(student.getId());
 		for (int i = 0; i < actualCourses.size(); i++) {
 			Course course = actualCourses.get(i);

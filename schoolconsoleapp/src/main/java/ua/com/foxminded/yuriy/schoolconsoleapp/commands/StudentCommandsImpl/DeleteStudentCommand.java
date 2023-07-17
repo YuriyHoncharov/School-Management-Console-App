@@ -9,7 +9,12 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.StudentServiceImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
 
 public class DeleteStudentCommand implements Command {
+	
 	private StudentService studentService = new StudentServiceImpl();
+
+	public DeleteStudentCommand(StudentService studentService) {
+		this.studentService = studentService;
+	}
 
 	@Override
 	public void execute(Scanner sc) {

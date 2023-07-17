@@ -100,17 +100,17 @@ class StudentDaoImplTest {
 		  verify(mockCourseStatement, times(8)).setInt(anyInt(), anyInt());
 		  verify(mockCourseStatement, times(4)).executeUpdate();
 	}
-	
+
 	@Test
 	void deleteByIdTest_Success() throws SQLException {
 		int studentId = 10;
 		when(mockConnection.prepareStatement(SqlStudentQueries.DELETE)).thenReturn(mockStatement);
 		studentDao.deleteById(studentId);
 		verify(mockStatement).setInt(1, studentId);
-		verify(mockStatement).executeUpdate();		
-	}	
-	
-	@Test 
+		verify(mockStatement).executeUpdate();
+	}
+
+	@Test
 	void setGroupByIdTest_Success() throws SQLException {
 		int studentId = 1;
 		Group group = mock(Group.class);

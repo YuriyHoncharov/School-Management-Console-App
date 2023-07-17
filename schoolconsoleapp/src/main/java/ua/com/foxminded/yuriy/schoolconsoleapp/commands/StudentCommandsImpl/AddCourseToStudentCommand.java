@@ -16,6 +16,12 @@ public class AddCourseToStudentCommand implements Command {
 	private CourseService courseService = new CourseServiceImpl();
 	private StudentService studentService = new StudentServiceImpl();
 
+	public AddCourseToStudentCommand(CourseService courseService, StudentService studentService) {
+		this.courseService = courseService;
+		this.studentService = studentService;
+
+	}
+
 	@Override
 	public void execute(Scanner sc) {
 
@@ -23,7 +29,7 @@ public class AddCourseToStudentCommand implements Command {
 		if (student == null) {
 			System.out.println("Student with provided ID is not found.");
 		} else {
-			List<Course> courses = chooseCourse(sc, student);
+			List<Course> courses = availableCourses(student);
 			int choosenCourse = InputValidator.getNextInt(sc);
 			boolean courseExist = courses.stream().anyMatch(course -> course.getId() == choosenCourse);
 			if (!courseExist) {
@@ -38,10 +44,10 @@ public class AddCourseToStudentCommand implements Command {
 		System.out.println("Please enter the student's id...");
 		int studentId = InputValidator.getNextInt(sc);
 		return studentService.getById(studentId);
-		
+
 	}
 
-	private List<Course> chooseCourse(Scanner sc, Student student) {
+	private List<Course> availableCourses(Student student) {
 		List<Course> availableCourses = courseService.getAvailableCourses(student.getId());
 		System.out.println("Please enter Course ID you want to add...");
 		for (Course course : availableCourses) {
