@@ -2,6 +2,7 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -14,15 +15,18 @@ import java.util.Scanner;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.CourseServiceImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.StudentServiceImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
+
+@ExtendWith(MockitoExtension.class)
 
 class AddCourseToStudentCommandTest {
 
@@ -37,7 +41,7 @@ class AddCourseToStudentCommandTest {
 
 	@Mock
 	private Scanner mockScanner;
-
+	
 	MockedStatic<InputValidator> mockedStatic;
 
 	@InjectMocks
@@ -45,10 +49,8 @@ class AddCourseToStudentCommandTest {
 
 	@BeforeEach
 	void setUp() {
-		MockitoAnnotations.openMocks(this);
 		System.setOut(new PrintStream(outPutStream));
-		mockedStatic = mockStatic(InputValidator.class);
-		mockAddCourseToStudentCommand = new AddCourseToStudentCommand(mockCourseService, mockStudentService);
+		mockedStatic = mockStatic(InputValidator.class);		
 	}
 
 	@AfterEach
@@ -64,7 +66,7 @@ class AddCourseToStudentCommandTest {
 		Student studentNull = null;
 		Course course = any(Course.class);
 		when(InputValidator.getNextInt(mockScanner)).thenReturn(studentId);
-		when(mockStudentService.getById(studentId)).thenReturn(studentNull);
+		when(mockStudentService.getById(anyInt())).thenReturn(studentNull);
 
 		mockAddCourseToStudentCommand.execute(mockScanner);
 
@@ -109,6 +111,7 @@ class AddCourseToStudentCommandTest {
 	@Test
 
 	void execute_CourseIdIsMissing_ShouldPrintRightErrorMessage() {
+		
 		int studentId = 10;
 		Student student = new Student("Annabel", "Mira");
 		student.setId(studentId);
@@ -121,9 +124,7 @@ class AddCourseToStudentCommandTest {
 		availableCourses.add(course);
 		int chosenCourse = 2;
 		
-		when(mockCourseService.getAvailableCourses(student.getId())).thenReturn(availableCourses);
-		when(mockCourseService.getById(chosenCourse)).thenReturn(course);
-		
+		when(mockCourseService.getAvailableCourses(student.getId())).thenReturn(availableCourses);		
 		mockAddCourseToStudentCommand.execute(mockScanner);
 
 		String printedMessage = outPutStream.toString().trim();
