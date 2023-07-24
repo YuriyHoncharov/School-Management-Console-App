@@ -4,7 +4,6 @@ import java.io.PrintStream;
 import java.util.Map;
 import java.util.Scanner;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
-import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Invoker;
 
 public class ConsoleMenu {
 

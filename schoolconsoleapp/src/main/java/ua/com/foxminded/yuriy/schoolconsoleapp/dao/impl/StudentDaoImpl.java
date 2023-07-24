@@ -18,7 +18,7 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
 
 public class StudentDaoImpl implements StudentDao {
 
-	public void addAll(List<Student> students) { //tested
+	public void addAll(List<Student> students) {
 
 		try (Connection connection = ConnectionUtil.getConnection()) {
 			PreparedStatement statement = connection.prepareStatement(SqlStudentQueries.ADD_ALL,
@@ -90,7 +90,7 @@ public class StudentDaoImpl implements StudentDao {
 	}
 
 	@Override
-	public void deleteById(int id) { //tested
+	public void deleteById(int id) {
 
 		try (Connection connection = ConnectionUtil.getConnection()) {
 			PreparedStatement statement = connection.prepareStatement(SqlStudentQueries.DELETE);
@@ -122,7 +122,7 @@ public class StudentDaoImpl implements StudentDao {
 	}
 
 	@Override
-	public void setGroupById(int id, Group group) { //tested
+	public void setGroupById(int id, Group group) {
 
 		try (Connection connection = ConnectionUtil.getConnection()) {
 			PreparedStatement statement = connection.prepareStatement(SqlStudentQueries.SET_GROUP_ID);

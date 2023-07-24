@@ -33,7 +33,7 @@ class GetAllStudentsByCourseCommandTest {
 	@InjectMocks
 	private GetAllStudentsByCourseCommand mockGetAllStudentsByCourseCommand;
 	
-	MockedStatic<InputValidator> mockedStatic;
+	private MockedStatic<InputValidator> mockedStatic;
 	
 	private PrintStream originalSystemOut;
 	private ByteArrayOutputStream outputStreamCaptor;

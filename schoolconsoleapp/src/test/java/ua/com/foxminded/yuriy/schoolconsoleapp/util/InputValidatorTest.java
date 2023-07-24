@@ -26,24 +26,6 @@ class InputValidatorTest {
 	}
 
 	@Test
-	void getValidChoiceTest_ValidInput1_ShouldReturn1() {
-		String input = "1";
-		System.setIn(new ByteArrayInputStream(input.getBytes()));
-		Scanner scanner = new Scanner(System.in);
-		int result = InputValidator.getValidChoice(scanner);
-		assertEquals(1, result);
-	}
-
-	@Test
-	void getValidChoiceTest_ValidInput2_ShouldReturn2() {
-		String input = "2";
-		System.setIn(new ByteArrayInputStream(input.getBytes()));
-		Scanner scanner = new Scanner(System.in);
-		int result = InputValidator.getValidChoice(scanner);
-		assertEquals(2, result);
-	}
-
-	@Test
 	void getValidChoiceTest_InvalidInput_ShouldRetryUntilValidInput() {
 		// Prepare
 		String input = "3\n2";

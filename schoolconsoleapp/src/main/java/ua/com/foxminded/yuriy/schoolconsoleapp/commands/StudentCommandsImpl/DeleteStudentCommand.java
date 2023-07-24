@@ -5,12 +5,11 @@ import java.util.Scanner;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
-import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.StudentServiceImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
 
 public class DeleteStudentCommand implements Command {
 	
-	private StudentService studentService = new StudentServiceImpl();
+	private StudentService studentService;
 
 	public DeleteStudentCommand(StudentService studentService) {
 		this.studentService = studentService;
@@ -20,8 +19,8 @@ public class DeleteStudentCommand implements Command {
 	public void execute(Scanner sc) {
 
 		Student student = getStudent(sc);
-		if (student.getFirstName() == null) {
-			System.out.println("Student with following ID : " + "[ " + student.getId() + " ] is not found.");
+		if (student == null) {
+			System.out.println("Student with entered ID is not found.");
 		} else {
 			if (choiceToDelete(sc, student)) {
 				studentService.deleteById(student.getId());

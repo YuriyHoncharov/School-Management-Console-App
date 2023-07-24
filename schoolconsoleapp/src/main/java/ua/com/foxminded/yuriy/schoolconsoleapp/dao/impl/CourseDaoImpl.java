@@ -17,7 +17,7 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
 public class CourseDaoImpl implements CourseDao {
 
 	@Override
-	public void addAll(List<Course> courses) { //tested
+	public void addAll(List<Course> courses) {
 		try (Connection connection = ConnectionUtil.getConnection()) {
 			PreparedStatement statement = connection.prepareStatement(SqlCourseQueries.ADD_ALL);
 			for (Course course : courses) {
@@ -58,7 +58,7 @@ public class CourseDaoImpl implements CourseDao {
 	}
 
 	@Override
-	public List<Course> getByStudentId(int studentId) { //tested
+	public List<Course> getByStudentId(int studentId) {
 		List<Course> allCourses = new ArrayList<>();
 		try (Connection connection = ConnectionUtil.getConnection()) {
 			PreparedStatement statement = connection.prepareStatement(SqlCourseQueries.GET_COURSES_BY_STUDENT_ID);
@@ -76,7 +76,7 @@ public class CourseDaoImpl implements CourseDao {
 	}
 
 	@Override
-	public void addToStudent(Course course, int studentId) { //tested
+	public void addToStudent(Course course, int studentId) {
 		try (Connection connection = ConnectionUtil.getConnection()) {
 			PreparedStatement statement = connection.prepareStatement(SqlCourseQueries.ADD_TO_STUDENT_BY_ID);
 			statement.setInt(1, course.getId());

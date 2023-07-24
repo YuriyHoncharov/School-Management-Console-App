@@ -7,14 +7,12 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.GroupService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
-import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.GroupServiceImpl;
-import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.StudentServiceImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
 
 public class AddStudentCommand implements Command {
 	
-	private StudentService studentService = new StudentServiceImpl();
-	private GroupService groupService = new GroupServiceImpl();
+	private StudentService studentService;
+	private GroupService groupService;
 	
 	public AddStudentCommand(StudentService studentService, GroupService groupService) {
 		this.studentService = studentService;
