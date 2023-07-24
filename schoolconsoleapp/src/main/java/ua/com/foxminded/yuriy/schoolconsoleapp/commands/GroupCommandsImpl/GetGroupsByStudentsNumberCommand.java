@@ -4,15 +4,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
-
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.GroupService;
-import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.GroupServiceImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
 
 public class GetGroupsByStudentsNumberCommand implements Command {
-	private GroupService groupService = new GroupServiceImpl();
+	
+	private GroupService groupService;
 
 	public GetGroupsByStudentsNumberCommand(GroupService groupService) {
 		this.groupService = groupService;

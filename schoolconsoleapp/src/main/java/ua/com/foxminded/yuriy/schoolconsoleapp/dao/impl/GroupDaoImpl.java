@@ -36,7 +36,7 @@ public class GroupDaoImpl implements GroupDao {
 	}
 
 	@Override
-	public List<Group> getAllLessOrEqual(int studentCount) { //tested
+	public List<Group> getAllLessOrEqual(int studentCount) {
 
 		List<Group> groups = new ArrayList<>();
 		try (Connection connection = ConnectionUtil.getConnection()) {
@@ -54,7 +54,7 @@ public class GroupDaoImpl implements GroupDao {
 	}
 
 	@Override
-	public int studentsCountByGroupId(int groupId) { //tested
+	public int studentsCountByGroupId(int groupId) {
 
 		int count = 0;
 		try (Connection connection = ConnectionUtil.getConnection()) {
@@ -88,7 +88,7 @@ public class GroupDaoImpl implements GroupDao {
 	}
 
 	@Override
-	public Group getById(int groupId) { //tested
+	public Group getById(int groupId) {
 
 		Group group = null;
 		try (Connection connection = ConnectionUtil.getConnection()) {

@@ -2,19 +2,17 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl;
 
 import java.util.List;
 import java.util.Scanner;
-
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.CourseService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
-import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.CourseServiceImpl;
-import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.StudentServiceImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
 
 public class AddCourseToStudentCommand implements Command {
-	private CourseService courseService = new CourseServiceImpl();
-	private StudentService studentService = new StudentServiceImpl();
+	
+	private CourseService courseService;
+	private StudentService studentService;
 
 	public AddCourseToStudentCommand(CourseService courseService, StudentService studentService) {
 		this.courseService = courseService;

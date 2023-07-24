@@ -12,7 +12,6 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.impl.CourseDaoImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.impl.GroupDaoImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.impl.StudentDaoImpl;
-import ua.com.foxminded.yuriy.schoolconsoleapp.exception.FileReadException;
 import ua.com.foxminded.yuriy.schoolconsoleapp.exception.SqlRunException;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.FileHandler;
 

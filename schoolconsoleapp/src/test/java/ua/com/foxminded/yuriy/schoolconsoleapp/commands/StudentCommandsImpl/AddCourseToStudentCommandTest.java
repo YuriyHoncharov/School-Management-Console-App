@@ -42,7 +42,7 @@ class AddCourseToStudentCommandTest {
 	@Mock
 	private Scanner mockScanner;
 	
-	MockedStatic<InputValidator> mockedStatic;
+	private MockedStatic<InputValidator> mockedStatic;
 
 	@InjectMocks
 	private AddCourseToStudentCommand mockAddCourseToStudentCommand;
@@ -121,8 +121,7 @@ class AddCourseToStudentCommandTest {
 		
 		List<Course> availableCourses = new ArrayList<>();
 		Course course = new Course("Math", "Math Course", courseId);
-		availableCourses.add(course);
-		int chosenCourse = 2;
+		availableCourses.add(course);		
 		
 		when(mockCourseService.getAvailableCourses(student.getId())).thenReturn(availableCourses);		
 		mockAddCourseToStudentCommand.execute(mockScanner);
