@@ -63,8 +63,8 @@ class ConsoleMenuTest {
 		ConsoleMenu consoleMenu = new ConsoleMenu();
 		Invoker.registerCommands();
 
-		consoleMenu.setCommands(Invoker.commandMap);
-		consoleMenu.setScanner(mockScanner);
+//		consoleMenu.setCommands(Invoker.commandMap);
+//		consoleMenu.setScanner(mockScanner);
 		when(mockScanner.nextLine()).thenReturn(command);
 		consoleMenu.run();
 		String expectedOutput = "Please select the command to execute..\r\n" + commandsList
@@ -84,8 +84,8 @@ class ConsoleMenuTest {
 	    when(mockScanner.nextLine()).thenReturn(commandNumber).thenReturn("exit");
 
 	    ConsoleMenu consoleMenu = new ConsoleMenu();
-	    consoleMenu.setCommands(commands);
-	    consoleMenu.setScanner(mockScanner);
+//	    consoleMenu.setCommands(commands);
+//	    consoleMenu.setScanner(mockScanner);
 	    consoleMenu.run();
 
 	    verify(mockCommand, times(1)).execute(mockScanner);
@@ -113,8 +113,8 @@ class ConsoleMenuTest {
 	    when(mockScanner.nextLine()).thenReturn(wrongNumber).thenReturn("exit");
 
 	    ConsoleMenu consoleMenu = new ConsoleMenu();
-	    consoleMenu.setCommands(commands);
-	    consoleMenu.setScanner(mockScanner);
+//	    consoleMenu.setCommands(commands);
+//	    consoleMenu.setScanner(mockScanner);
 	    consoleMenu.run();
 
 	    assertEquals(message, testOut.toString());
