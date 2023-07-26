@@ -7,10 +7,10 @@ public class InputValidator {
 
 	public static int getNextInt(Scanner sc) {
 		while (!sc.hasNextInt()) {
-			sc.next();
 			System.out.println("You should enter a numeric value, please retry.");
+			sc.nextLine();
 		}
-		return sc.nextInt();
+		return Integer.parseInt(sc.nextLine());
 	}
 
 	public static int getValidChoice(Scanner sc) {

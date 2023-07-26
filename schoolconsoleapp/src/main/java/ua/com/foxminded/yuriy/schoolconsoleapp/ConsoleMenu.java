@@ -9,16 +9,19 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Invoker;
 public class ConsoleMenu {
 
 	public static final String LINE = " - ";
-
+	private Invoker invoker;
+	
+	public ConsoleMenu(Invoker invoker) {
+		this.invoker = invoker;
+	}
 
 	public void run() {
 
 		PrintStream printStream = System.out;
-		Invoker.registerCommands();
-		Map<String, Command> commands = Invoker.commandMap;
+		Map<String, Command> commands = invoker.registerCommands();
+		Scanner sc = new Scanner(System.in);
 
-		while (true) {
-			Scanner sc = new Scanner(System.in);
+		while (true) {			
 			printStream.println("Please select the command to execute..");
 			for (Command command : commands.values()) {
 				printStream.println(command.name() + LINE + command.description());
