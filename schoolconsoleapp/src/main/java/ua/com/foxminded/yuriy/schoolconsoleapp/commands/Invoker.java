@@ -20,7 +20,7 @@ public class Invoker {
 
 	public static final Map<String, Command> commandMap = new HashMap<>();
 
-	public static void registerCommands() {
+	public static final Map<String, Command> registerCommands() {
 		CourseService courseService = new CourseServiceImpl();
 		StudentService studentService = new StudentServiceImpl();
 		GroupService groupService = new GroupServiceImpl();
@@ -38,5 +38,7 @@ public class Invoker {
 		commandMap.put(addCourseToStudentCommand.name(), addCourseToStudentCommand);
 		commandMap.put(deleteStudentCourseCommand.name(), deleteStudentCourseCommand);
 		commandMap.put(findGroupsByStudentsNumberCommand.name(), findGroupsByStudentsNumberCommand);
+		
+		return commandMap;
 	}
 }

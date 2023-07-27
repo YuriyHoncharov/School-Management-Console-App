@@ -4,26 +4,24 @@ import java.io.PrintStream;
 import java.util.Map;
 import java.util.Scanner;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
+import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Invoker;
 
 public class ConsoleMenu {
 
 	public static final String LINE = " - ";
-	private Map<String, Command> commands;
-	private Scanner sc;
-
-	public void setScanner(Scanner sc) {
-		this.sc = sc;
-	}
-
-	public void setCommands(Map<String, Command> commands) {
-		this.commands = commands;
+	private Invoker invoker;
+	
+	public ConsoleMenu(Invoker invoker) {
+		this.invoker = invoker;
 	}
 
 	public void run() {
 
 		PrintStream printStream = System.out;
+		Map<String, Command> commands = invoker.registerCommands();
+		Scanner sc = new Scanner(System.in);
 
-		while (true) {
+		while (true) {			
 			printStream.println("Please select the command to execute..");
 			for (Command command : commands.values()) {
 				printStream.println(command.name() + LINE + command.description());
