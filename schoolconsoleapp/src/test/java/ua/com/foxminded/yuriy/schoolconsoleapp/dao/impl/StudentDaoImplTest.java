@@ -41,7 +41,7 @@ class StudentDaoImplTest {
 	private MockedStatic<ConnectionUtil> mockedStatic;
 
 	@BeforeEach
-	void setUp() throws SQLException {
+	void setUp() {
 		MockitoAnnotations.openMocks(this);
 		mockedStatic = mockStatic(ConnectionUtil.class);
 		when(ConnectionUtil.getConnection()).thenReturn(mockConnection);
