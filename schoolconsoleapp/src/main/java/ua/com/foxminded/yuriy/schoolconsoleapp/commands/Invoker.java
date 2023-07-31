@@ -18,9 +18,9 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.StudentServiceImpl;
 
 public class Invoker {
 
-	public static final Map<String, Command> commandMap = new HashMap<>();
+	public final Map<String, Command> commandMap = new HashMap<>();
 
-	public static final Map<String, Command> registerCommands() {
+	public final Map<String, Command> registerCommands() {
 		CourseService courseService = new CourseServiceImpl();
 		StudentService studentService = new StudentServiceImpl();
 		GroupService groupService = new GroupServiceImpl();
