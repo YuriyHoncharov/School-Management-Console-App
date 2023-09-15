@@ -6,6 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.stereotype.Component;
+
 import ua.com.foxminded.yuriy.schoolconsoleapp.config.ConnectionUtil;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.GroupDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.sqlqueries.SqlGroupQueries;
@@ -13,6 +16,7 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.tables.GroupsColumn
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
 
+@Component
 public class GroupDaoImpl implements GroupDao {
 
 	public void addAll(List<Group> groups) {

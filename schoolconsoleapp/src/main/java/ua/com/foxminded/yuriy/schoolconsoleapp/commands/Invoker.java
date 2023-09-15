@@ -2,35 +2,40 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.commands;
 
 import java.util.HashMap;
 import java.util.Map;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.GroupCommandsImpl.GetGroupsByStudentsNumberCommand;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl.AddCourseToStudentCommand;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl.AddStudentCommand;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl.DeleteStudentCommand;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl.DeleteStudentCourseCommand;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl.GetAllStudentsByCourseCommand;
-import ua.com.foxminded.yuriy.schoolconsoleapp.service.CourseService;
-import ua.com.foxminded.yuriy.schoolconsoleapp.service.GroupService;
-import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
-import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.CourseServiceImpl;
-import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.GroupServiceImpl;
-import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.StudentServiceImpl;
 
+@Component
 public class Invoker {
 
+	private AddStudentCommand addStudentCommand;
+	private DeleteStudentCommand deleteStudentCommand;
+	private GetAllStudentsByCourseCommand findAllStudentsByCourseCommand;
+	private AddCourseToStudentCommand addCourseToStudentCommand;
+	private DeleteStudentCourseCommand deleteStudentCourseCommand;
+	private GetGroupsByStudentsNumberCommand findGroupsByStudentsNumberCommand;
 	public final Map<String, Command> commandMap = new HashMap<>();
 
+	@Autowired
+	public Invoker(AddStudentCommand addStudentCommand, DeleteStudentCommand deleteStudentCommand,
+			GetAllStudentsByCourseCommand findAllStudentsByCourseCommand,
+			AddCourseToStudentCommand addCourseToStudentCommand, DeleteStudentCourseCommand deleteStudentCourseCommand,
+			GetGroupsByStudentsNumberCommand findGroupsByStudentsNumberCommand) {
+		this.addStudentCommand = addStudentCommand;
+		this.deleteStudentCommand = deleteStudentCommand;
+		this.findAllStudentsByCourseCommand = findAllStudentsByCourseCommand;
+		this.addCourseToStudentCommand = addCourseToStudentCommand;
+		this.deleteStudentCourseCommand = deleteStudentCourseCommand;
+		this.findGroupsByStudentsNumberCommand = findGroupsByStudentsNumberCommand;
+	}
+
 	public final Map<String, Command> registerCommands() {
-		CourseService courseService = new CourseServiceImpl();
-		StudentService studentService = new StudentServiceImpl();
-		GroupService groupService = new GroupServiceImpl();
-		
-		AddStudentCommand addStudentCommand = new AddStudentCommand(studentService, groupService);
-		DeleteStudentCommand deleteStudentCommand = new DeleteStudentCommand(studentService);
-		GetAllStudentsByCourseCommand findAllStudentsByCourseCommand = new GetAllStudentsByCourseCommand(studentService);
-		AddCourseToStudentCommand addCourseToStudentCommand = new AddCourseToStudentCommand(courseService, studentService);
-		DeleteStudentCourseCommand deleteStudentCourseCommand = new DeleteStudentCourseCommand(courseService, studentService);
-		GetGroupsByStudentsNumberCommand findGroupsByStudentsNumberCommand = new GetGroupsByStudentsNumberCommand(groupService);
 
 		commandMap.put(addStudentCommand.name(), addStudentCommand);
 		commandMap.put(deleteStudentCommand.name(), deleteStudentCommand);
@@ -38,7 +43,7 @@ public class Invoker {
 		commandMap.put(addCourseToStudentCommand.name(), addCourseToStudentCommand);
 		commandMap.put(deleteStudentCourseCommand.name(), deleteStudentCourseCommand);
 		commandMap.put(findGroupsByStudentsNumberCommand.name(), findGroupsByStudentsNumberCommand);
-		
+
 		return commandMap;
 	}
 }

@@ -7,6 +7,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.stereotype.Component;
+
 import ua.com.foxminded.yuriy.schoolconsoleapp.config.ConnectionUtil;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.sqlqueries.SqlStudentQueries;
@@ -16,6 +19,7 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
 
+@Component
 public class StudentDaoImpl implements StudentDao {
 
 	public void addAll(List<Student> students) {

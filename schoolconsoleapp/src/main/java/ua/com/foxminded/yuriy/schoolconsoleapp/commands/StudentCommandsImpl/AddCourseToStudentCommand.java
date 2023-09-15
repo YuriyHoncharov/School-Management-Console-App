@@ -2,18 +2,23 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl;
 
 import java.util.List;
 import java.util.Scanner;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.CourseService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
-
+@Component
 public class AddCourseToStudentCommand implements Command {
 	
 	private CourseService courseService;
 	private StudentService studentService;
-
+	
+	@Autowired
 	public AddCourseToStudentCommand(CourseService courseService, StudentService studentService) {
 		this.courseService = courseService;
 		this.studentService = studentService;

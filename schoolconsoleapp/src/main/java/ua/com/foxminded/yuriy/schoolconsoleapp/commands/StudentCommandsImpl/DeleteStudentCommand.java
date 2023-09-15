@@ -2,15 +2,19 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl;
 
 import java.util.Scanner;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
-
+@Component
 public class DeleteStudentCommand implements Command {
 	
 	private StudentService studentService;
-
+	
+	@Autowired
 	public DeleteStudentCommand(StudentService studentService) {
 		this.studentService = studentService;
 	}

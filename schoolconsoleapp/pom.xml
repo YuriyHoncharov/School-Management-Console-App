@@ -41,6 +41,26 @@
 			<version>4.1.0</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>5.2.25.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>5.2.25.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>5.2.25.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<version>1.4.196</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
@@ -67,6 +87,18 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<version>3.0.3</version>
+			</plugin>
+			<plugin>
+				<groupId>org.flywaydb</groupId>
+				<artifactId>flyway-maven-plugin</artifactId>
+				<version>9.20.0</version>
+				<configuration>
+					<user>yuriy</user>
+					<password>1234</password>
+					<schemas>
+						<schema>school</schema>
+					</schemas>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

@@ -5,6 +5,10 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import javax.annotation.PostConstruct;
+
+import org.springframework.stereotype.Component;
+
 import ua.com.foxminded.yuriy.schoolconsoleapp.config.ConnectionUtil;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.CourseDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.GroupDao;
@@ -15,6 +19,7 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.dao.impl.StudentDaoImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.exception.SqlRunException;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.FileHandler;
 
+@Component
 public class DataGenerator {
 
 	public final static String FILE_PATH = "src/main/resources/";
@@ -43,6 +48,7 @@ public class DataGenerator {
 		runSQLScript(FileHandler.readFile(TABLE_FILE_PATH));
 		System.out.println("Tables were created.");
 	}
+
 	public void runSQLScript(String sqlQuery) {
 		try (Connection connection = ConnectionUtil.getConnection();
 				PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
@@ -52,6 +58,7 @@ public class DataGenerator {
 		}
 	}
 
+	@PostConstruct
 	public void initializeAndPopulateTestDatabase() {
 		createDataBase();
 		createTables();

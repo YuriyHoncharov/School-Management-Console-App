@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import ua.com.foxminded.yuriy.schoolconsoleapp.config.ConnectionUtil;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.CourseDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.sqlqueries.SqlCourseQueries;
@@ -14,6 +16,7 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.tables.CoursesColum
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
 
+@Component
 public class CourseDaoImpl implements CourseDao {
 
 	@Override
