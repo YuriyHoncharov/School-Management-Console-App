@@ -3,19 +3,13 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.dataGenerator;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
 import javax.annotation.PostConstruct;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-
-import ua.com.foxminded.yuriy.schoolconsoleapp.config.ConnectionUtil;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.CourseDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.GroupDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentDao;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.impl.CourseDaoImpl;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.impl.GroupDaoImpl;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.impl.StudentDaoImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.exception.SqlRunException;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.FileHandler;
 
@@ -27,6 +21,19 @@ public class DataGenerator {
 	public final static String TABLE_PATH = "tables_creation.sql";
 	public final static String DATA_BASE_FILE_PATH = FILE_PATH + DATA_BASE_PATH;
 	public final static String TABLE_FILE_PATH = FILE_PATH + TABLE_PATH;
+
+	private final CourseDao courseDao;
+	private final GroupDao groupDao;
+	private final StudentDao studentDao;
+	private final JdbcTemplate jdbcTemplate;
+
+	@Autowired
+	public DataGenerator(CourseDao courseDao, GroupDao groupDao, StudentDao studentDao, JdbcTemplate jdbcTemplate) {
+		this.courseDao = courseDao;
+		this.groupDao = groupDao;
+		this.studentDao = studentDao;
+		this.jdbcTemplate = jdbcTemplate;
+	}
 
 	public void createDataBase() {
 
@@ -50,10 +57,9 @@ public class DataGenerator {
 	}
 
 	public void runSQLScript(String sqlQuery) {
-		try (Connection connection = ConnectionUtil.getConnection();
-				PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
-			statement.execute();
-		} catch (SQLException e) {
+		try {
+			jdbcTemplate.execute(sqlQuery);
+		} catch (Exception e) {
 			throw new SqlRunException("An error occured: " + e.getMessage());
 		}
 	}
@@ -63,9 +69,6 @@ public class DataGenerator {
 		createDataBase();
 		createTables();
 		RandomDataGenerator randomDataGenerator = new RandomDataGenerator();
-		StudentDao studentDao = new StudentDaoImpl();
-		GroupDao groupDao = new GroupDaoImpl();
-		CourseDao courseDao = new CourseDaoImpl();
 		groupDao.addAll(randomDataGenerator.generateGroups());
 		courseDao.addAll(randomDataGenerator.generateCourses());
 		studentDao.addAll(randomDataGenerator.generateStudents());

@@ -8,12 +8,15 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.yuriy.schoolconsoleapp.config.ConnectionUtil;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.sqlqueries.SqlStudentQueries;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.tables.StudentsColumns;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.mappers.StudentMapper;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
@@ -21,6 +24,13 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
 
 @Component
 public class StudentDaoImpl implements StudentDao {
+
+	private final JdbcTemplate jdbcTemplate;
+
+	@Autowired
+	public StudentDaoImpl(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
+	}
 
 	public void addAll(List<Student> students) {
 
@@ -36,7 +46,7 @@ public class StudentDaoImpl implements StudentDao {
 					statement.executeUpdate();
 				} catch (SQLException e) {
 					throw new DaoException("Failed to add : " + student.toString() + " to database.");
-				}	
+				}
 				ResultSet generatedKeys = statement.getGeneratedKeys();
 				if (generatedKeys.next()) {
 					student.setId(generatedKeys.getInt(1));
@@ -56,21 +66,8 @@ public class StudentDaoImpl implements StudentDao {
 
 	@Override
 	public List<Student> getAllByCourse(String courseName) {
-		List<Student> studentsOfCourse = new ArrayList<>();
-		try (Connection connection = ConnectionUtil.getConnection()) {
-			PreparedStatement statement = connection.prepareStatement(SqlStudentQueries.GET_STUDENTS_ON_COURSE);
-			statement.setString(1, courseName);
-			ResultSet rs = statement.executeQuery();
-			while (rs.next()) {
-				Student student = new Student(rs.getString(StudentsColumns.FIRST_NAME),
-						rs.getString(StudentsColumns.LAST_NAME));
-				student.setId(rs.getInt(StudentsColumns.STUDENT_ID));
-				studentsOfCourse.add(student);
-			}
-		} catch (SQLException e) {
-			throw new DaoException("Failed to find students that follow the course : " + courseName);
-		}
-		return studentsOfCourse;
+		return jdbcTemplate.query(SqlStudentQueries.GET_STUDENTS_ON_COURSE, new Object[] { courseName },
+				new StudentMapper());
 	}
 
 	@Override
@@ -95,67 +92,22 @@ public class StudentDaoImpl implements StudentDao {
 
 	@Override
 	public void deleteById(int id) {
-
-		try (Connection connection = ConnectionUtil.getConnection()) {
-			PreparedStatement statement = connection.prepareStatement(SqlStudentQueries.DELETE);
-			statement.setInt(1, id);
-			statement.executeUpdate();
-		} catch (SQLException e) {
-			throw new DaoException("Failed to delete the student with the following ID : " + id);
-		}
+		jdbcTemplate.update(SqlStudentQueries.DELETE, id);
 	}
 
 	@Override
 	public Student getById(int id) {
-
-		Student student = null;
-		try (Connection connection = ConnectionUtil.getConnection()) {
-			PreparedStatement statement = connection.prepareStatement(SqlStudentQueries.GET_INFO_BY_ID);
-			statement.setInt(1, id);
-			ResultSet rs = statement.executeQuery();
-
-			while (rs.next()) {
-				student = new Student(rs.getString(StudentsColumns.FIRST_NAME), rs.getString(StudentsColumns.LAST_NAME));
-				student.setId(rs.getInt(StudentsColumns.STUDENT_ID));
-				student.setGroupId(rs.getInt(StudentsColumns.GROUP_ID));
-			}
-		} catch (SQLException e) {
-			throw new DaoException("Failed to get student with the following ID : " + id);
-		}
-		return student;
+		return jdbcTemplate.queryForObject(SqlStudentQueries.GET_INFO_BY_ID, new Object[] { id }, new StudentMapper());
 	}
 
 	@Override
 	public void setGroupById(int id, Group group) {
-
-		try (Connection connection = ConnectionUtil.getConnection()) {
-			PreparedStatement statement = connection.prepareStatement(SqlStudentQueries.SET_GROUP_ID);
-			statement.setInt(1, group.getId());
-			statement.setInt(2, id);
-			statement.executeUpdate();
-		} catch (SQLException e) {
-			throw new DaoException("Failed to add group " + group.getName() + " to the student : " + id + " | ");
-		}
+		jdbcTemplate.update(SqlStudentQueries.SET_GROUP_ID, group.getId(), id);
 	}
 
 	@Override
 	public Student getByName(String firstName, String lastName) {
-
-		Student student = null;
-		try (Connection connection = ConnectionUtil.getConnection()) {
-			PreparedStatement statement = connection.prepareStatement(SqlStudentQueries.GET_INFO_BY_NAME_LASTNAME);
-			statement.setString(1, firstName);
-			statement.setString(2, lastName);
-			ResultSet rs = statement.executeQuery();
-
-			while (rs.next()) {
-				student = new Student(firstName, lastName);
-				student.setId(rs.getInt(StudentsColumns.STUDENT_ID));
-				student.setGroupId(rs.getInt(StudentsColumns.GROUP_ID));
-			}
-		} catch (SQLException e) {
-			throw new DaoException("Failed to find the following student : [" + firstName + " " + lastName + "]");
-		}
-		return student;
+		return jdbcTemplate.queryForObject(SqlStudentQueries.GET_INFO_BY_NAME_LASTNAME,
+				new Object[] { firstName, lastName }, new StudentMapper());
 	}
 }
