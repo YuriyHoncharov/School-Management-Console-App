@@ -10,8 +10,13 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.service.CourseService;
 @Service
 public class CourseServiceImpl implements CourseService {
 	
-	@Autowired
+	
 	private CourseDao courseDao;
+	
+	@Autowired
+	public CourseServiceImpl(CourseDao courseDao) {
+		this.courseDao = courseDao;
+	}
 
 	@Override
 	public List<Course> getAvailableCourses(int studentId) {

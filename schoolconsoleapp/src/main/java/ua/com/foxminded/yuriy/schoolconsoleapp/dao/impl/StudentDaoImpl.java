@@ -1,21 +1,15 @@
 package ua.com.foxminded.yuriy.schoolconsoleapp.dao.impl;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
-
-import ua.com.foxminded.yuriy.schoolconsoleapp.config.ConnectionUtil;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.sqlqueries.SqlStudentQueries;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.tables.StudentsColumns;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.mappers.StudentMapper;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
@@ -34,33 +28,22 @@ public class StudentDaoImpl implements StudentDao {
 
 	public void addAll(List<Student> students) {
 
-		try (Connection connection = ConnectionUtil.getConnection()) {
-			PreparedStatement statement = connection.prepareStatement(SqlStudentQueries.ADD_ALL,
-					Statement.RETURN_GENERATED_KEYS);
-			PreparedStatement coursesStatement = connection.prepareStatement(SqlStudentQueries.ADD_COURSES);
-			for (Student student : students) {
-				statement.setInt(1, student.getGroupId());
-				statement.setString(2, student.getFirstName());
-				statement.setString(3, student.getLastName());
-				try {
-					statement.executeUpdate();
-				} catch (SQLException e) {
-					throw new DaoException("Failed to add : " + student.toString() + " to database.");
-				}
-				ResultSet generatedKeys = statement.getGeneratedKeys();
-				if (generatedKeys.next()) {
-					student.setId(generatedKeys.getInt(1));
-				}
-				generatedKeys.close();
-				List<Course> courses = student.getCourses();
-				for (Course course : courses) {
-					coursesStatement.setInt(1, course.getId());
-					coursesStatement.setInt(2, student.getId());
-					coursesStatement.executeUpdate();
-				}
+		for (Student student : students) {
+			KeyHolder kh = new GeneratedKeyHolder();
+			jdbcTemplate.update(conn -> {
+				PreparedStatement ps = conn.prepareStatement(SqlStudentQueries.ADD_ALL, Statement.RETURN_GENERATED_KEYS);
+				ps.setInt(1, student.getGroupId());
+				ps.setString(2, student.getFirstName());
+				ps.setString(3, student.getLastName());
+				return ps;
+			}, kh);
+			int studentId = kh.getKey().intValue();
+			student.setId(studentId);
+
+			List<Course> courses = student.getCourses();
+			for (Course course : courses) {
+				jdbcTemplate.update(SqlStudentQueries.ADD_COURSES, course.getId(), studentId);
 			}
-		} catch (SQLException e) {
-			throw new DaoException("Failed to add students to Data Base: " + e.getMessage());
 		}
 	}
 
@@ -72,22 +55,20 @@ public class StudentDaoImpl implements StudentDao {
 
 	@Override
 	public int add(Student student) {
-		int id = 0;
-		try (Connection connection = ConnectionUtil.getConnection()) {
-			PreparedStatement statement = connection.prepareStatement(SqlStudentQueries.ADD_NEW,
-					Statement.RETURN_GENERATED_KEYS);
-			statement.setString(1, student.getFirstName());
-			statement.setString(2, student.getLastName());
-			statement.executeUpdate();
-			ResultSet rs = statement.getGeneratedKeys();
-			while (rs.next()) {
-				id = rs.getInt(1);
-			}
-		} catch (SQLException e) {
-			throw new DaoException(
-					"Failed to add the new student : [" + student.getFirstName() + " " + student.getLastName() + "]");
-		}
-		return id;
+		KeyHolder kh = new GeneratedKeyHolder();
+
+		jdbcTemplate.update(con -> {
+			PreparedStatement ps = con.prepareStatement(SqlStudentQueries.ADD_NEW, Statement.RETURN_GENERATED_KEYS);
+			ps.setString(1, student.getFirstName());
+			ps.setString(2, student.getLastName());
+			return ps;
+		}, kh);
+		Number studentId = kh.getKey();
+		if (studentId != null) {
+			return studentId.intValue();
+		} else {
+			throw new DaoException("Failed to add new student : [" + student.getFirstName() + " " + student.getLastName() + "]");
+		}		
 	}
 
 	@Override

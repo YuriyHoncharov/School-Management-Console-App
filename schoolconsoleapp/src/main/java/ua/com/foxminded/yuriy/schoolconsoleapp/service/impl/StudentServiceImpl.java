@@ -10,9 +10,16 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
 
 @Service
 public class StudentServiceImpl implements StudentService {
-	
-	@Autowired
+
 	private StudentDao studentDao;
+
+	@Autowired
+	public StudentServiceImpl(StudentDao studentDao) {
+		this.studentDao = studentDao;
+	}
+
+	public StudentServiceImpl() {
+	}
 
 	@Override
 	public List<Student> getAllByCourse(String courseName) {

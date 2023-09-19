@@ -10,8 +10,13 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.service.GroupService;
 
 @Service
 public class GroupServiceImpl implements GroupService {
-	@Autowired
+	
 	private GroupDao groupDao;
+	
+	@Autowired
+	public GroupServiceImpl(GroupDao groupDao) {
+		this.groupDao = groupDao;
+	}
 
 	@Override
 	public List<Group> getAllLessOrEqual(int studentsCount) {
