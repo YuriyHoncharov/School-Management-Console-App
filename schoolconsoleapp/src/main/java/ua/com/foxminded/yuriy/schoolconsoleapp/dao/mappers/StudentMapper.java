@@ -14,21 +14,23 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.service.CourseService;
 @Component
 public class StudentMapper implements RowMapper<Student> {
 
-	private CourseService courseService;	
+	private CourseService courseService;
 
 	@Autowired
 	public StudentMapper(CourseService courseService) {
 		this.courseService = courseService;
 	}
-	public StudentMapper() {}
+
+	public StudentMapper() {
+	}
 
 	@Override
 	public Student mapRow(ResultSet rs, int rowNum) throws SQLException {
 		Student student = new Student(rs.getString(StudentsColumns.FIRST_NAME), rs.getString(StudentsColumns.LAST_NAME));
 		student.setId(rs.getInt(StudentsColumns.STUDENT_ID));
 		student.setGroupId(rs.getInt(StudentsColumns.GROUP_ID));
-		List<Course> courses = courseService.getByStudentId(student.getId());
-		student.setCourse(courses);
+//		List<Course> courses = courseService.getByStudentId(student.getId());
+//		student.setCourse(courses);
 		return student;
 	}
 }
