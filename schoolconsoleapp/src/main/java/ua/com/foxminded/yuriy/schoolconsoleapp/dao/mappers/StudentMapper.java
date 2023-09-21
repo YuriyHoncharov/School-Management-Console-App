@@ -14,7 +14,7 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.service.CourseService;
 @Component
 public class StudentMapper implements RowMapper<Student> {
 
-	private CourseService courseService;
+	private CourseService courseService;	
 
 	@Autowired
 	public StudentMapper(CourseService courseService) {

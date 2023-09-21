@@ -3,6 +3,8 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.dao.impl;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Objects;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -10,6 +12,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.sqlqueries.SqlStudentQueries;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.tables.StudentsColumns;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.mappers.StudentMapper;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
@@ -37,7 +40,7 @@ public class StudentDaoImpl implements StudentDao {
 				ps.setString(3, student.getLastName());
 				return ps;
 			}, kh);
-			int studentId = kh.getKey().intValue();
+			Integer studentId = (Integer) Objects.requireNonNull(kh.getKeys()).get(StudentsColumns.STUDENT_ID);
 			student.setId(studentId);
 
 			List<Course> courses = student.getCourses();
@@ -63,7 +66,7 @@ public class StudentDaoImpl implements StudentDao {
 			ps.setString(2, student.getLastName());
 			return ps;
 		}, kh);
-		Number studentId = kh.getKey();
+		Integer studentId = (Integer) Objects.requireNonNull(kh.getKeys()).get(StudentsColumns.STUDENT_ID);
 		if (studentId != null) {
 			return studentId.intValue();
 		} else {

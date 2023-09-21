@@ -6,7 +6,7 @@ public class SqlStudentQueries {
 
 	public static String ADD_COURSES = "INSERT INTO students_courses (course_id, student_id) VALUES (?, ?)";
 
-	public static String GET_STUDENTS_ON_COURSE = "SELECT students.student_id, students.first_name, students.last_name FROM students INNER JOIN students_courses ON students.student_id = students_courses.student_id INNER JOIN courses ON students_courses.course_id = courses.course_id WHERE courses.course_name = ?";
+	public static String GET_STUDENTS_ON_COURSE = "SELECT students.student_id, students.first_name, students.last_name, students.group_id FROM students INNER JOIN students_courses ON students.student_id = students_courses.student_id INNER JOIN courses ON students_courses.course_id = courses.course_id WHERE courses.course_name = ?";
 
 	public static String ADD_NEW = "INSERT INTO students (first_name, last_name) VALUES (?, ?) RETURNING student_id;";
 

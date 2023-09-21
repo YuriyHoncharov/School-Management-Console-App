@@ -12,10 +12,13 @@ public class CourseServiceImpl implements CourseService {
 	
 	
 	private CourseDao courseDao;
-	
+		
 	@Autowired
 	public CourseServiceImpl(CourseDao courseDao) {
 		this.courseDao = courseDao;
+	}
+	
+	public CourseServiceImpl(){		
 	}
 
 	@Override

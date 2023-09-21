@@ -22,10 +22,13 @@ public class DataGenerator {
 	public final static String DATA_BASE_FILE_PATH = FILE_PATH + DATA_BASE_PATH;
 	public final static String TABLE_FILE_PATH = FILE_PATH + TABLE_PATH;
 
-	private final CourseDao courseDao;
-	private final GroupDao groupDao;
-	private final StudentDao studentDao;
-	private final JdbcTemplate jdbcTemplate;
+	private CourseDao courseDao;
+	private GroupDao groupDao;
+	private StudentDao studentDao;
+	private JdbcTemplate jdbcTemplate;
+
+	public DataGenerator() {
+	}
 
 	@Autowired
 	public DataGenerator(CourseDao courseDao, GroupDao groupDao, StudentDao studentDao, JdbcTemplate jdbcTemplate) {
@@ -64,7 +67,6 @@ public class DataGenerator {
 		}
 	}
 
-	@PostConstruct
 	public void initializeAndPopulateTestDatabase() {
 		createDataBase();
 		createTables();

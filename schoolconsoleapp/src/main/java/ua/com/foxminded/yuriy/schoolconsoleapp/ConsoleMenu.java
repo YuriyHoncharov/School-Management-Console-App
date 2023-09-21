@@ -3,26 +3,18 @@ package ua.com.foxminded.yuriy.schoolconsoleapp;
 import java.io.PrintStream;
 import java.util.Map;
 import java.util.Scanner;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Invoker;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dataGenerator.DataGenerator;
+
 
 @Component
 public class ConsoleMenu {
 
 	public static final String LINE = " - ";
 	private Invoker invoker;
-	private DataGenerator dataGenerator;
 	
-	@Autowired
-	public void setDataGenerator(DataGenerator dataGenerator) {
-		this.dataGenerator = dataGenerator;
-	}
-
 	@Autowired
 	public ConsoleMenu(Invoker invoker) {
 		this.invoker = invoker;		
