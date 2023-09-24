@@ -1,5 +1,6 @@
 package ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl;
 
+import java.util.List;
 import java.util.Scanner;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,11 +10,12 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
+
 @Component
 public class DeleteStudentCommand implements Command {
-	
+
 	private StudentService studentService;
-	
+
 	@Autowired
 	public DeleteStudentCommand(StudentService studentService) {
 		this.studentService = studentService;
@@ -22,6 +24,14 @@ public class DeleteStudentCommand implements Command {
 	@Override
 	public void execute(Scanner sc) {
 
+		System.out.println("Do you want to see the entire list of students?");
+		System.out.println("Enter - 1 to confirm and - 2 to continue.");
+		if (choiceYesOrNot(sc)) {
+			List<Student> allStudents = studentService.getAll();
+			for (Student student : allStudents) {
+				System.out.println(student.toString());
+			}
+		}
 		Student student = getStudent(sc);
 		if (student == null) {
 			System.out.println("Student with entered ID is not found.");
@@ -44,6 +54,11 @@ public class DeleteStudentCommand implements Command {
 	private boolean choiceToDelete(Scanner sc, Student student) {
 		System.out.println("Are you sure that you want to delete: " + student.toString());
 		System.out.println("Enter - 1 to confirm and - 2 to cancel.");
+		int confirmation = InputValidator.getNextInt(sc);
+		return confirmation == 1;
+	}
+
+	private boolean choiceYesOrNot(Scanner sc) {
 		int confirmation = InputValidator.getNextInt(sc);
 		return confirmation == 1;
 	}

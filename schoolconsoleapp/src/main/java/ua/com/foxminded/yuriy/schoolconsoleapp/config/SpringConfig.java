@@ -6,17 +6,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.annotation.PropertySources;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 @Configuration
-@PropertySources({
-	@PropertySource("classpath:db.properties"),
-	@PropertySource("classpath:columns/coursescolumns.properties"),
-	@PropertySource("classpath:columns/groupscolumns.properties"),
-	@PropertySource("classpath:columns/studentscolumns.properties")
-})
+@PropertySource("classpath:db.properties")
 
 public class SpringConfig {
 

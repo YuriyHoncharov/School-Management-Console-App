@@ -21,4 +21,6 @@ public interface StudentDao {
 
 	void addAll(List<Student> students);
 
+	List<Student> getAll();
+
 }

@@ -50,4 +50,9 @@ public class StudentServiceImpl implements StudentService {
 	public Student getByName(String firstName, String lastName) {
 		return studentDao.getByName(firstName, lastName);
 	}
+
+	@Override
+	public List<Student> getAll() {
+		return studentDao.getAll();
+	}
 }

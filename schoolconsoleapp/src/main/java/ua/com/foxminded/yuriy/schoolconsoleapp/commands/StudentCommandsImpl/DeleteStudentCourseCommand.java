@@ -17,7 +17,7 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
 
 @Component
 public class DeleteStudentCourseCommand implements Command {
-
+	// TO DO
 	private CourseService courseService;
 	private StudentService studentService;
 
@@ -29,7 +29,14 @@ public class DeleteStudentCourseCommand implements Command {
 
 	@Override
 	public void execute(Scanner sc) {
-
+		System.out.println("Do you want to see the entire list of students?");
+		System.out.println("Enter - 1 to confirm and - 2 to continue.");
+		if (choiceYesOrNot(sc)) {
+			List<Student> allStudents = studentService.getAll();
+			for (Student student : allStudents) {
+				System.out.println(student.toString());
+			}
+		}
 		Student student = getStudent(sc);
 		if (student == null) {
 			System.out.println("Student with provided ID is not found.");
@@ -76,6 +83,11 @@ public class DeleteStudentCourseCommand implements Command {
 	private void deleteCourse(Student student, int choosenCourse) {
 		courseService.deregisterCourse(choosenCourse, student.getId());
 		System.out.println("Course has been succesfully removed.");
+	}
+
+	private boolean choiceYesOrNot(Scanner sc) {
+		int confirmation = InputValidator.getNextInt(sc);
+		return confirmation == 1;
 	}
 
 	@Override

@@ -51,7 +51,6 @@ public class StudentDaoImpl implements StudentDao {
 		}
 	}
 
-
 	@Override
 	public List<Student> getAllByCourse(int courseId) {
 		return jdbcTemplate.query(SqlStudentQueries.GET_STUDENTS_ON_COURSE, new Object[] { courseId },
@@ -96,5 +95,10 @@ public class StudentDaoImpl implements StudentDao {
 	public Student getByName(String firstName, String lastName) {
 		return jdbcTemplate.queryForObject(SqlStudentQueries.GET_INFO_BY_NAME_LASTNAME,
 				new Object[] { firstName, lastName }, new StudentMapper());
+	}
+
+	@Override
+	public List<Student> getAll() {
+		return jdbcTemplate.query(SqlStudentQueries.GET_ALL_STUDENTS, new StudentMapper());
 	}
 }
