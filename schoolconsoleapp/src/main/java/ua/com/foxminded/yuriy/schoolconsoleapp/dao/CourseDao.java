@@ -17,4 +17,6 @@ public interface CourseDao {
 
 	Course getById(int courseId);
 
+	List<Course> getAllCourses();
+
 }

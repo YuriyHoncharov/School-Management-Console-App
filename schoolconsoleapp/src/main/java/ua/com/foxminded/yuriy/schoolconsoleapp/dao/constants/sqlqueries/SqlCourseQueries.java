@@ -14,4 +14,5 @@ public class SqlCourseQueries {
 
 	public static String ADD_ALL = "INSERT INTO courses (course_id, course_name, course_description) VALUES (?, ?, ?)";
 	
+	public static String GET_ALL_COURSES = "SELECT * FROM courses";
 }

@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.Scanner;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
@@ -13,12 +14,13 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.CourseService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
+
 @Component
 public class DeleteStudentCourseCommand implements Command {
 
 	private CourseService courseService;
 	private StudentService studentService;
-	
+
 	@Autowired
 	public DeleteStudentCourseCommand(CourseService courseService, StudentService studentService) {
 		this.courseService = courseService;
@@ -46,7 +48,12 @@ public class DeleteStudentCourseCommand implements Command {
 	private Student getStudent(Scanner sc) {
 		System.out.println("Please enter student ID..");
 		int studentId = InputValidator.getNextInt(sc);
-		return studentService.getById(studentId);
+		try {
+			Student student = studentService.getById(studentId);
+			return student;
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
 	}
 
 	private int choiceCourseToDelete(Scanner sc, Student student) {

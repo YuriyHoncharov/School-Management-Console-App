@@ -11,5 +11,5 @@ public class SqlGroupQueries {
 	public static String GET_ALL_GROUPS = "SELECT * FROM groups";
 
 	public static String GET_BY_ID = "SELECT * FROM groups WHERE group_id = ?";
-
+	
 }

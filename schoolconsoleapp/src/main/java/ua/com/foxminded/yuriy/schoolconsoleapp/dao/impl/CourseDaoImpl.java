@@ -53,4 +53,9 @@ public class CourseDaoImpl implements CourseDao {
 	public Course getById(int courseId) {
 		return jdbcTemplate.queryForObject(SqlCourseQueries.GET_BY_ID, new Object[] { courseId }, new CourseMapper());
 	}
+
+	@Override
+	public List<Course> getAllCourses() {
+		return jdbcTemplate.query(SqlCourseQueries.GET_ALL_COURSES, new CourseMapper());
+	}
 }

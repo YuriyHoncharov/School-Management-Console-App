@@ -1,11 +1,12 @@
 package ua.com.foxminded.yuriy.schoolconsoleapp.dao.impl;
 
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Objects;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -50,9 +51,10 @@ public class StudentDaoImpl implements StudentDao {
 		}
 	}
 
+
 	@Override
-	public List<Student> getAllByCourse(String courseName) {
-		return jdbcTemplate.query(SqlStudentQueries.GET_STUDENTS_ON_COURSE, new Object[] { courseName },
+	public List<Student> getAllByCourse(int courseId) {
+		return jdbcTemplate.query(SqlStudentQueries.GET_STUDENTS_ON_COURSE, new Object[] { courseId },
 				new StudentMapper());
 	}
 
@@ -68,10 +70,11 @@ public class StudentDaoImpl implements StudentDao {
 		}, kh);
 		Integer studentId = (Integer) Objects.requireNonNull(kh.getKeys()).get(StudentsColumns.STUDENT_ID);
 		if (studentId != null) {
-			return studentId.intValue();
+			return studentId;
 		} else {
-			throw new DaoException("Failed to add new student : [" + student.getFirstName() + " " + student.getLastName() + "]");
-		}		
+			throw new DaoException(
+					"Failed to add new student : [" + student.getFirstName() + " " + student.getLastName() + "]");
+		}
 	}
 
 	@Override

@@ -6,7 +6,7 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 
 public interface StudentService {
 
-	List<Student> getAllByCourse(String courseName);
+	List<Student> getAllByCourse(int courseId);
 
 	void deleteById(int id);
 

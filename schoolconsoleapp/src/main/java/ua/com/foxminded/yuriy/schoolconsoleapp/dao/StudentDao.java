@@ -7,7 +7,7 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 
 public interface StudentDao {
 
-	List<Student> getAllByCourse(String courseName);
+	List<Student> getAllByCourse(int courseId);
 
 	int add(Student student);
 

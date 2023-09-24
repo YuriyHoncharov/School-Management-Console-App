@@ -22,8 +22,8 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	@Override
-	public List<Student> getAllByCourse(String courseName) {
-		return studentDao.getAllByCourse(courseName);
+	public List<Student> getAllByCourse(int courseId) {
+		return studentDao.getAllByCourse(courseId);
 	}
 
 	@Override
