@@ -33,10 +33,7 @@ public class StudentDaoImpl implements StudentDao {
 	public void addAll(List<Student> students) {
 
 		int studentId = (getLastIdValue() + 1);
-//		for (Student student : students) {
-//			student.setId(studentId);
-//			studentId++;
-//		}
+
 		jdbcTemplate.batchUpdate(SqlStudentQueries.ADD_ALL, new BatchPreparedStatementSetter() {
 
 			@Override

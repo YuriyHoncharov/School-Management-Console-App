@@ -12,12 +12,13 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.CourseService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
+
 @Component
 public class AddCourseToStudentCommand implements Command {
-	
+
 	private CourseService courseService;
 	private StudentService studentService;
-	
+
 	@Autowired
 	public AddCourseToStudentCommand(CourseService courseService, StudentService studentService) {
 		this.courseService = courseService;
@@ -28,6 +29,14 @@ public class AddCourseToStudentCommand implements Command {
 	@Override
 	public void execute(Scanner sc) {
 
+		System.out.println("Do you want to see the entire list of students?");
+		System.out.println("Enter - 1 to confirm and - 2 to continue.");
+		if (choiceYesOrNot(sc)) {
+			List<Student> allStudents = studentService.getAll();
+			for (Student student : allStudents) {
+				System.out.println(student.toString());
+			}
+		}
 		Student student = getStudent(sc);
 		if (student == null) {
 			System.out.println("Student with provided ID is not found.");
@@ -63,6 +72,11 @@ public class AddCourseToStudentCommand implements Command {
 		Course selectedCourse = courseService.getById(choosenCourse);
 		courseService.addToStudent(selectedCourse, student.getId());
 		System.out.println("Course has been succesfuly added to the student.");
+	}
+
+	private boolean choiceYesOrNot(Scanner sc) {
+		int confirmation = InputValidator.getNextInt(sc);
+		return confirmation == 1;
 	}
 
 	@Override
