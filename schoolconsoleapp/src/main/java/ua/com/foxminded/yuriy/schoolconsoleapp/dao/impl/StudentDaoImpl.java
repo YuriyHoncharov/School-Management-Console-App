@@ -32,21 +32,33 @@ public class StudentDaoImpl implements StudentDao {
 
 	public void addAll(List<Student> students) {
 
-		for (Student student : students) {
-			KeyHolder kh = new GeneratedKeyHolder();
-			jdbcTemplate.update(conn -> {
-				PreparedStatement ps = conn.prepareStatement(SqlStudentQueries.ADD_ALL, Statement.RETURN_GENERATED_KEYS);
+		int studentId = (getLastIdValue() + 1);
+//		for (Student student : students) {
+//			student.setId(studentId);
+//			studentId++;
+//		}
+		jdbcTemplate.batchUpdate(SqlStudentQueries.ADD_ALL, new BatchPreparedStatementSetter() {
+
+			@Override
+			public void setValues(PreparedStatement ps, int i) throws SQLException {
+				Student student = students.get(i);
 				ps.setInt(1, student.getGroupId());
 				ps.setString(2, student.getFirstName());
 				ps.setString(3, student.getLastName());
-				return ps;
-			}, kh);
-			Integer studentId = (Integer) Objects.requireNonNull(kh.getKeys()).get(StudentsColumns.STUDENT_ID);
-			student.setId(studentId);
+			}
 
+			@Override
+			public int getBatchSize() {
+				return students.size();
+			}
+		});
+
+		for (Student student : students) {
+			student.setId(studentId);
+			studentId++;
 			List<Course> courses = student.getCourses();
 			for (Course course : courses) {
-				jdbcTemplate.update(SqlStudentQueries.ADD_COURSES, course.getId(), studentId);
+				jdbcTemplate.update(SqlStudentQueries.ADD_COURSES, course.getId(), student.getId());
 			}
 		}
 	}
@@ -100,5 +112,16 @@ public class StudentDaoImpl implements StudentDao {
 	@Override
 	public List<Student> getAll() {
 		return jdbcTemplate.query(SqlStudentQueries.GET_ALL_STUDENTS, new StudentMapper());
+	}
+
+	@Override
+	public int getLastIdValue() {
+		Integer maxIdValue = jdbcTemplate.queryForObject(SqlStudentQueries.GET_LAST_ID_VALUE, Integer.class);
+
+		if (maxIdValue != null) {
+			return maxIdValue;
+		} else {
+			return 0;
+		}
 	}
 }

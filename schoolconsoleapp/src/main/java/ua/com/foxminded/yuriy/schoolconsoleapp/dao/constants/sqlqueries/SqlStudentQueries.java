@@ -19,5 +19,7 @@ public class SqlStudentQueries {
 	public static String GET_INFO_BY_NAME_LASTNAME = "SELECT * FROM students WHERE first_name = ? AND last_name = ?";
 	
 	public static String GET_ALL_STUDENTS = "SELECT * FROM students";
+	
+	public static String GET_LAST_ID_VALUE = "SELECT max(student_id) from students";
 
 }

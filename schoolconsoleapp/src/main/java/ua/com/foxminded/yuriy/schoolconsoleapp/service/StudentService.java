@@ -19,5 +19,7 @@ public interface StudentService {
 	void setGroupById(int id, Group group);
 
 	List<Student> getAll();
+	
+	int lastIdValue();
 
 }

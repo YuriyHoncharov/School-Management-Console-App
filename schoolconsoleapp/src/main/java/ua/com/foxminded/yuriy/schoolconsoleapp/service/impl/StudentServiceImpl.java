@@ -55,4 +55,9 @@ public class StudentServiceImpl implements StudentService {
 	public List<Student> getAll() {
 		return studentDao.getAll();
 	}
+
+	@Override
+	public int lastIdValue() {
+		return studentDao.getLastIdValue();
+	}
 }
