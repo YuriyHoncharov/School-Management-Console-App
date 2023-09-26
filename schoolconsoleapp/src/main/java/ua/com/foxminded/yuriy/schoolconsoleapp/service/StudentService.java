@@ -16,10 +16,10 @@ public interface StudentService {
 
 	Student getByName(String firstName, String lastName);
 
-	void setGroupById(int id, Group group);
-
 	List<Student> getAll();
 	
 	int lastIdValue();
+	
+	void update (Student student);
 
 }

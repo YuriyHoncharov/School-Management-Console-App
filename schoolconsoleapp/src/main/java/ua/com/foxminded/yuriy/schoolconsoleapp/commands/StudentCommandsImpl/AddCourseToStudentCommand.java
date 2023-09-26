@@ -1,5 +1,6 @@
 package ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -70,7 +71,10 @@ public class AddCourseToStudentCommand implements Command {
 
 	private void addCourseToStudent(Student student, int choosenCourse) {
 		Course selectedCourse = courseService.getById(choosenCourse);
-		courseService.addToStudent(selectedCourse, student.getId());
+		List<Course> coursesToUpdate = new ArrayList<>();
+		coursesToUpdate.add(selectedCourse);
+		student.setCourse(coursesToUpdate);
+		studentService.update(student);
 		System.out.println("Course has been succesfuly added to the student.");
 	}
 

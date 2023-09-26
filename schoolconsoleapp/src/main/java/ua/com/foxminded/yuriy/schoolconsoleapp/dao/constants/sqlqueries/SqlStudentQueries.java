@@ -17,9 +17,11 @@ public class SqlStudentQueries {
 	public static String SET_GROUP_ID = "UPDATE students SET group_id = ? WHERE student_id = ?";
 
 	public static String GET_INFO_BY_NAME_LASTNAME = "SELECT * FROM students WHERE first_name = ? AND last_name = ?";
-	
+
 	public static String GET_ALL_STUDENTS = "SELECT * FROM students";
-	
+
 	public static String GET_LAST_ID_VALUE = "SELECT max(student_id) from students";
+
+	public static String UPDATE = "UPDATE students SET group_id = ?, first_name = ?, last_name = ? WHERE student_id = ?";
 
 }

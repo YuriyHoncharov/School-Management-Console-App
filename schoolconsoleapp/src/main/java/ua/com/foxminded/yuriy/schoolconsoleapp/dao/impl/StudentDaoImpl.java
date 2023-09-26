@@ -96,11 +96,6 @@ public class StudentDaoImpl implements StudentDao {
 	}
 
 	@Override
-	public void setGroupById(int id, Group group) {
-		jdbcTemplate.update(SqlStudentQueries.SET_GROUP_ID, group.getId(), id);
-	}
-
-	@Override
 	public Student getByName(String firstName, String lastName) {
 		return jdbcTemplate.queryForObject(SqlStudentQueries.GET_INFO_BY_NAME_LASTNAME,
 				new Object[] { firstName, lastName }, new StudentMapper());
@@ -119,6 +114,15 @@ public class StudentDaoImpl implements StudentDao {
 			return maxIdValue;
 		} else {
 			return 0;
+		}
+	}
+
+	@Override
+	public void update(Student student) {
+		jdbcTemplate.update(SqlStudentQueries.UPDATE, student.getGroupId(), student.getFirstName(), student.getLastName(),
+				student.getId());
+		for (Course course : student.getCourses()) {
+			jdbcTemplate.update(SqlStudentQueries.ADD_COURSES, course.getId(), student.getId());
 		}
 	}
 }

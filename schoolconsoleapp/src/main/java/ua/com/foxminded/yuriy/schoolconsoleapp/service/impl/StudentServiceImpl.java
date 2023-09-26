@@ -42,11 +42,6 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	@Override
-	public void setGroupById(int id, Group group) {
-		studentDao.setGroupById(id, group);
-	}
-
-	@Override
 	public Student getByName(String firstName, String lastName) {
 		return studentDao.getByName(firstName, lastName);
 	}
@@ -60,4 +55,10 @@ public class StudentServiceImpl implements StudentService {
 	public int lastIdValue() {
 		return studentDao.getLastIdValue();
 	}
+
+	@Override
+	public void update(Student student) {
+		studentDao.update(student);
+	}
+
 }

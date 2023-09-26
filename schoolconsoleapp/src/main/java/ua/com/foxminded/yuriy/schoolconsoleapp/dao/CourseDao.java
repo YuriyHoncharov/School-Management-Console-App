@@ -11,8 +11,6 @@ public interface CourseDao {
 
 	List<Course> getByStudentId(int studentId);
 
-	void addToStudent(Course selectedCourse, int studentId);
-
 	void deregisterCourse(int studentId, int courseId);
 
 	Course getById(int courseId);

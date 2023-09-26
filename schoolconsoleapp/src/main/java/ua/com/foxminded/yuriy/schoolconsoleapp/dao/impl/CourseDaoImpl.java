@@ -40,11 +40,6 @@ public class CourseDaoImpl implements CourseDao {
 	}
 
 	@Override
-	public void addToStudent(Course course, int studentId) {
-		jdbcTemplate.update(SqlCourseQueries.ADD_TO_STUDENT_BY_ID, course.getId(), studentId);
-	}
-
-	@Override
 	public void deregisterCourse(int courseId, int studentId) {
 		jdbcTemplate.update(SqlCourseQueries.DELETE_FROM_STUDENT, studentId, courseId);
 	}
