@@ -1,8 +1,6 @@
 package ua.com.foxminded.yuriy.schoolconsoleapp.dataGenerator;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.CourseDao;
@@ -12,7 +10,6 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.exception.SqlRunException;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.FileHandler;
 
 @Component
-@PropertySource("classpath:db.properties")
 public class DataGenerator {
 
 	public final static String FILE_PATH = "src/main/resources/";
@@ -20,13 +17,6 @@ public class DataGenerator {
 	public final static String TABLE_PATH = "tables_creation.sql";
 	public final static String DATA_BASE_FILE_PATH = FILE_PATH + DATA_BASE_PATH;
 	public final static String TABLE_FILE_PATH = FILE_PATH + TABLE_PATH;
-
-	@Value("${DB_URL}")
-	String urlCreateDataBase;
-	@Value("${DB_USERNAME}")
-	String user = "postgres";
-	@Value("${DB_PASSWORD}")
-	String password = "1234";
 
 	private CourseDao courseDao;
 	private GroupDao groupDao;

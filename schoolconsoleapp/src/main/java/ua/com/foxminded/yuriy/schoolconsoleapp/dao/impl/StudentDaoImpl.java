@@ -12,6 +12,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentDao;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.sqlqueries.SqlCourseQueries;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.sqlqueries.SqlStudentQueries;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.tables.StudentsColumns;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.mappers.StudentMapper;
@@ -121,8 +122,16 @@ public class StudentDaoImpl implements StudentDao {
 	public void update(Student student) {
 		jdbcTemplate.update(SqlStudentQueries.UPDATE, student.getGroupId(), student.getFirstName(), student.getLastName(),
 				student.getId());
-		for (Course course : student.getCourses()) {
-			jdbcTemplate.update(SqlStudentQueries.ADD_COURSES, course.getId(), student.getId());
+		for (Course courseToDelete : student.getCourses()) {
+			int deleteResult = jdbcTemplate.update(SqlCourseQueries.DELETE_FROM_STUDENT, student.getId(),
+					courseToDelete.getId());
+			boolean deleteUnsuccessful = deleteResult == 0;
+
+			if (deleteUnsuccessful) {
+				for (Course courseToAdd : student.getCourses()) {
+					jdbcTemplate.update(SqlStudentQueries.ADD_COURSES, courseToAdd.getId(), student.getId());
+				}
+			}
 		}
 	}
 }

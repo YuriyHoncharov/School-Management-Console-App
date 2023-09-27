@@ -9,8 +9,6 @@ public interface CourseService {
 
 	List<Course> getByStudentId(int studentId);
 
-	void deregisterCourse(int studentId, int courseId);
-
 	Course getById(int courseId);
 	
 	List<Course> getAllCourses();

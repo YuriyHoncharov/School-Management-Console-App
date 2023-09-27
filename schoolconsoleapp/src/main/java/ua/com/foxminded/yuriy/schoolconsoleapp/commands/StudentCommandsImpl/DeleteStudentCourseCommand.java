@@ -1,5 +1,6 @@
 package ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -81,7 +82,10 @@ public class DeleteStudentCourseCommand implements Command {
 	}
 
 	private void deleteCourse(Student student, int choosenCourse) {
-		courseService.deregisterCourse(choosenCourse, student.getId());
+		List<Course> courseToDelete = new ArrayList<>();
+		courseToDelete.add(courseService.getById(choosenCourse));
+		student.setCourse(courseToDelete);
+		studentService.update(student);
 		System.out.println("Course has been succesfully removed.");
 	}
 

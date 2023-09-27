@@ -40,11 +40,6 @@ public class CourseDaoImpl implements CourseDao {
 	}
 
 	@Override
-	public void deregisterCourse(int courseId, int studentId) {
-		jdbcTemplate.update(SqlCourseQueries.DELETE_FROM_STUDENT, studentId, courseId);
-	}
-
-	@Override
 	public Course getById(int courseId) {
 		return jdbcTemplate.queryForObject(SqlCourseQueries.GET_BY_ID, new Object[] { courseId }, new CourseMapper());
 	}

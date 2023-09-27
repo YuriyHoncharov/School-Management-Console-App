@@ -32,11 +32,6 @@ public class CourseServiceImpl implements CourseService {
 	}
 
 	@Override
-	public void deregisterCourse(int studentId, int courseId) {
-		courseDao.deregisterCourse(studentId, courseId);
-	}
-
-	@Override
 	public Course getById(int courseId) {
 		return courseDao.getById(courseId);
 	}
