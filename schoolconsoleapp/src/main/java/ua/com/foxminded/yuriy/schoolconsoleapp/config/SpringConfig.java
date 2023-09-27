@@ -10,7 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 @Configuration
-@PropertySource("classpath:db.properties")
+@PropertySource("classpath:application.properties")
 
 public class SpringConfig {
 
@@ -35,7 +35,7 @@ public class SpringConfig {
 		dataSource.setPassword(password);
 		return dataSource;
 	}
-
+	
 	@Bean
 	public JdbcTemplate jdbcTemplate() {
 		return new JdbcTemplate(dataSource());

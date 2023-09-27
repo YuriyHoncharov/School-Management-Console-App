@@ -7,7 +7,6 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.dao.CourseDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.GroupDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.exception.SqlRunException;
-import ua.com.foxminded.yuriy.schoolconsoleapp.util.FileHandler;
 
 @Component
 public class DataGenerator {
@@ -34,11 +33,7 @@ public class DataGenerator {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
-	public void createTables() {
-
-		runSQLScript(FileHandler.readFile(TABLE_FILE_PATH));
-		System.out.println("Tables were created.");
-	}
+	
 
 	public void runSQLScript(String sqlQuery) {
 		try {
@@ -49,7 +44,6 @@ public class DataGenerator {
 	}
 
 	public void initializeAndPopulateTestDatabase() {
-		createTables();
 		RandomDataGenerator randomDataGenerator = new RandomDataGenerator();
 		groupDao.addAll(randomDataGenerator.generateGroups());
 		courseDao.addAll(randomDataGenerator.generateCourses());
