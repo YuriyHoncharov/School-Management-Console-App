@@ -82,9 +82,7 @@ public class DeleteStudentCourseCommand implements Command {
 	}
 
 	private void deleteCourse(Student student, int choosenCourse) {
-		List<Course> courseToDelete = new ArrayList<>();
-		courseToDelete.add(courseService.getById(choosenCourse));
-		student.setCourse(courseToDelete);
+		student.getCourses().removeIf(course -> course.getId() == choosenCourse);
 		studentService.update(student);
 		System.out.println("Course has been succesfully removed.");
 	}

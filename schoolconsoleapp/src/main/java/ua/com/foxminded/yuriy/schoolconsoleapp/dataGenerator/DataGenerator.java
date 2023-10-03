@@ -1,12 +1,10 @@
 package ua.com.foxminded.yuriy.schoolconsoleapp.dataGenerator;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.CourseDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.GroupDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentDao;
-import ua.com.foxminded.yuriy.schoolconsoleapp.exception.SqlRunException;
 
 @Component
 public class DataGenerator {
@@ -20,27 +18,16 @@ public class DataGenerator {
 	private CourseDao courseDao;
 	private GroupDao groupDao;
 	private StudentDao studentDao;
-	private JdbcTemplate jdbcTemplate;
 
 	public DataGenerator() {
 	}
 
 	@Autowired
-	public DataGenerator(CourseDao courseDao, GroupDao groupDao, StudentDao studentDao, JdbcTemplate jdbcTemplate) {
+	public DataGenerator(CourseDao courseDao, GroupDao groupDao, StudentDao studentDao) {
 		this.courseDao = courseDao;
 		this.groupDao = groupDao;
 		this.studentDao = studentDao;
-		this.jdbcTemplate = jdbcTemplate;
-	}
 
-	
-
-	public void runSQLScript(String sqlQuery) {
-		try {
-			jdbcTemplate.execute(sqlQuery);
-		} catch (Exception e) {
-			throw new SqlRunException("An error occured: " + e.getMessage());
-		}
 	}
 
 	public void initializeAndPopulateTestDatabase() {

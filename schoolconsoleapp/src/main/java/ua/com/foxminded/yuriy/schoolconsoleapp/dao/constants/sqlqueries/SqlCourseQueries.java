@@ -4,7 +4,7 @@ public class SqlCourseQueries {
 
 	public static String GET_BY_ID = "SELECT * FROM courses WHERE course_id = ?";
 
-	public static String DELETE_FROM_STUDENT = "DELETE FROM students_courses WHERE student_id = ? AND course_id = ?";
+	public static String DELETE_ALL_FROM_STUDENT = "DELETE FROM students_courses WHERE student_id = ?";
 
 	public static String ADD_TO_STUDENT_BY_ID = "INSERT INTO students_courses (course_id, student_id) VALUES (?, ?)";
 

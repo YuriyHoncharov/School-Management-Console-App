@@ -71,9 +71,7 @@ public class AddCourseToStudentCommand implements Command {
 
 	private void addCourseToStudent(Student student, int choosenCourse) {
 		Course selectedCourse = courseService.getById(choosenCourse);
-		List<Course> coursesToUpdate = new ArrayList<>();
-		coursesToUpdate.add(selectedCourse);
-		student.setCourse(coursesToUpdate);
+		student.getCourses().add(selectedCourse);
 		studentService.update(student);
 		System.out.println("Course has been succesfuly added to the student.");
 	}
