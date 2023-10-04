@@ -9,12 +9,6 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentDao;
 @Component
 public class DataGenerator {
 
-	public final static String FILE_PATH = "src/main/resources/";
-	public final static String DATA_BASE_PATH = "data_base_creation.sql";
-	public final static String TABLE_PATH = "tables_creation.sql";
-	public final static String DATA_BASE_FILE_PATH = FILE_PATH + DATA_BASE_PATH;
-	public final static String TABLE_FILE_PATH = FILE_PATH + TABLE_PATH;
-
 	private CourseDao courseDao;
 	private GroupDao groupDao;
 	private StudentDao studentDao;
