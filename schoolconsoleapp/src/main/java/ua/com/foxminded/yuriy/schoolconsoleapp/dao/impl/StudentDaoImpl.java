@@ -93,7 +93,7 @@ public class StudentDaoImpl implements StudentDao {
 
 	@Override
 	public Student getById(int id) {
-		return jdbcTemplate.queryForObject(SqlStudentQueries.GET_INFO_BY_ID, new Object[] { id }, new StudentMapper());
+		return jdbcTemplate.queryForObject(SqlStudentQueries.GET_BY_ID, new Object[] { id }, new StudentMapper());
 	}
 
 	@Override
