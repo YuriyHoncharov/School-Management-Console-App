@@ -9,7 +9,6 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.sqlqueries.SqlCours
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.mappers.CourseMapper;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 
-
 @Component
 public class CourseDaoImpl implements CourseDao {
 
@@ -29,19 +28,17 @@ public class CourseDaoImpl implements CourseDao {
 
 	@Override
 	public List<Course> getAvailableCourses(int studentId) {
-		return jdbcTemplate.query(SqlCourseQueries.GET_AVAILABLE_BY_STUDENT_ID, new Object[] { studentId },
-				new CourseMapper());
+		return jdbcTemplate.query(SqlCourseQueries.GET_AVAILABLE_BY_STUDENT_ID, new CourseMapper(), studentId);
 	}
 
 	@Override
 	public List<Course> getByStudentId(int studentId) {
-		return jdbcTemplate.query(SqlCourseQueries.GET_COURSES_BY_STUDENT_ID, new Object[] { studentId },
-				new CourseMapper());
+		return jdbcTemplate.query(SqlCourseQueries.GET_COURSES_BY_STUDENT_ID, new CourseMapper(), studentId);
 	}
 
 	@Override
 	public Course getById(int courseId) {
-		return jdbcTemplate.queryForObject(SqlCourseQueries.GET_BY_ID, new Object[] { courseId }, new CourseMapper());
+		return jdbcTemplate.queryForObject(SqlCourseQueries.GET_BY_ID, new CourseMapper(), courseId);
 	}
 
 	@Override

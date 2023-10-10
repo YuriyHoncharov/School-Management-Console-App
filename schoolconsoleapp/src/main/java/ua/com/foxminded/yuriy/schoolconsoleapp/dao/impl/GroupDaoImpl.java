@@ -1,4 +1,5 @@
 package ua.com.foxminded.yuriy.schoolconsoleapp.dao.impl;
+
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -27,8 +28,7 @@ public class GroupDaoImpl implements GroupDao {
 	@Override
 	public List<Group> getAllLessOrEqual(int studentCount) {
 
-		return jdbcTemplate.query(SqlGroupQueries.GET_BY_LESS_OR_EQUAL_STUDENTS, new Object[] { studentCount },
-				new GroupMapper());
+		return jdbcTemplate.query(SqlGroupQueries.GET_BY_LESS_OR_EQUAL_STUDENTS, new GroupMapper(), studentCount);
 	}
 
 	@Override
@@ -43,6 +43,6 @@ public class GroupDaoImpl implements GroupDao {
 
 	@Override
 	public Group getById(int groupId) {
-		return jdbcTemplate.queryForObject(SqlGroupQueries.GET_BY_ID, new Object[] { groupId }, new GroupMapper());
+		return jdbcTemplate.queryForObject(SqlGroupQueries.GET_BY_ID, new GroupMapper(), groupId);
 	}
 }

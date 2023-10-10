@@ -16,6 +16,7 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.sqlqueries.SqlCourseQueries;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.sqlqueries.SqlStudentQueries;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.tables.StudentsColumns;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.mappers.CourseMapper;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.mappers.StudentMapper;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
@@ -63,8 +64,7 @@ public class StudentDaoImpl implements StudentDao {
 
 	@Override
 	public List<Student> getAllByCourse(int courseId) {
-		return jdbcTemplate.query(SqlStudentQueries.GET_STUDENTS_ON_COURSE, new Object[] { courseId },
-				new StudentMapper());
+		return jdbcTemplate.query(SqlStudentQueries.GET_STUDENTS_ON_COURSE, new StudentMapper(), courseId);
 	}
 
 	@Override
@@ -93,18 +93,26 @@ public class StudentDaoImpl implements StudentDao {
 
 	@Override
 	public Student getById(int id) {
-		return jdbcTemplate.queryForObject(SqlStudentQueries.GET_BY_ID, new Object[] { id }, new StudentMapper());
+		Student student = jdbcTemplate.queryForObject(SqlStudentQueries.GET_BY_ID, new StudentMapper(), id);
+		student.setCourse(
+				jdbcTemplate.query(SqlCourseQueries.GET_COURSES_BY_STUDENT_ID, new CourseMapper(), student.getId()));
+		return student;
 	}
 
 	@Override
 	public Student getByName(String firstName, String lastName) {
-		return jdbcTemplate.queryForObject(SqlStudentQueries.GET_INFO_BY_NAME_LASTNAME,
-				new Object[] { firstName, lastName }, new StudentMapper());
+		return jdbcTemplate.queryForObject(SqlStudentQueries.GET_INFO_BY_NAME_LASTNAME, new StudentMapper(), firstName,
+				lastName);
 	}
 
 	@Override
 	public List<Student> getAll() {
-		return jdbcTemplate.query(SqlStudentQueries.GET_ALL_STUDENTS, new StudentMapper());
+		List<Student> students = jdbcTemplate.query(SqlStudentQueries.GET_ALL_STUDENTS, new StudentMapper());
+		for (Student student : students) {
+			student.setCourse(
+					jdbcTemplate.query(SqlCourseQueries.GET_COURSES_BY_STUDENT_ID, new CourseMapper(), student.getId()));
+		}
+		return students;
 	}
 
 	@Override

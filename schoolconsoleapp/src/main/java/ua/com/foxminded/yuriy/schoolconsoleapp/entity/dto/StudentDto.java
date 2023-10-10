@@ -1,4 +1,4 @@
-package ua.com.foxminded.yuriy.schoolconsoleapp.model.dto;
+package ua.com.foxminded.yuriy.schoolconsoleapp.entity.dto;
 
 import java.util.ArrayList;
 import java.util.List;
