@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
+import ua.com.foxminded.yuriy.schoolconsoleapp.entity.dto.StudentDto;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
 
@@ -15,10 +16,12 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
 public class DeleteStudentCommand implements Command {
 
 	private StudentService studentService;
+	private StudentDto studentDto;
 
 	@Autowired
-	public DeleteStudentCommand(StudentService studentService) {
+	public DeleteStudentCommand(StudentService studentService,StudentDto studentDto) {
 		this.studentService = studentService;
+		this.studentDto = studentDto;
 	}
 
 	@Override
@@ -28,8 +31,9 @@ public class DeleteStudentCommand implements Command {
 		System.out.println("Enter - 1 to confirm and - 2 to continue.");
 		if (choiceYesOrNot(sc)) {
 			List<Student> allStudents = studentService.getAll();
-			for (Student student : allStudents) {
-				System.out.println(student.toString());
+			List<StudentDto>studentsList = studentDto.studensDto(allStudents);
+			for (StudentDto studentDto : studentsList) {
+				System.out.println(studentDto.toString());
 			}
 		}
 		Student student = getStudent(sc);

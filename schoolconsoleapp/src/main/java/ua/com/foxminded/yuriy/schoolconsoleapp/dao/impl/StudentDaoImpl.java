@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -21,7 +20,6 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.sqlqueries.SqlCours
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.sqlqueries.SqlStudentQueries;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.tables.CoursesColumns;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.tables.StudentsColumns;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.mappers.CourseMapper;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.mappers.StudentMapper;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;

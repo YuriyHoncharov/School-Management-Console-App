@@ -2,9 +2,7 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.entity.dto;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.stereotype.Component;
-
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 
 @Component
@@ -51,8 +49,7 @@ public class StudentDto {
 
 	@Override
 	public String toString() {
-		return "Student ID : " + id + ", Group ID : " + groupId + ", First Name  : " + firstName + ", Last Name : "
-				+ lastName;
+	    return String.format("ID : %-3d | Name : %-20s | Group ID : %-2d", id, firstName + " " + lastName, groupId);
 	}
 
 	public List<StudentDto> studensDto(List<Student> students) {
