@@ -22,7 +22,7 @@ public class StudentMapper implements RowMapper<Student> {
 
 	@Override
 	public Student mapRow(ResultSet rs, int rowNum) throws SQLException {
-		Student student = null;
+		Student student = new Student();
 		try {
 			student = new Student(rs.getInt(StudentsColumns.STUDENT_ID), rs.getInt(StudentsColumns.GROUP_ID),
 					rs.getString(StudentsColumns.FIRST_NAME), rs.getString(StudentsColumns.LAST_NAME));

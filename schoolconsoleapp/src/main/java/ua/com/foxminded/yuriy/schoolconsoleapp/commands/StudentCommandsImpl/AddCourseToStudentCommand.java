@@ -56,8 +56,9 @@ public class AddCourseToStudentCommand implements Command {
 	private Student getStudent(Scanner sc) {
 		System.out.println("Please enter the student's id...");
 		int studentId = InputValidator.getNextInt(sc);
-		return studentService.getById(studentId);
-
+		Student student = studentService.getById(studentId);
+		student.setCourse(courseService.getByStudentId(studentId));
+		return student;
 	}
 
 	private List<Course> availableCourses(Student student) {

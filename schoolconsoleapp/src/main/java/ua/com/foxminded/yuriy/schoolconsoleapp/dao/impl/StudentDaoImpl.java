@@ -3,11 +3,15 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.dao.impl;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
@@ -15,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.sqlqueries.SqlCourseQueries;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.sqlqueries.SqlStudentQueries;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.tables.CoursesColumns;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.tables.StudentsColumns;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.mappers.CourseMapper;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.mappers.StudentMapper;
@@ -93,10 +98,7 @@ public class StudentDaoImpl implements StudentDao {
 
 	@Override
 	public Student getById(int id) {
-		Student student = jdbcTemplate.queryForObject(SqlStudentQueries.GET_BY_ID, new StudentMapper(), id);
-		student.setCourse(
-				jdbcTemplate.query(SqlCourseQueries.GET_COURSES_BY_STUDENT_ID, new CourseMapper(), student.getId()));
-		return student;
+		return jdbcTemplate.queryForObject(SqlStudentQueries.GET_BY_ID, new StudentMapper(), id);
 	}
 
 	@Override
@@ -107,12 +109,33 @@ public class StudentDaoImpl implements StudentDao {
 
 	@Override
 	public List<Student> getAll() {
-		List<Student> students = jdbcTemplate.query(SqlStudentQueries.GET_ALL_STUDENTS, new StudentMapper());
-		for (Student student : students) {
-			student.setCourse(
-					jdbcTemplate.query(SqlCourseQueries.GET_COURSES_BY_STUDENT_ID, new CourseMapper(), student.getId()));
-		}
-		return students;
+
+		return jdbcTemplate.query(SqlStudentQueries.GET_ALL_STUDENTS, (ResultSetExtractor<List<Student>>) rs -> {
+			List<Student> students = new ArrayList<>();
+			Student student = new Student();
+
+			while (rs.next()) {
+				if (rs.getInt(StudentsColumns.STUDENT_ID) == student.getId()) {
+					Course course = new Course(rs.getString(CoursesColumns.COURSE_NAME),
+							rs.getString(CoursesColumns.COURSE_DESCRIPTION), rs.getInt(CoursesColumns.COURSE_ID));
+					List<Course> courses = student.getCourses();
+					courses.add(course);
+					student.setCourse(courses);
+				} else {
+					student = new Student(rs.getInt(StudentsColumns.STUDENT_ID), rs.getInt(StudentsColumns.GROUP_ID),
+							rs.getString(StudentsColumns.FIRST_NAME), rs.getString(StudentsColumns.LAST_NAME));
+					Course course = new Course(rs.getString(CoursesColumns.COURSE_NAME),
+							rs.getString(CoursesColumns.COURSE_DESCRIPTION), rs.getInt(CoursesColumns.COURSE_ID));
+					List<Course> courses = new ArrayList<>();
+					courses.add(course);
+					student.setCourse(courses);
+					}
+				int studentId = student.getId();
+				students = students.stream().filter(s -> s.getId() != studentId).collect(Collectors.toList());
+				students.add(student);
+			}
+			return students;
+		});
 	}
 
 	@Override

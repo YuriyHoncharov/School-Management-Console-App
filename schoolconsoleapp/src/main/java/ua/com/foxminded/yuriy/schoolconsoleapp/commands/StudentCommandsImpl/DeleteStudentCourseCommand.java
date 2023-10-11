@@ -58,6 +58,7 @@ public class DeleteStudentCourseCommand implements Command {
 		int studentId = InputValidator.getNextInt(sc);
 		try {
 			Student student = studentService.getById(studentId);
+			student.setCourse(courseService.getByStudentId(studentId));
 			return student;
 		} catch (EmptyResultDataAccessException e) {
 			return null;
