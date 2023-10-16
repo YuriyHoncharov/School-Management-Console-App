@@ -43,7 +43,7 @@ public class DeleteStudentCourseCommand implements Command {
 		if (student == null) {
 			System.out.println("Student with provided ID is not found.");
 		} else {
-			List<Course> actualCourses = courseService.getByStudentId(student.getId());
+			List<Course> actualCourses = student.getCourses();
 			int choosenCourse = choiceCourseToDelete(sc, student);
 			if (studentFollowsCourse(actualCourses, choosenCourse)) {
 				deleteCourse(student, choosenCourse);
@@ -59,7 +59,6 @@ public class DeleteStudentCourseCommand implements Command {
 		int studentId = InputValidator.getNextInt(sc);
 		try {
 			Student student = studentService.getById(studentId);
-			student.setCourse(courseService.getByStudentId(studentId));
 			return student;
 		} catch (EmptyResultDataAccessException e) {
 			return null;
@@ -68,7 +67,7 @@ public class DeleteStudentCourseCommand implements Command {
 
 	private int choiceCourseToDelete(Scanner sc, Student student) {
 
-		List<Course> actualCourses = courseService.getByStudentId(student.getId());
+		List<Course> actualCourses = student.getCourses();
 		for (int i = 0; i < actualCourses.size(); i++) {
 			Course course = actualCourses.get(i);
 			System.out.println((i + 1) + ". " + course.toString());

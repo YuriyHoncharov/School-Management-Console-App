@@ -20,6 +20,7 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.sqlqueries.SqlCours
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.sqlqueries.SqlStudentQueries;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.tables.CoursesColumns;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.tables.StudentsColumns;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.mappers.CourseMapper;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.mappers.StudentMapper;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
@@ -60,7 +61,7 @@ public class StudentDaoImpl implements StudentDao {
 			studentId++;
 			List<Course> courses = student.getCourses();
 			for (Course course : courses) {
-				jdbcTemplate.update(SqlStudentQueries.ADD_COURSES, course.getId(), student.getId());
+				jdbcTemplate.update(SqlCourseQueries.ADD_TO_STUDENT_BY_ID, course.getId(), student.getId());
 			}
 		}
 	}
@@ -111,20 +112,19 @@ public class StudentDaoImpl implements StudentDao {
 		return jdbcTemplate.query(SqlStudentQueries.GET_ALL_STUDENTS, (ResultSetExtractor<List<Student>>) rs -> {
 			List<Student> students = new ArrayList<>();
 			Student student = new Student();
+			CourseMapper courseMapper = new CourseMapper(); 
 
 			while (rs.next()) {
 				if (rs.getInt(StudentsColumns.STUDENT_ID) == student.getId()) {
-					Course course = new Course(rs.getString(CoursesColumns.COURSE_NAME),
-							rs.getString(CoursesColumns.COURSE_DESCRIPTION), rs.getInt(CoursesColumns.COURSE_ID));
+					Course course = courseMapper.mapRow(rs, 0);
 					List<Course> courses = student.getCourses();
 					courses.add(course);
 					student.setCourse(courses);
 				} else {
 					student = new Student(rs.getInt(StudentsColumns.STUDENT_ID), rs.getInt(StudentsColumns.GROUP_ID),
 							rs.getString(StudentsColumns.FIRST_NAME), rs.getString(StudentsColumns.LAST_NAME));
-					Course course = new Course(rs.getString(CoursesColumns.COURSE_NAME),
-							rs.getString(CoursesColumns.COURSE_DESCRIPTION), rs.getInt(CoursesColumns.COURSE_ID));
-					List<Course> courses = new ArrayList<>();
+					Course course = courseMapper.mapRow(rs, 0);
+					List<Course> courses = student.getCourses();
 					courses.add(course);
 					student.setCourse(courses);
 					}
@@ -154,7 +154,7 @@ public class StudentDaoImpl implements StudentDao {
 				student.getId());
 		jdbcTemplate.update(SqlCourseQueries.DELETE_ALL_FROM_STUDENT, student.getId());
 		for (Course course : student.getCourses()) {
-			jdbcTemplate.update(SqlStudentQueries.ADD_COURSES, course.getId(), student.getId());
+			jdbcTemplate.update(SqlCourseQueries.ADD_TO_STUDENT_BY_ID, course.getId(), student.getId());
 		}
 	}
 }
