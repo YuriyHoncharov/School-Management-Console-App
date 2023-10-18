@@ -31,7 +31,7 @@ public class DeleteStudentCommand implements Command {
 		System.out.println("Enter - 1 to confirm and - 2 to continue.");
 		if (choiceYesOrNot(sc)) {
 			List<Student> allStudents = studentService.getAll();
-			List<StudentDto>studentsList = studentDto.studensDto(allStudents);
+			List<StudentDto>studentsList = studentDto.studentsListDto(allStudents);
 			for (StudentDto studentDto : studentsList) {
 				System.out.println(studentDto.toString());
 			}
@@ -42,7 +42,7 @@ public class DeleteStudentCommand implements Command {
 		} else {
 			if (choiceToDelete(sc, student)) {
 				studentService.deleteById(student.getId());
-				System.out.println(student.toString() + " has been deleted from database.");
+				System.out.println((studentDto.studentToDto(student)).toString() + " - Has been deleted from database.");
 			} else {
 				System.out.println("You canceled the operation.");
 			}
@@ -56,7 +56,8 @@ public class DeleteStudentCommand implements Command {
 	}
 
 	private boolean choiceToDelete(Scanner sc, Student student) {
-		System.out.println("Are you sure that you want to delete: " + student.toString());
+		StudentDto studentPrint = studentDto.studentToDto(student);
+		System.out.println(studentPrint.toString() + " - Will be deleted from the database. Are you sure you want to confirm?");
 		System.out.println("Enter - 1 to confirm and - 2 to cancel.");
 		int confirmation = InputValidator.getNextInt(sc);
 		return confirmation == 1;

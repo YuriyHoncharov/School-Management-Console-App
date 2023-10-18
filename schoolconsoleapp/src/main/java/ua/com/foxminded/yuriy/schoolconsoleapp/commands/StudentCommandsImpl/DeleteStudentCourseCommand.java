@@ -34,7 +34,7 @@ public class DeleteStudentCourseCommand implements Command {
 		System.out.println("Enter - 1 to confirm and - 2 to continue.");
 		if (choiceYesOrNot(sc)) {
 			List<Student> allStudents = studentService.getAll();
-			List<StudentDto> studentsList = studentDto.studensDto(allStudents);
+			List<StudentDto> studentsList = studentDto.studentsListDto(allStudents);
 			for (StudentDto studentDto : studentsList) {
 				System.out.println(studentDto.toString());
 			}

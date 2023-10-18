@@ -19,8 +19,6 @@ public interface StudentDao {
 
 	List<Student> getAll();
 	
-	int getLastIdValue();
-	
 	void update(Student student);
 
 }

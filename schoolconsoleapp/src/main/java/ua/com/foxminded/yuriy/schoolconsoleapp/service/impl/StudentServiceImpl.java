@@ -51,11 +51,6 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	@Override
-	public int lastIdValue() {
-		return studentDao.getLastIdValue();
-	}
-
-	@Override
 	public void update(Student student) {
 		studentDao.update(student);
 	}

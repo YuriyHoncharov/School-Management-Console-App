@@ -4,13 +4,13 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.sqlqueries.SqlCourseQueries;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.sqlqueries.SqlStudentQueries;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.tables.CoursesColumns;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.tables.StudentsColumns;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.mappers.CourseMapper;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.mappers.StudentMapper;
@@ -30,10 +29,14 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
 public class StudentDaoImpl implements StudentDao {
 
 	private final JdbcTemplate jdbcTemplate;
+	private final CourseMapper courseMapper;
+	private final StudentMapper studentMapper;
 
 	@Autowired
-	public StudentDaoImpl(JdbcTemplate jdbcTemplate) {
+	public StudentDaoImpl(JdbcTemplate jdbcTemplate, CourseMapper courseMapper, StudentMapper studentMapper) {
 		this.jdbcTemplate = jdbcTemplate;
+		this.courseMapper = courseMapper;
+		this.studentMapper = studentMapper;
 	}
 
 	public void addAll(List<Student> students) {
@@ -68,7 +71,7 @@ public class StudentDaoImpl implements StudentDao {
 
 	@Override
 	public List<Student> getAllByCourse(int courseId) {
-		return jdbcTemplate.query(SqlStudentQueries.GET_STUDENTS_ON_COURSE, new StudentMapper(), courseId);
+		return jdbcTemplate.query(SqlStudentQueries.GET_STUDENTS_ON_COURSE, studentMapper::basicMapRow, courseId);
 	}
 
 	@Override
@@ -97,47 +100,47 @@ public class StudentDaoImpl implements StudentDao {
 
 	@Override
 	public Student getById(int id) {
-		return jdbcTemplate.queryForObject(SqlStudentQueries.GET_BY_ID, new StudentMapper(), id);
+		List<Student> studentData = jdbcTemplate.query(SqlStudentQueries.GET_BY_ID, studentMapper::mapRow, id);
+		Student student = studentData.get(0);
+		List<Course> courses = new ArrayList<>();
+		if (student.getCourses() == null || student.getCourses().isEmpty()) {
+			return student;
+		}
+
+		studentData.forEach(st -> courses.add(st.getCourses().get(0)));
+		student.setCourse(courses);
+		return student;
 	}
 
 	@Override
 	public Student getByName(String firstName, String lastName) {
-		return jdbcTemplate.queryForObject(SqlStudentQueries.GET_INFO_BY_NAME_LASTNAME, new StudentMapper(), firstName,
+		return jdbcTemplate.queryForObject(SqlStudentQueries.GET_INFO_BY_NAME_LASTNAME, studentMapper::basicMapRow, firstName,
 				lastName);
 	}
 
 	@Override
 	public List<Student> getAll() {
 
-		return jdbcTemplate.query(SqlStudentQueries.GET_ALL_STUDENTS, (ResultSetExtractor<List<Student>>) rs -> {
-			List<Student> students = new ArrayList<>();
-			Student student = new Student();
-			CourseMapper courseMapper = new CourseMapper(); 
+		return jdbcTemplate.query(SqlStudentQueries.GET_ALL_STUDENTS, rs -> {
+			Map<Integer, Student> studentsMap = new HashMap<>();
+			Student student = null;
 
 			while (rs.next()) {
-				if (rs.getInt(StudentsColumns.STUDENT_ID) == student.getId()) {
-					Course course = courseMapper.mapRow(rs, 0);
+				int studentId = rs.getInt(StudentsColumns.STUDENT_ID);
+				if (student != null && studentId == student.getId()) {
 					List<Course> courses = student.getCourses();
-					courses.add(course);
-					student.setCourse(courses);
+					courses.add(courseMapper.mapRow(rs, 0));
 				} else {
-					student = new Student(rs.getInt(StudentsColumns.STUDENT_ID), rs.getInt(StudentsColumns.GROUP_ID),
-							rs.getString(StudentsColumns.FIRST_NAME), rs.getString(StudentsColumns.LAST_NAME));
-					Course course = courseMapper.mapRow(rs, 0);
-					List<Course> courses = student.getCourses();
-					courses.add(course);
-					student.setCourse(courses);
-					}
-				int studentId = student.getId();
-				students = students.stream().filter(s -> s.getId() != studentId).collect(Collectors.toList());
-				students.add(student);
+					student = studentMapper.mapRow(rs, 0);
+				}
+				studentsMap.put(student.getId(), student);
 			}
-			return students;
+			return new ArrayList<>(studentsMap.values());
+
 		});
 	}
 
-	@Override
-	public int getLastIdValue() {
+	private int getLastIdValue() {
 		Integer maxIdValue = jdbcTemplate.queryForObject(SqlStudentQueries.GET_LAST_ID_VALUE, Integer.class);
 
 		if (maxIdValue != null) {

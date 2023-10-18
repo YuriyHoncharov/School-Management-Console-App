@@ -61,6 +61,10 @@ public class StudentDto {
 	public String courseToString() {
 
 		StringBuilder sb = new StringBuilder();
+		
+		if(courses.isEmpty()) {
+			return "No courses are currently assigned to this student.";
+		}
 
 		for (Course course : courses) {
 			CourseDto courseDto = new CourseDto();
@@ -81,7 +85,7 @@ public class StudentDto {
 				firstName + " " + lastName, groupId, courseString);
 	}
 
-	public List<StudentDto> studensDto(List<Student> students) {
+	public List<StudentDto> studentsListDto(List<Student> students) {
 		List<StudentDto> studentsDto = new ArrayList<>();
 
 		for (Student st : students) {
@@ -95,5 +99,17 @@ public class StudentDto {
 
 		}
 		return studentsDto;
+	}
+	
+	public StudentDto studentToDto(Student student) {
+		
+		StudentDto studentDto = new StudentDto();
+		studentDto.setCourses(student.getCourses());
+		studentDto.setFirstName(student.getFirstName());
+		studentDto.setGroupId(student.getGroupId());
+		studentDto.setId(student.getId());
+		studentDto.setLastName(student.getLastName());
+		return studentDto;
+		
 	}
 }

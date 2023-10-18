@@ -18,8 +18,6 @@ public interface StudentService {
 
 	List<Student> getAll();
 	
-	int lastIdValue();
-	
 	void update (Student student);
 
 }

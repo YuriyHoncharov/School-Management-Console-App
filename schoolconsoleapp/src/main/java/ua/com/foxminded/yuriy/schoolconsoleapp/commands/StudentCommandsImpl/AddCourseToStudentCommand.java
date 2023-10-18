@@ -33,7 +33,7 @@ public class AddCourseToStudentCommand implements Command {
 		System.out.println("Enter - 1 to confirm and - 2 to continue.");
 		if (choiceYesOrNot(sc)) {
 			List<Student> allStudents = studentService.getAll();
-			List<StudentDto> studentsList = studentDto.studensDto(allStudents);
+			List<StudentDto> studentsList = studentDto.studentsListDto(allStudents);
 			for (StudentDto studentDto : studentsList) {
 				System.out.println(studentDto.toString());
 			}
@@ -71,7 +71,9 @@ public class AddCourseToStudentCommand implements Command {
 
 	private void addCourseToStudent(Student student, int choosenCourse) {
 		Course selectedCourse = courseService.getById(choosenCourse);
-		student.getCourses().add(selectedCourse);
+		List<Course> courses = student.getCourses();
+		courses.add(selectedCourse);
+		student.setCourse(courses);
 		studentService.update(student);
 		System.out.println("Course has been succesfuly added to the student.");
 	}
