@@ -24,15 +24,10 @@ public class StudentMapper implements RowMapper<Student> {
 		this.courseMapper = courseMapper;
 	}
 
-	public StudentMapper() {
-		this.courseMapper = new CourseMapper();
-	}
-
 	@Override
 	public Student mapRow(ResultSet rs, int rowNum) throws SQLException {
 		try {
-			Student student = new Student(rs.getInt(StudentsColumns.STUDENT_ID), rs.getInt(StudentsColumns.GROUP_ID),
-					rs.getString(StudentsColumns.FIRST_NAME), rs.getString(StudentsColumns.LAST_NAME));
+			Student student = basicMapRow(rs, rowNum);
 			List<Course> courses = new ArrayList<>();
 			Integer courseId = rs.getObject(CoursesColumns.COURSE_ID, Integer.class);
 			Course course;

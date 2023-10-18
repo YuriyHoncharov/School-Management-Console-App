@@ -18,9 +18,6 @@ public class CourseServiceImpl implements CourseService {
 		this.courseDao = courseDao;
 	}
 	
-	public CourseServiceImpl(){		
-	}
-
 	@Override
 	public List<Course> getAvailableCourses(int studentId) {
 		return courseDao.getAvailableCourses(studentId);
