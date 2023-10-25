@@ -3,7 +3,6 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.dao.impl;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -17,14 +16,16 @@ import java.util.List;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
-import ua.com.foxminded.yuriy.schoolconsoleapp.config.ConnectionUtil;
+
+import org.springframework.jdbc.core.JdbcTemplate;
+
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.sqlqueries.SqlStudentQueries;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.mappers.CourseMapper;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.mappers.StudentMapper;
 
 class StudentDaoImplTest {
 
@@ -36,27 +37,22 @@ class StudentDaoImplTest {
 	private PreparedStatement mockCourseStatement;
 	@Mock
 	private ResultSet mockGeneratedKeys;
-
+	
 	private StudentDaoImpl studentDao;
-	private MockedStatic<ConnectionUtil> mockedStatic;
+	private JdbcTemplate jdbcTemplate;
+	private CourseMapper courseMapper;
+	private StudentMapper studentMapper;
 
 	@BeforeEach
 	void setUp() {
 		MockitoAnnotations.openMocks(this);
-		mockedStatic = mockStatic(ConnectionUtil.class);
-		when(ConnectionUtil.getConnection()).thenReturn(mockConnection);
-		studentDao = new StudentDaoImpl();
+		studentDao = new StudentDaoImpl(jdbcTemplate, courseMapper, studentMapper);
 	}
-
-	@AfterEach
-	void cleanUp() {
-		mockedStatic.close();
-	}
-
+	
+	
 	@Test
 	void addAllTest_Success() throws SQLException {
 		  when(mockConnection.prepareStatement(SqlStudentQueries.ADD_ALL, Statement.RETURN_GENERATED_KEYS)).thenReturn(mockStatement);
-		  when(mockConnection.prepareStatement(SqlStudentQueries.ADD_COURSES)).thenReturn(mockCourseStatement);
 		  when(mockStatement.getGeneratedKeys()).thenReturn(mockGeneratedKeys);
 		  when(mockGeneratedKeys.next()).thenReturn(true, true);
 		  when(mockGeneratedKeys.getInt(1)).thenReturn(1, 2);
@@ -86,7 +82,7 @@ class StudentDaoImplTest {
 		  studentDao.addAll(students);
 		  
 		  verify(mockConnection, times(1)).prepareStatement(SqlStudentQueries.ADD_ALL, Statement.RETURN_GENERATED_KEYS);
-		  verify(mockConnection, times(1)).prepareStatement(SqlStudentQueries.ADD_COURSES);
+		  verify(mockConnection, times(1)).prepareStatement(SqlStudentQueries.GET_LAST_ID_VALUE);
 		  verify(mockStatement, times(2)).setInt(anyInt(), anyInt());
 		  verify(mockStatement, times(4)).setString(anyInt(), anyString());		 
 		  verify(mockStatement, times(2)).executeUpdate();
@@ -110,9 +106,10 @@ class StudentDaoImplTest {
 	void setGroupByIdTest_Success() throws SQLException {
 		int studentId = 1;
 		Group group = mock(Group.class);
+		Student student = mock(Student.class);
 		when(group.getId()).thenReturn(1);
 		when(mockConnection.prepareStatement(SqlStudentQueries.SET_GROUP_ID)).thenReturn(mockStatement);
-		studentDao.setGroupById(studentId, group);
+		studentDao.update(student);
 		verify(mockStatement).setInt(1, group.getId());
 		verify(mockStatement).setInt(2, studentId);
 		verify(mockStatement).executeUpdate();
