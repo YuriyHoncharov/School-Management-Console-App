@@ -29,14 +29,18 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
 public class StudentDaoImpl implements StudentDao {
 
 	private final JdbcTemplate jdbcTemplate;
-	private final CourseMapper courseMapper;
-	private final StudentMapper studentMapper;
+	private CourseMapper courseMapper;
+	private StudentMapper studentMapper;
 
 	@Autowired
 	public StudentDaoImpl(JdbcTemplate jdbcTemplate, CourseMapper courseMapper, StudentMapper studentMapper) {
 		this.jdbcTemplate = jdbcTemplate;
 		this.courseMapper = courseMapper;
 		this.studentMapper = studentMapper;
+	}
+
+	public StudentDaoImpl(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
 	}
 
 	public void addAll(List<Student> students) {
@@ -114,8 +118,8 @@ public class StudentDaoImpl implements StudentDao {
 
 	@Override
 	public Student getByName(String firstName, String lastName) {
-		return jdbcTemplate.queryForObject(SqlStudentQueries.GET_INFO_BY_NAME_LASTNAME, studentMapper::basicMapRow, firstName,
-				lastName);
+		return jdbcTemplate.queryForObject(SqlStudentQueries.GET_INFO_BY_NAME_LASTNAME, studentMapper::basicMapRow,
+				firstName, lastName);
 	}
 
 	@Override

@@ -1,23 +1,30 @@
 package ua.com.foxminded.yuriy.schoolconsoleapp.testconfig;
 
-import javax.activation.DataSource;
-
+import javax.sql.DataSource;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.impl.StudentDaoImpl;
 
 @TestConfiguration
 public class TestConfig {
 
-	
+	private JdbcTemplate JdbcTemplate;
+
 	@Bean
-	public DataSource dataSource(){
-		return new EmbeddedDatabaseBuilder()
-				.setType(EmbeddedDatabaseType.H2)
-				.addScript("classpath:schema.sql")
-				.addScript("classpath:test-data.sql")
-				.build();
-				
+	public DataSource dataSource() {
+		DriverManagerDataSource dataSource = new DriverManagerDataSource();
+		dataSource.setDriverClassName("org.h2.Driver");
+		dataSource.setUrl("jdbc:h2:mem:testdb;MODE=PostgreSQL;DB_CLOSE_ON_EXIT=FALSE");
+		dataSource.setUsername("testuser");
+		dataSource.setPassword("testpassword");
+		return dataSource;
+	}
+
+	@Bean
+	public StudentDaoImpl studentDao() {
+		return new StudentDaoImpl(JdbcTemplate);
 	}
 }
