@@ -105,15 +105,21 @@ public class StudentDaoImpl implements StudentDao {
 	@Override
 	public Student getById(int id) {
 		List<Student> studentData = jdbcTemplate.query(SqlStudentQueries.GET_BY_ID, studentMapper::mapRow, id);
-		Student student = studentData.get(0);
+		Student student = null;
+		if (!studentData.isEmpty()) {
+		student = studentData.get(0);
+		
 		List<Course> courses = new ArrayList<>();
 		if (student.getCourses() == null || student.getCourses().isEmpty()) {
 			return student;
+			
 		}
 
 		studentData.forEach(st -> courses.add(st.getCourses().get(0)));
 		student.setCourse(courses);
+		}
 		return student;
+		
 	}
 
 	@Override
