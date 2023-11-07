@@ -6,7 +6,7 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 
 public interface StudentService {
 
-	List<Student> getAllByCourse(String courseName);
+	List<Student> getAllByCourse(int courseId);
 
 	void deleteById(int id);
 
@@ -16,6 +16,8 @@ public interface StudentService {
 
 	Student getByName(String firstName, String lastName);
 
-	void setGroupById(int id, Group group);
+	List<Student> getAll();
+	
+	void update (Student student);
 
 }

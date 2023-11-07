@@ -3,16 +3,21 @@ package ua.com.foxminded.yuriy.schoolconsoleapp;
 import java.io.PrintStream;
 import java.util.Map;
 import java.util.Scanner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Invoker;
 
+
+@Component
 public class ConsoleMenu {
 
 	public static final String LINE = " - ";
 	private Invoker invoker;
 	
+	@Autowired
 	public ConsoleMenu(Invoker invoker) {
-		this.invoker = invoker;
+		this.invoker = invoker;		
 	}
 
 	public void run() {

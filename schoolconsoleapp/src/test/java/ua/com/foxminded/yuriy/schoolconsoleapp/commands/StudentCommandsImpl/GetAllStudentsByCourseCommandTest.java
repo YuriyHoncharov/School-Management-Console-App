@@ -1,6 +1,7 @@
 package ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 import java.io.ByteArrayOutputStream;
@@ -16,7 +17,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
+import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.CourseServiceImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.StudentServiceImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
 
@@ -28,13 +32,16 @@ class GetAllStudentsByCourseCommandTest {
 	private StudentServiceImpl mockStudentService;
 
 	@Mock
+	private CourseServiceImpl mockCourseService;
+
+	@Mock
 	private Scanner mockScanner;
 
 	@InjectMocks
 	private GetAllStudentsByCourseCommand mockGetAllStudentsByCourseCommand;
-	
+
 	private MockedStatic<InputValidator> mockedStatic;
-	
+
 	private PrintStream originalSystemOut;
 	private ByteArrayOutputStream outputStreamCaptor;
 
@@ -54,20 +61,25 @@ class GetAllStudentsByCourseCommandTest {
 
 	@Test
 	void execute_courseExist_ShouldPrintAllStudens() {
+		int courseId = 1;
 
-		String courseName = "Math";
+		Course course = new Course("random", "random", 1);
+		List<Course> courses = new ArrayList<>();
+		courses.add(course);
+
 		List<Student> studentList = new ArrayList<>();
 		Student student = new Student("random", "student");
 		student.setId(1);
 		studentList.add(student);
 
-		when(InputValidator.isAlphabeticalInput(mockScanner)).thenReturn(courseName);
-		when(mockStudentService.getAllByCourse(courseName)).thenReturn(studentList);
+		when(mockCourseService.getAllCourses()).thenReturn(courses);
+		when(InputValidator.getNextInt(mockScanner)).thenReturn(courseId);
+		when(mockStudentService.getAllByCourse(courseId)).thenReturn(studentList);
 
 		mockGetAllStudentsByCourseCommand.execute(mockScanner);
 
-		String expectedOutput = "Please enter the course name.." + System.lineSeparator() + "1. random student"
-				+ System.lineSeparator();
+		String expectedOutput = "Please insert the course ID..\r\n"
+				+ "[Course ID : 1 | Course Name : random | Description : random]\r\n" + "1. random student\r\n" + "";
 		assertEquals(expectedOutput, outputStreamCaptor.toString());
 	}
 }

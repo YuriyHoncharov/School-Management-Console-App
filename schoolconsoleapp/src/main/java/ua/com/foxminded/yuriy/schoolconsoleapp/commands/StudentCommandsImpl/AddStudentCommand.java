@@ -2,6 +2,10 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl;
 
 import java.util.List;
 import java.util.Scanner;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
@@ -9,16 +13,17 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.service.GroupService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
 
+@Component
 public class AddStudentCommand implements Command {
-	
+
 	private StudentService studentService;
 	private GroupService groupService;
-	
+
+	@Autowired
 	public AddStudentCommand(StudentService studentService, GroupService groupService) {
 		this.studentService = studentService;
 		this.groupService = groupService;
 	}
-	
 
 	@Override
 	public void execute(Scanner sc) {
@@ -59,8 +64,8 @@ public class AddStudentCommand implements Command {
 		if (!groupExist) {
 			System.out.println("The group with ID : " + groupId + " does now exist. Please retry");
 		} else {
-			Group group = groupService.getById(groupId);
-			studentService.setGroupById(student.getId(), group);
+			student.setGroupId(groupId);
+			studentService.update(student);
 			System.out.println("Group has been succesfully added to the student.");
 		}
 	}

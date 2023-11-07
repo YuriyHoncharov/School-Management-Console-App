@@ -2,27 +2,42 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl;
 
 import java.util.List;
 import java.util.Scanner;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
+import ua.com.foxminded.yuriy.schoolconsoleapp.entity.dto.StudentDto;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.CourseService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
 
+@Component
 public class AddCourseToStudentCommand implements Command {
-	
+
 	private CourseService courseService;
 	private StudentService studentService;
+	private StudentDto studentDto;
 
-	public AddCourseToStudentCommand(CourseService courseService, StudentService studentService) {
+	@Autowired
+	public AddCourseToStudentCommand(CourseService courseService, StudentService studentService, StudentDto studentDto) {
 		this.courseService = courseService;
 		this.studentService = studentService;
-
+		this.studentDto = studentDto;
 	}
 
 	@Override
 	public void execute(Scanner sc) {
 
+		System.out.println("Do you want to see the entire list of students?");
+		System.out.println("Enter - 1 to confirm and - 2 to continue.");
+		if (choiceYesOrNot(sc)) {
+			List<Student> allStudents = studentService.getAll();
+			List<StudentDto> studentsList = studentDto.studentsListDto(allStudents);
+			for (StudentDto studentDto : studentsList) {
+				System.out.println(studentDto.toString());
+			}
+		}
 		Student student = getStudent(sc);
 		if (student == null) {
 			System.out.println("Student with provided ID is not found.");
@@ -41,8 +56,8 @@ public class AddCourseToStudentCommand implements Command {
 	private Student getStudent(Scanner sc) {
 		System.out.println("Please enter the student's id...");
 		int studentId = InputValidator.getNextInt(sc);
-		return studentService.getById(studentId);
-
+		Student student = studentService.getById(studentId);
+		return student;
 	}
 
 	private List<Course> availableCourses(Student student) {
@@ -56,8 +71,16 @@ public class AddCourseToStudentCommand implements Command {
 
 	private void addCourseToStudent(Student student, int choosenCourse) {
 		Course selectedCourse = courseService.getById(choosenCourse);
-		courseService.addToStudent(selectedCourse, student.getId());
+		List<Course> courses = student.getCourses();
+		courses.add(selectedCourse);
+		student.setCourse(courses);
+		studentService.update(student);
 		System.out.println("Course has been succesfuly added to the student.");
+	}
+
+	private boolean choiceYesOrNot(Scanner sc) {
+		int confirmation = InputValidator.getNextInt(sc);
+		return confirmation == 1;
 	}
 
 	@Override

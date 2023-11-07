@@ -11,6 +11,10 @@ public class Group {
 		this.name = name;
 		this.id = id;
 	}
+	
+	public Group() {
+		
+	}
 
 	public int getId() {
 		return id;

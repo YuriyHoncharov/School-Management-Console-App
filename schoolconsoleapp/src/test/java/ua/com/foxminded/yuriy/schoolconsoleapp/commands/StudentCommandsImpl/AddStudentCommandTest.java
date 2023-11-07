@@ -77,13 +77,12 @@ class AddStudentCommandTest {
 		when(InputValidator.getValidChoice(mockScanner)).thenReturn(answer);
 		when(InputValidator.getNextInt(mockScanner)).thenReturn(groupId);
 		when(mockGroupService.getAll()).thenReturn(all);
-		when(mockGroupService.getById(groupId)).thenReturn(group);
 		when(mockStudentService.add(any(Student.class))).thenReturn(studentId);
 
 		mockAddStudentCommand.execute(mockScanner);
 
 		verify(mockStudentService, times(1)).add(any(Student.class));
-		verify(mockStudentService, times(1)).setGroupById(anyInt(), any(Group.class));
+		verify(mockStudentService, times(1)).update(any(Student.class));
 	}
 
 	@Test
