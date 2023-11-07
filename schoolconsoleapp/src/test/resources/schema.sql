@@ -18,5 +18,5 @@ course_description TEXT
 
 CREATE TABLE IF NOT EXISTS students_courses (
 course_id INTEGER REFERENCES courses(course_id),
-student_id INTEGER REFERENCES students(student_id)
+student_id INTEGER REFERENCES students(student_id) ON DELETE CASCADE
 );

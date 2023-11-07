@@ -37,7 +37,6 @@ public class StudentDaoIT {
 	@Test
 	void shouldAddAllStudents() {
 		Student student = new Student(10, 1, "TestName", "TestLastName");
-
 		List<Student> students = new ArrayList<>();
 		students.add(student);
 		studentDao.addAll(students);
@@ -74,9 +73,7 @@ public class StudentDaoIT {
 
 	@Test
 	void shouldDeleteStudentById() {
-		Student student = new Student("Name", "LastName");
-		int studentId = 10;
-		student.setId(studentId);
+		int studentId = 1;
 		studentDao.deleteById(studentId);
 		Student deletedStudent = studentDao.getById(studentId);
 		assertNull(deletedStudent);
@@ -85,20 +82,31 @@ public class StudentDaoIT {
 	@Test
 	void shouldReturnStudentById() {
 		int studentId = 3;
-		Student student = studentDao.getById(studentId);
-		Student studentFromDb = new Student(3, 1, "Bob", "Johnson");
+		Student studentFromDb = studentDao.getById(studentId);
+		Student student = new Student(3, 1, "Bob", "Johnson");
 		Course course = new Course("History", "World History", 2);
 		List<Course> courses = new ArrayList<>();
 		courses.add(course);
-		studentFromDb.setCourse(courses);
-		assertEquals(studentFromDb, student);
+		student.setCourse(courses);
+		assertEquals(student, studentFromDb);
 	}
-	
+
 	@Test
-	void shouldGetStudentByName(){
+	void shouldGetStudentByName() {
 		Student student = studentDao.getByName("Bob", "Johnson");
 		Student studentFromDb = new Student(3, 1, "Bob", "Johnson");
 		assertEquals(studentFromDb, student);
-		
+	}
+
+	@Test
+	void shouldUpdateStudentInfoCorrectly() {
+		Student student = new Student(1, 2, "New Name", "New Last Name");
+		Course course = new Course("History", "World History", 2);
+		List<Course> courses = new ArrayList<>();
+		courses.add(course);
+		student.setCourse(courses);
+		studentDao.update(student);
+		Student updatedStudent = studentDao.getById(1);
+		assertEquals(student, updatedStudent);
 	}
 }
