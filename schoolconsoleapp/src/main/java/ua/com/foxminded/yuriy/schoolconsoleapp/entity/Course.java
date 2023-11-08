@@ -13,6 +13,10 @@ public class Course {
 		this.description = description;
 		this.id = id;
 	}
+	
+	public Course() {
+		
+	}
 
 	public int getId() {
 		return id;

@@ -2,13 +2,21 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.GroupDao;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.impl.GroupDaoImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.GroupService;
 
+@Service
 public class GroupServiceImpl implements GroupService {
-	private GroupDao groupDao = new GroupDaoImpl();
+	
+	private GroupDao groupDao;
+	
+	@Autowired
+	public GroupServiceImpl(GroupDao groupDao) {
+		this.groupDao = groupDao;
+	}
 
 	@Override
 	public List<Group> getAllLessOrEqual(int studentsCount) {

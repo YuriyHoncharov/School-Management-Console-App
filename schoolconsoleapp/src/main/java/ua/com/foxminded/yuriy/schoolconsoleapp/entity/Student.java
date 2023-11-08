@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Student {
-	
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(courses, firstName, groupId, id, lastName);
@@ -30,7 +30,17 @@ public class Student {
 	private String lastName;
 	private List<Course> courses = new ArrayList<>();
 
+	public Student() {
+	}
+
 	public Student(String firstName, String lastName) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+	}
+
+	public Student(int id, int groupId, String firstName, String lastName) {
+		this.id = id;
+		this.groupId = groupId;
 		this.firstName = firstName;
 		this.lastName = lastName;
 	}

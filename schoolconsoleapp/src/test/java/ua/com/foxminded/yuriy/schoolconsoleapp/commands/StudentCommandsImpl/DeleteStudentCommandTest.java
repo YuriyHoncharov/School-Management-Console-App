@@ -1,6 +1,7 @@
 package ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -17,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
+import ua.com.foxminded.yuriy.schoolconsoleapp.entity.dto.StudentDto;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.StudentServiceImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
 
@@ -29,6 +31,9 @@ class DeleteStudentCommandTest {
 
 	@Mock
 	private Scanner mockScanner;
+
+	@Mock
+	private StudentDto mockStudentDto;
 
 	@InjectMocks
 	private DeleteStudentCommand mockDeleteStudentCommand;
@@ -44,6 +49,7 @@ class DeleteStudentCommandTest {
 		originalSystemOut = System.out;
 		outputStreamCaptor = new ByteArrayOutputStream();
 		System.setOut(new PrintStream(outputStreamCaptor));
+		mockDeleteStudentCommand = new DeleteStudentCommand(mockStudentService, mockStudentDto);
 	}
 
 	@AfterEach
@@ -58,9 +64,14 @@ class DeleteStudentCommandTest {
 		int confirmation = 1;
 		Student student = new Student("Name", "Lastname");
 		student.setId(studentId);
+		StudentDto studentPrint = new StudentDto();
+		studentPrint.setFirstName("Name");
+		studentPrint.setLastName("Lastname");
+		studentPrint.setId(studentId);
 
-		when(InputValidator.getNextInt(mockScanner)).thenReturn(studentId, confirmation);
+		when(InputValidator.getNextInt(mockScanner)).thenReturn(2, studentId, confirmation);
 		when(mockStudentService.getById(studentId)).thenReturn(student);
+		when(mockStudentDto.studentToDto(student)).thenReturn(studentPrint);
 
 		mockDeleteStudentCommand.execute(mockScanner);
 
@@ -74,33 +85,36 @@ class DeleteStudentCommandTest {
 		int confirmation = 2;
 		Student student = new Student("Name", "Lastname");
 		student.setId(studentId);
-		String message = "Enter student's ID you want to delete..\r\n"
-				+ "Are you sure that you want to delete: [Student ID : 10, Group ID : 0, First Name : Name, Last Name : Lastname]\r\n"
-				+ "Enter - 1 to confirm and - 2 to cancel.\r\n"
-				+ "You canceled the operation.\r\n"
-				+ "";
-		when(InputValidator.getNextInt(mockScanner)).thenReturn(studentId, confirmation);
+		StudentDto studentPrint = new StudentDto();
+		studentPrint.setFirstName("Name");
+		studentPrint.setLastName("Lastname");
+		studentPrint.setId(studentId);
+		String message = "Do you want to see the entire list of students?\r\n"
+				+ "Enter - 1 to confirm and - 2 to continue.\r\n" + "Enter student's ID you want to delete..\r\n"
+				+ "ID : 10  | Name : Name Lastname        | Group ID : 0  | Courses : No courses are currently assigned to this student. - Will be deleted from the database. Are you sure you want to confirm?\r\n"
+				+ "Enter - 1 to confirm and - 2 to cancel.\r\n" + "You canceled the operation.\r\n" + "";
+		when(InputValidator.getNextInt(mockScanner)).thenReturn(2, studentId, confirmation);
 		when(mockStudentService.getById(studentId)).thenReturn(student);
-		
+		when(mockStudentDto.studentToDto(student)).thenReturn(studentPrint);
 		mockDeleteStudentCommand.execute(mockScanner);
-		
+
 		verify(mockStudentService).getById(studentId);
 		assertEquals(message, outputStreamCaptor.toString());
 	}
-	
+
 	@Test
 	void execute_studentNotFound_ShouldPrintRightMessage() {
 		int studentId = 10;
-		
+
 		Student student = null;
-		String message = "Enter student's ID you want to delete..\r\n"
-				+ "Student with entered ID is not found.\r\n"
-				+ "";
+		String message = "Do you want to see the entire list of students?\r\n"
+				+ "Enter - 1 to confirm and - 2 to continue.\r\n" + "Enter student's ID you want to delete..\r\n"
+				+ "Student with entered ID is not found.\r\n" + "";
 		when(InputValidator.getNextInt(mockScanner)).thenReturn(studentId);
 		when(mockStudentService.getById(studentId)).thenReturn(student);
-		
+
 		mockDeleteStudentCommand.execute(mockScanner);
-		
+
 		verify(mockStudentService).getById(studentId);
 		assertEquals(message, outputStreamCaptor.toString());
 	}

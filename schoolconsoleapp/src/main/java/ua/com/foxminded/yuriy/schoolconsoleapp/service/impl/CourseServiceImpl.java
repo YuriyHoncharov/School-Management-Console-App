@@ -1,24 +1,26 @@
 package ua.com.foxminded.yuriy.schoolconsoleapp.service.impl;
 
 import java.util.List;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.CourseDao;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.impl.CourseDaoImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.CourseService;
 
+@Service
 public class CourseServiceImpl implements CourseService {
-
-	private CourseDao courseDao = new CourseDaoImpl();
-
+	
+	
+	private CourseDao courseDao;
+		
+	@Autowired
+	public CourseServiceImpl(CourseDao courseDao) {
+		this.courseDao = courseDao;
+	}
+	
 	@Override
 	public List<Course> getAvailableCourses(int studentId) {
 		return courseDao.getAvailableCourses(studentId);
-	}
-
-	@Override
-	public void addToStudent(Course selectedCourse, int studentId) {
-		courseDao.addToStudent(selectedCourse, studentId);
 	}
 
 	@Override
@@ -27,12 +29,12 @@ public class CourseServiceImpl implements CourseService {
 	}
 
 	@Override
-	public void deregisterCourse(int studentId, int courseId) {
-		courseDao.deregisterCourse(studentId, courseId);
+	public Course getById(int courseId) {
+		return courseDao.getById(courseId);
 	}
 
 	@Override
-	public Course getById(int courseId) {
-		return courseDao.getById(courseId);
+	public List<Course> getAllCourses() {
+		return courseDao.getAllCourses();
 	}
 }

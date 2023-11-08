@@ -3,32 +3,47 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Component;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
+import ua.com.foxminded.yuriy.schoolconsoleapp.entity.dto.StudentDto;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.CourseService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
 
+@Component
 public class DeleteStudentCourseCommand implements Command {
-
+	// TO DO
 	private CourseService courseService;
 	private StudentService studentService;
+	private StudentDto studentDto;
 
-	public DeleteStudentCourseCommand(CourseService courseService, StudentService studentService) {
+	@Autowired
+	public DeleteStudentCourseCommand(CourseService courseService, StudentService studentService, StudentDto studentDto) {
 		this.courseService = courseService;
 		this.studentService = studentService;
+		this.studentDto = studentDto;
 	}
 
 	@Override
 	public void execute(Scanner sc) {
-
+		System.out.println("Do you want to see the entire list of students?");
+		System.out.println("Enter - 1 to confirm and - 2 to continue.");
+		if (choiceYesOrNot(sc)) {
+			List<Student> allStudents = studentService.getAll();
+			List<StudentDto> studentsList = studentDto.studentsListDto(allStudents);
+			for (StudentDto studentDto : studentsList) {
+				System.out.println(studentDto.toString());
+			}
+		}
 		Student student = getStudent(sc);
 		if (student == null) {
 			System.out.println("Student with provided ID is not found.");
 		} else {
-			List<Course> actualCourses = courseService.getByStudentId(student.getId());
+			List<Course> actualCourses = student.getCourses();
 			int choosenCourse = choiceCourseToDelete(sc, student);
 			if (studentFollowsCourse(actualCourses, choosenCourse)) {
 				deleteCourse(student, choosenCourse);
@@ -42,12 +57,17 @@ public class DeleteStudentCourseCommand implements Command {
 	private Student getStudent(Scanner sc) {
 		System.out.println("Please enter student ID..");
 		int studentId = InputValidator.getNextInt(sc);
-		return studentService.getById(studentId);
+		try {
+			Student student = studentService.getById(studentId);
+			return student;
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
 	}
 
 	private int choiceCourseToDelete(Scanner sc, Student student) {
 
-		List<Course> actualCourses = courseService.getByStudentId(student.getId());
+		List<Course> actualCourses = student.getCourses();
 		for (int i = 0; i < actualCourses.size(); i++) {
 			Course course = actualCourses.get(i);
 			System.out.println((i + 1) + ". " + course.toString());
@@ -63,8 +83,14 @@ public class DeleteStudentCourseCommand implements Command {
 	}
 
 	private void deleteCourse(Student student, int choosenCourse) {
-		courseService.deregisterCourse(choosenCourse, student.getId());
+		student.getCourses().removeIf(course -> course.getId() == choosenCourse);
+		studentService.update(student);
 		System.out.println("Course has been succesfully removed.");
+	}
+
+	private boolean choiceYesOrNot(Scanner sc) {
+		int confirmation = InputValidator.getNextInt(sc);
+		return confirmation == 1;
 	}
 
 	@Override

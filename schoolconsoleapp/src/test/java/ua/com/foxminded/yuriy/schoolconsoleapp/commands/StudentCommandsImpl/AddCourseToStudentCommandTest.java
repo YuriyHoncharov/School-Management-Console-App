@@ -3,6 +3,7 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -22,6 +23,7 @@ import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
+import ua.com.foxminded.yuriy.schoolconsoleapp.entity.dto.StudentDto;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.CourseServiceImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.StudentServiceImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
@@ -41,6 +43,9 @@ class AddCourseToStudentCommandTest {
 
 	@Mock
 	private Scanner mockScanner;
+	
+	@Mock
+	private StudentDto studentDto;
 	
 	private MockedStatic<InputValidator> mockedStatic;
 
@@ -72,9 +77,11 @@ class AddCourseToStudentCommandTest {
 
 		String printedMessage = outPutStream.toString().trim();
 		String[] lines = printedMessage.split("\\r?\\n");
-		assertEquals("Please enter the student's id...", lines[0]);
-		assertEquals("Student with provided ID is not found.", lines[1]);
-		verify(mockCourseService, times(0)).addToStudent(course, studentId);
+		assertEquals("Do you want to see the entire list of students?", lines[0]);
+		assertEquals("Enter - 1 to confirm and - 2 to continue.", lines[1]);
+		assertEquals("Please enter the student's id...", lines[2]);
+		assertEquals("Student with provided ID is not found.", lines[3]);
+		verify(mockStudentService, times(0)).update(studentNull);
 
 	}
 
@@ -90,8 +97,10 @@ class AddCourseToStudentCommandTest {
 		Course course = new Course("Math", "Math Course", courseId);
 		availableCourses.add(course);
 		int chosenCourse = courseId;
-
-		when(InputValidator.getNextInt(mockScanner)).thenReturn(1, 2);
+		List<Student>allStudents = new ArrayList<>();
+		
+		when(InputValidator.getNextInt(mockScanner)).thenReturn(1, 1, 2);
+		when(mockStudentService.getAll()).thenReturn(allStudents);
 		when(mockStudentService.getById(studentId)).thenReturn(student);
 		when(mockCourseService.getAvailableCourses(student.getId())).thenReturn(availableCourses);
 		when(mockCourseService.getById(chosenCourse)).thenReturn(course);
@@ -100,12 +109,14 @@ class AddCourseToStudentCommandTest {
 
 		String printedMessage = outPutStream.toString().trim();
 		String[] lines = printedMessage.split("\\r?\\n");
-		assertEquals("Please enter the student's id...", lines[0]);
-		assertEquals("Please enter Course ID you want to add...", lines[1]);
-		assertEquals("[Course ID : 2 | Course Name : Math | Description : Math Course]", lines[2]);
-		assertEquals("Course has been succesfuly added to the student.", lines[3]);
+		assertEquals("Do you want to see the entire list of students?", lines[0]);
+		assertEquals("Enter - 1 to confirm and - 2 to continue.", lines[1]);
+		assertEquals("Please enter the student's id...", lines[2]);
+		assertEquals("Please enter Course ID you want to add...", lines[3]);
+		assertEquals("[Course ID : 2 | Course Name : Math | Description : Math Course]", lines[4]);
+		assertEquals("Course has been succesfuly added to the student.", lines[5]);
 
-		verify(mockCourseService, times(1)).addToStudent(course, studentId);
+		verify(mockStudentService, times(1)).update(student);;
 	}
 
 	@Test
@@ -128,10 +139,12 @@ class AddCourseToStudentCommandTest {
 
 		String printedMessage = outPutStream.toString().trim();
 		String[] lines = printedMessage.split("\\r?\\n");
-		assertEquals("Please enter the student's id...", lines[0]);
-		assertEquals("Please enter Course ID you want to add...", lines[1]);
-		assertEquals("[Course ID : 1 | Course Name : Math | Description : Math Course]", lines[2]);
-		assertEquals("This number is missing, please choose the course from the list", lines[3]);
-		verify(mockCourseService, times(0)).addToStudent(course, studentId);
+		assertEquals("Do you want to see the entire list of students?", lines[0]);
+		assertEquals("Enter - 1 to confirm and - 2 to continue.", lines[1]);
+		assertEquals("Please enter the student's id...", lines[2]);
+		assertEquals("Please enter Course ID you want to add...", lines[3]);
+		assertEquals("[Course ID : 1 | Course Name : Math | Description : Math Course]", lines[4]);
+		assertEquals("This number is missing, please choose the course from the list", lines[5]);
+		verify(mockStudentService, times(0)).update(student);
 	}
 }
