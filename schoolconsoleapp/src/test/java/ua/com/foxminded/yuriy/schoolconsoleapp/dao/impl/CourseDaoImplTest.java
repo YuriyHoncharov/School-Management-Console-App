@@ -36,6 +36,7 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.sqlqueries.SqlCours
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.tables.CoursesColumns;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.mappers.CourseMapper;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
+import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 
 @ExtendWith(MockitoExtension.class)
 public class CourseDaoImplTest {
@@ -72,15 +73,14 @@ public class CourseDaoImplTest {
 	}
 
 	@Test
-	void addToStudentTest_Success_shouldAddCourseToStudent() throws SQLException {
-		int studentId = 10;
-		Course course = mock(Course.class);
-		when(mockStatement.executeUpdate()).thenReturn(1);
-		courseDao.addToStudent(course, studentId);
-		verify(mockConnection, times(1)).prepareStatement(SqlCourseQueries.ADD_TO_STUDENT_BY_ID);
-		verify(mockStatement, times(1)).setInt(1, course.getId());
-		verify(mockStatement, times(1)).setInt(2, studentId);
-		verify(mockStatement, times(1)).executeUpdate();
-
+	void getByStudentId_Success_shouldReturnList() {
+		int studentId = 1;
+		List<Course> courses = new ArrayList<>();
+		courses.add(new Course("Mathematics", "Math Course", 1));
+		courses.add(new Course("Biology", "Biology Course", 2));
+		when(jdbcTemplate.query(eq(SqlCourseQueries.GET_COURSES_BY_STUDENT_ID), any(CourseMapper.class), eq(studentId))).thenReturn(courses);
+		List<Course>coursesFromDb = courseDao.getByStudentId(studentId);
+		verify(jdbcTemplate, times(1)).query(eq(SqlCourseQueries.GET_COURSES_BY_STUDENT_ID), any(CourseMapper.class), eq(studentId));
+		assertEquals(courses, coursesFromDb);
 	}
 }
