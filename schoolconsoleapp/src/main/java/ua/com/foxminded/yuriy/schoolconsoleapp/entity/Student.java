@@ -4,6 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "students")
 public class Student {
 
 	@Override
@@ -24,10 +37,25 @@ public class Student {
 				&& groupId == other.groupId && id == other.id && Objects.equals(lastName, other.lastName);
 	}
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "student_id", nullable = false)
 	private int id;
+
+	@ManyToOne
+	@JoinColumn(name = "group_id", referencedColumnName = "group_id")
 	private int groupId;
+
+	@Column(name = "first_name", nullable = false)
 	private String firstName;
+
+	@Column(name = "last_name", nullable = false)
 	private String lastName;
+
+	@ManyToMany
+	@JoinTable(name = "students_courses", 
+	joinColumns = @JoinColumn(name = "student_id"), 
+	inverseJoinColumns = @JoinColumn(name = "course_id"))
 	private List<Course> courses = new ArrayList<>();
 
 	public Student() {

@@ -1,19 +1,39 @@
 package ua.com.foxminded.yuriy.schoolconsoleapp.entity;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "groups")
 public class Group {
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "group_id")	
 	private int id;
+	
+	@Column(name = "group_name", nullable = false)
 	private String name;
+	
+	@OneToMany(mappedBy = "group")
+   private List<Student> students = new ArrayList<>();
 
 	public Group(String name, int id) {
 		this.name = name;
 		this.id = id;
 	}
-	
+
 	public Group() {
-		
+
 	}
 
 	public int getId() {
