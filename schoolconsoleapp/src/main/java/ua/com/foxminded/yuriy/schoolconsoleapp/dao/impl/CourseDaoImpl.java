@@ -1,28 +1,37 @@
 package ua.com.foxminded.yuriy.schoolconsoleapp.dao.impl;
 
 import java.util.List;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.CourseDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.sqlqueries.SqlCourseQueries;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.mappers.CourseMapper;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 
-@Component
+@Repository
 public class CourseDaoImpl implements CourseDao {
 	
-	private final JdbcTemplate jdbcTemplate;
+	private final SessionFactory sessionFactory;
+	private final Session session;
 
 	@Autowired
-	public CourseDaoImpl(JdbcTemplate jdbcTemplate) {
-		this.jdbcTemplate = jdbcTemplate;
+	public CourseDaoImpl(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+		this.session = sessionFactory.getCurrentSession();
 	}
 
 	@Override
+	@Transactional
 	public void addAll(List<Course> courses) {
 		for (Course course : courses) {
-			jdbcTemplate.update(SqlCourseQueries.ADD_ALL, course.getId(), course.getName(), course.getDescription());
+			session.save(course);
 		}
 	}
 

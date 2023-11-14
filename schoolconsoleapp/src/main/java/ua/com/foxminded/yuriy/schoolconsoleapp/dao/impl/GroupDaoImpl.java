@@ -4,12 +4,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
+
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.GroupDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.sqlqueries.SqlGroupQueries;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.mappers.GroupMapper;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 
-@Component
+@Repository
 public class GroupDaoImpl implements GroupDao {
 
 	private final JdbcTemplate jdbcTemplate;
