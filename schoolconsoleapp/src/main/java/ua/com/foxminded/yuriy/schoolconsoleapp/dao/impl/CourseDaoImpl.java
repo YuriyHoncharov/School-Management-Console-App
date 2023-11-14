@@ -11,7 +11,7 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 
 @Component
 public class CourseDaoImpl implements CourseDao {
-
+	
 	private final JdbcTemplate jdbcTemplate;
 
 	@Autowired
