@@ -4,8 +4,10 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
+
 
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.GroupDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
@@ -19,7 +21,7 @@ private EntityManager entityManager;
 	@Transactional
 	public void addAll(List<Group> groups) {
 		for (Group group : groups) {
-			entityManager.persist(group);
+			entityManager.merge(group);
 		}
 	}
 
