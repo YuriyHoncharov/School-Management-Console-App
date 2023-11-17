@@ -19,24 +19,6 @@ import javax.persistence.Table;
 @Table(name = "students")
 public class Student {
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(courses, firstName, groupId, id, lastName);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Student other = (Student) obj;
-		return Objects.equals(courses, other.courses) && Objects.equals(firstName, other.firstName)
-				&& groupId == other.groupId && id == other.id && Objects.equals(lastName, other.lastName);
-	}
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "student_id", nullable = false)
@@ -53,9 +35,7 @@ public class Student {
 	private String lastName;
 
 	@ManyToMany
-	@JoinTable(name = "students_courses", 
-	joinColumns = @JoinColumn(name = "student_id"), 
-	inverseJoinColumns = @JoinColumn(name = "course_id"))
+	@JoinTable(name = "students_courses", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
 	private List<Course> courses = new ArrayList<>();
 
 	public Student() {
@@ -109,6 +89,24 @@ public class Student {
 	public String toString() {
 		return "[Student ID : " + id + ", Group ID : " + groupId + ", First Name : " + firstName + ", Last Name : "
 				+ lastName + coursesToString() + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(courses, firstName, groupId, id, lastName);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Student other = (Student) obj;
+		return Objects.equals(courses, other.courses) && Objects.equals(firstName, other.firstName)
+				&& groupId == other.groupId && id == other.id && Objects.equals(lastName, other.lastName);
 	}
 
 	public List<Course> getCourses() {

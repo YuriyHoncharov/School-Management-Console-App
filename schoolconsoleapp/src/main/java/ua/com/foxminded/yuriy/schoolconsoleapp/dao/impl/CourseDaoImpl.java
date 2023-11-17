@@ -2,6 +2,11 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.dao.impl;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.PersistenceContext;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,41 +22,44 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 
 @Repository
 public class CourseDaoImpl implements CourseDao {
-	
-	private final SessionFactory sessionFactory;
-	private final Session session;
 
-	@Autowired
-	public CourseDaoImpl(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-		this.session = sessionFactory.getCurrentSession();
-	}
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	@Override
 	@Transactional
 	public void addAll(List<Course> courses) {
+		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("persistence");
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
 		for (Course course : courses) {
-			session.save(course);
-		}
+			entityManager.persist(course);
+		} 
 	}
 
 	@Override
+	@Transactional
 	public List<Course> getAvailableCourses(int studentId) {
-		return jdbcTemplate.query(SqlCourseQueries.GET_AVAILABLE_BY_STUDENT_ID, new CourseMapper(), studentId);
+		String jpql = "SELECT c FROM Course c WHERE c.id NOT IN (SELECT sc.course.id FROM StudentCourse sc WHERE sc.student.id = :studentId)";
+		return entityManager.createQuery(jpql, Course.class).setParameter("studentId", studentId).getResultList();
 	}
 
 	@Override
+	@Transactional
 	public List<Course> getByStudentId(int studentId) {
-		return jdbcTemplate.query(SqlCourseQueries.GET_COURSES_BY_STUDENT_ID, new CourseMapper(), studentId);
+		String jpql = "SELECT c FROM Course c JOIN FETCH c.students s WHERE s.id = :studentId";
+		return entityManager.createQuery(jpql, Course.class).setParameter("studentId", studentId).getResultList();
 	}
 
 	@Override
+	@Transactional
 	public Course getById(int courseId) {
-		return jdbcTemplate.queryForObject(SqlCourseQueries.GET_BY_ID, new CourseMapper(), courseId);
+		return entityManager.find(Course.class, courseId);
 	}
 
 	@Override
+	@Transactional
 	public List<Course> getAllCourses() {
-		return jdbcTemplate.query(SqlCourseQueries.GET_ALL_COURSES, new CourseMapper());
+		String jpql = "SELECT c FROM Course c";
+		return entityManager.createQuery(jpql, Course.class).getResultList();
 	}
 }

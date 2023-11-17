@@ -33,7 +33,6 @@ public class Group {
 	}
 
 	public Group() {
-
 	}
 
 	public int getId() {
