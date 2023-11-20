@@ -1,11 +1,13 @@
 package ua.com.foxminded.yuriy.schoolconsoleapp.dao;
 
 import java.util.List;
+
+import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 
 public interface StudentDao {
 
-	List<Student> getAllByCourse(int courseId);
+	List<Student> getAllByCourse(Course course);
 
 	int add(Student student);
 

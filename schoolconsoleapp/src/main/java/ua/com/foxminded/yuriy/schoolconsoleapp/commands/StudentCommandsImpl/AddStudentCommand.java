@@ -56,15 +56,17 @@ public class AddStudentCommand implements Command {
 	}
 
 	private void assignStudentToGroup(Scanner sc, Student student) {
+
 		System.out.println("Please insert the Group ID you want to assign to your student..");
 		List<Group> allGroups = groupService.getAll();
 		allGroups.forEach(g -> System.out.println(g.toString()));
 		int groupId = InputValidator.getNextInt(sc);
 		boolean groupExist = allGroups.stream().anyMatch(group -> group.getId() == groupId);
+		Group groupToAssign = allGroups.stream().filter(gr -> gr.getId() == groupId).findFirst().orElse(null);
 		if (!groupExist) {
 			System.out.println("The group with ID : " + groupId + " does now exist. Please retry");
 		} else {
-			student.setGroupId(groupId);
+			student.setGroup(groupToAssign);
 			studentService.update(student);
 			System.out.println("Group has been succesfully added to the student.");
 		}

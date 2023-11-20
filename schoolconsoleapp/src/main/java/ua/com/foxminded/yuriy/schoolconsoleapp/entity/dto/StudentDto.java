@@ -12,7 +12,6 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 public class StudentDto {
 	private int id;
 	private Group group;
-
 	private String firstName;
 	private String lastName;
 	private List<Course> courses = new ArrayList<>();

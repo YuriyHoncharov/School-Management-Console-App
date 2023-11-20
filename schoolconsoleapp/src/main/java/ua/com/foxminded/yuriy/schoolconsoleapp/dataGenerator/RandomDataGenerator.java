@@ -51,7 +51,7 @@ public class RandomDataGenerator {
 	public List<Student> generateStudents() {
 
 		List<Student> students = new ArrayList<>();
-		List<Group>groups = generateGroups();
+		List<Group> groups = generateGroups();
 
 		int studentsCount = 1;
 		int groupId = 1;
@@ -74,10 +74,9 @@ public class RandomDataGenerator {
 			if (studentsCount > maxStudentInGroup) {
 				studentsCount = 1;
 				groupId++;
-				int finalGroupId = groupId;
-            group = groups.stream().filter(g -> g.getId() == finalGroupId).findFirst().orElse(null);
 			}
-			
+			int finalGroupId = groupId;
+			group = groups.stream().filter(g -> g.getId() == finalGroupId).findFirst().orElse(null);
 			Student student = new Student(name, surname);
 			student.setGroup(group);
 			student.setCourse(new ArrayList<>(assignedCourse));

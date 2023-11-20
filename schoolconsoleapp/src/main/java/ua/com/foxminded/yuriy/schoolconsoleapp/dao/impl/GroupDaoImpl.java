@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.GroupDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
+import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
 
 @Repository
 public class GroupDaoImpl implements GroupDao {
@@ -20,9 +21,17 @@ private EntityManager entityManager;
 	@Override
 	@Transactional
 	public void addAll(List<Group> groups) {
-		for (Group group : groups) {
-			entityManager.merge(group);
-		}
+	    for (int i = 0; i < groups.size(); i++) {
+	        try {
+	            entityManager.merge(groups.get(i));
+	        } catch (Exception e) {
+	            throw new DaoException("Failed to save group to database: " + groups.get(i));
+	        }
+	        if (i % groups.size() == 0) {
+	            entityManager.flush();
+	            entityManager.clear();
+	        }
+	    }
 	}
 
 	@Override

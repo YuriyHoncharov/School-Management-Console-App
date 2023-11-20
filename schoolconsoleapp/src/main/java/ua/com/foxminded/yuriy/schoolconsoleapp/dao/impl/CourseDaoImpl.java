@@ -2,13 +2,12 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.dao.impl;
 
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.CourseDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
+import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
 
 @Repository
 public class CourseDaoImpl implements CourseDao {
@@ -19,13 +18,19 @@ public class CourseDaoImpl implements CourseDao {
 	@Override
 	@Transactional
 	public void addAll(List<Course> courses) {
-		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("persistence");
-		EntityManager entityManager = entityManagerFactory.createEntityManager();
-		for (Course course : courses) {
-			entityManager.persist(course);
-		} 
+		for (int i = 0; i < courses.size(); i++) {
+			try {
+				entityManager.merge(courses.get(i));
+			} catch (Exception e) {
+				throw new DaoException("Failed to save course to Data Base : " + courses.get(i));
+			}
+			if (i % courses.size() == 0) {
+				entityManager.flush();
+				entityManager.clear();
+			}
+		}
 	}
-	
+
 	@Override
 	@Transactional
 	public List<Course> getAvailableCourses(int studentId) {
