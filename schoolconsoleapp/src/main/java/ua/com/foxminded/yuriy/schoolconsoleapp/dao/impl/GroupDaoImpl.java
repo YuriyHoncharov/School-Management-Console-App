@@ -18,6 +18,7 @@ public class GroupDaoImpl implements GroupDao {
 
 @PersistenceContext
 private EntityManager entityManager;
+
 	@Override
 	@Transactional
 	public void addAll(List<Group> groups) {
@@ -36,14 +37,8 @@ private EntityManager entityManager;
 
 	@Override
 	public List<Group> getAllLessOrEqual(int studentCount) {
-		String jpql = "SELECT g FROM Group g WHERE SIZE (g.students) <= :studentCount";
-		return entityManager.createQuery(jpql, Group.class).setParameter("studentCount", studentCount).getResultList();
-	}
-
-	@Override
-	public int studentsCountByGroupId(int groupId) {
-		String jpql = "SELECT COUNT(s) FROM Student s WHERE s.groupId =:groupId";
-		return ((Number) entityManager.createQuery(jpql).setParameter("groupId", groupId).getSingleResult()).intValue();
+		String jpql = "SELECT g FROM Group g WHERE (SELECT COUNT(s) FROM Student s WHERE s.group = g) <= :studentCount";
+		return entityManager.createQuery(jpql, Group.class).setParameter("studentCount", (long) studentCount).getResultList();
 	}
 
 	@Override

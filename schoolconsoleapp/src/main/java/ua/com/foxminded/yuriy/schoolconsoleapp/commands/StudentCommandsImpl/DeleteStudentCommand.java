@@ -41,7 +41,7 @@ public class DeleteStudentCommand implements Command {
 			System.out.println("Student with entered ID is not found.");
 		} else {
 			if (choiceToDelete(sc, student)) {
-				studentService.deleteById(student.getId());
+				studentService.delete(student);
 				System.out.println((studentDto.studentToDto(student)).toString() + " - Has been deleted from database.");
 			} else {
 				System.out.println("You canceled the operation.");

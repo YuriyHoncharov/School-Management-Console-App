@@ -3,6 +3,7 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.dao;
 import java.util.List;
 
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
+import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 
 public interface StudentDao {
@@ -11,7 +12,7 @@ public interface StudentDao {
 
 	int add(Student student);
 
-	void deleteById(int id);
+	void delete(Student student);
 
 	Student getById(int id);
 
@@ -22,5 +23,7 @@ public interface StudentDao {
 	List<Student> getAll();
 	
 	void update(Student student);
+	
+	int studentsCountByGroupId(Group group);
 
 }

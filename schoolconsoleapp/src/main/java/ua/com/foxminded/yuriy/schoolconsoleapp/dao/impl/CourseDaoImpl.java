@@ -32,27 +32,23 @@ public class CourseDaoImpl implements CourseDao {
 	}
 
 	@Override
-	@Transactional
 	public List<Course> getAvailableCourses(int studentId) {
-		String jpql = "SELECT c FROM Course c WHERE c.id NOT IN (SELECT sc.course.id FROM StudentCourse sc WHERE sc.student.id = :studentId)";
+		String jpql = "SELECT c FROM Course c WHERE c.id NOT IN (SELECT cr.id FROM Student s JOIN s.courses cr WHERE s.id = :studentId)";
 		return entityManager.createQuery(jpql, Course.class).setParameter("studentId", studentId).getResultList();
 	}
 
 	@Override
-	@Transactional
 	public List<Course> getByStudentId(int studentId) {
 		String jpql = "SELECT c FROM Course c JOIN FETCH c.students s WHERE s.id = :studentId";
 		return entityManager.createQuery(jpql, Course.class).setParameter("studentId", studentId).getResultList();
 	}
 
 	@Override
-	@Transactional
 	public Course getById(int courseId) {
 		return entityManager.find(Course.class, courseId);
 	}
 
 	@Override
-	@Transactional
 	public List<Course> getAllCourses() {
 		String jpql = "SELECT c FROM Course c";
 		return entityManager.createQuery(jpql, Course.class).getResultList();

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
+import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
 
@@ -35,7 +36,6 @@ public class StudentDaoImpl implements StudentDao {
 		}
 	}
 
-	@Transactional
 	@Override
 	public List<Student> getAllByCourse(Course course) {
 		String jpql = "SELECT s FROM Student s JOIN s.courses c WHERE c.id = :courseId";
@@ -51,20 +51,18 @@ public class StudentDaoImpl implements StudentDao {
 
 	@Transactional
 	@Override
-	public void deleteById(int id) {
-		Student student = entityManager.find(Student.class, id);
+	public void delete(Student student) {
 		if (student != null) {
-			entityManager.remove(student);
+			Student mergedStudent = entityManager.merge(student);
+			entityManager.remove(mergedStudent);
 		}
 	}
 
-	@Transactional
 	@Override
 	public Student getById(int id) {
 		return entityManager.find(Student.class, id);
 	}
 
-	@Transactional
 	@Override
 	public Student getByName(String firstName, String lastName) {
 		String jpql = "SELECT s FROM Student s WHERE s.firstName=:fistName AND s.lastName=:lastName";
@@ -80,7 +78,7 @@ public class StudentDaoImpl implements StudentDao {
 		return studentsResult.stream()
 				.collect(Collectors.toMap(Student::getId, Function.identity(), (existing, replacement) -> {
 					Set<Course> mergedCourses = new HashSet<>(existing.getCourses());
-					mergedCourses.addAll(replacement.getCourses());				
+					mergedCourses.addAll(replacement.getCourses());
 					existing.setCourse(new ArrayList<>(mergedCourses));
 					return existing;
 				})).values().stream().collect(Collectors.toList());
@@ -96,5 +94,11 @@ public class StudentDaoImpl implements StudentDao {
 		for (Course course : student.getCourses()) {
 			managedStudent.getCourses().add(entityManager.getReference(Course.class, course.getId()));
 		}
+	}
+
+	@Override
+	public int studentsCountByGroupId(Group group) {
+		String jpql = "SELECT COUNT(s) FROM Student s WHERE s.group =:group";
+		return ((Number) entityManager.createQuery(jpql).setParameter("group", group).getSingleResult()).intValue();
 	}
 }

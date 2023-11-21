@@ -9,15 +9,18 @@ import org.springframework.stereotype.Component;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.GroupService;
+import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
 
 @Component
 public class GetGroupsByStudentsNumberCommand implements Command {
-	
+
+	private StudentService studentService;
 	private GroupService groupService;
 
 	@Autowired
-	public GetGroupsByStudentsNumberCommand(GroupService groupService) {
+	public GetGroupsByStudentsNumberCommand(StudentService studentService, GroupService groupService) {
+		this.studentService = studentService;
 		this.groupService = groupService;
 	}
 
@@ -32,7 +35,7 @@ public class GetGroupsByStudentsNumberCommand implements Command {
 			Collections.sort(result, Comparator.comparingInt(Group::getId));
 			result.forEach((group) -> {
 				System.out.println("Group ID : " + group.getId() + ". " + group.getName() + " = "
-						+ groupService.studentsCountByGroupId(group.getId()) + " students in this group.");
+						+ studentService.studentsCountByGroupId(group) + " students in this group.");
 			});
 		}
 	}

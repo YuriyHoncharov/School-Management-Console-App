@@ -7,6 +7,7 @@ import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -35,12 +36,15 @@ public class Student {
 	@Column(name = "last_name", nullable = false)
 	private String lastName;
 
-	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
-	@JoinTable(name = "students_courses", joinColumns = @JoinColumn(name = "student_id"), inverseJoinColumns = @JoinColumn(name = "course_id"))
+	@ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@JoinTable(
+	    name = "students_courses",
+	    joinColumns = @JoinColumn(name = "student_id"),
+	    inverseJoinColumns = @JoinColumn(name = "course_id")
+	)
 	private List<Course> courses = new ArrayList<>();
 
-	public Student() {
-	}
+	public Student() {	}
 
 	public Student(String firstName, String lastName) {
 		this.firstName = firstName;
