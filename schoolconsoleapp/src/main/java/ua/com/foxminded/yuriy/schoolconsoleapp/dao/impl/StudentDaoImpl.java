@@ -1,12 +1,6 @@
 package ua.com.foxminded.yuriy.schoolconsoleapp.dao.impl;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
@@ -60,7 +54,8 @@ public class StudentDaoImpl implements StudentDao {
 
 	@Override
 	public Student getById(int id) {
-		return entityManager.find(Student.class, id);
+		String jpql = "SELECT s FROM Student s LEFT JOIN FETCH s.courses WHERE s.id = :id";
+		return entityManager.createQuery(jpql, Student.class).setParameter("id", id).getSingleResult();
 	}
 
 	@Override
@@ -73,15 +68,8 @@ public class StudentDaoImpl implements StudentDao {
 	@Transactional
 	@Override
 	public List<Student> getAll() {
-		String jpql = "SELECT s FROM Student s LEFT JOIN FETCH s.courses LEFT JOIN FETCH s.group";
-		List<Student> studentsResult = entityManager.createQuery(jpql, Student.class).getResultList();
-		return studentsResult.stream()
-				.collect(Collectors.toMap(Student::getId, Function.identity(), (existing, replacement) -> {
-					Set<Course> mergedCourses = new HashSet<>(existing.getCourses());
-					mergedCourses.addAll(replacement.getCourses());
-					existing.setCourse(new ArrayList<>(mergedCourses));
-					return existing;
-				})).values().stream().collect(Collectors.toList());
+		String jpql = "SELECT DISTINCT s FROM Student s LEFT JOIN FETCH s.courses LEFT JOIN FETCH s.group ORDER BY s.id";
+		return entityManager.createQuery(jpql, Student.class).getResultList();
 	}
 
 	@Transactional
@@ -90,7 +78,6 @@ public class StudentDaoImpl implements StudentDao {
 		entityManager.merge(student);
 		Student managedStudent = entityManager.find(Student.class, student.getId());
 		managedStudent.getCourses().clear();
-
 		for (Course course : student.getCourses()) {
 			managedStudent.getCourses().add(entityManager.getReference(Course.class, course.getId()));
 		}

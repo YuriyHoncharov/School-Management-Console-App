@@ -82,8 +82,9 @@ public class StudentDto {
 	@Override
 	public String toString() {
 		String courseString = courseToString();
-		return String.format("ID : %-3d | Name : %-20s | Group ID : %-2d | Courses : %-15s", id,
-				firstName + " " + lastName, group.getId(), courseString);
+		String groupName = (group != null) ? String.valueOf(group.getId()) : "N/A";
+		return String.format("ID : %-3d | Name : %-20s | Group ID : %-2s | Courses : %-15s", id,
+				firstName + " " + lastName, groupName, courseString);
 	}
 
 	public List<StudentDto> studentsListDto(List<Student> students) {

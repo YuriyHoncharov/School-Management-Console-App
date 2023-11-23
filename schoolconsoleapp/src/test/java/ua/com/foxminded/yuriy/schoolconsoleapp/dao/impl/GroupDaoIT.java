@@ -21,13 +21,14 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 public class GroupDaoIT {
 
 	private GroupDaoImpl groupDao;
+	private StudentDaoImpl studentDao;
 	
 	@Autowired
-	private JdbcTemplate jdbcTemplate;
+	
 	
 	@BeforeEach
 	void setUp() {
-		groupDao = new GroupDaoImpl(jdbcTemplate);
+		groupDao = new GroupDaoImpl();
 	}
 	
 	@Test
