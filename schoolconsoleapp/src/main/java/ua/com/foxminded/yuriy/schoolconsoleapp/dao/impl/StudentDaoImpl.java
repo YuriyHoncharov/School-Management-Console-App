@@ -2,6 +2,7 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.dao.impl;
 
 import java.util.List;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,13 +55,19 @@ public class StudentDaoImpl implements StudentDao {
 
 	@Override
 	public Student getById(int id) {
-		String jpql = "SELECT s FROM Student s LEFT JOIN FETCH s.courses WHERE s.id = :id";
-		return entityManager.createQuery(jpql, Student.class).setParameter("id", id).getSingleResult();
+	    try {
+	        String jpql = "SELECT s FROM Student s LEFT JOIN FETCH s.courses WHERE s.id = :id";
+	        return entityManager.createQuery(jpql, Student.class)
+	                .setParameter("id", id)
+	                .getSingleResult();
+	    } catch (Exception e) {
+	        return null;
+	    }
 	}
 
 	@Override
 	public Student getByName(String firstName, String lastName) {
-		String jpql = "SELECT s FROM Student s WHERE s.firstName=:fistName AND s.lastName=:lastName";
+		String jpql = "SELECT s FROM Student s WHERE s.firstName=:firstName AND s.lastName=:lastName";
 		return entityManager.createQuery(jpql, Student.class).setParameter("firstName", firstName)
 				.setParameter("lastName", lastName).getSingleResult();
 	}
@@ -84,7 +91,7 @@ public class StudentDaoImpl implements StudentDao {
 	}
 
 	@Override
-	public int studentsCountByGroupId(Group group) {
+	public int studentsCountByGroup(Group group) {
 		String jpql = "SELECT COUNT(s) FROM Student s WHERE s.group =:group";
 		return ((Number) entityManager.createQuery(jpql).setParameter("group", group).getSingleResult()).intValue();
 	}

@@ -35,7 +35,7 @@ public class GetGroupsByStudentsNumberCommand implements Command {
 			Collections.sort(result, Comparator.comparingInt(Group::getId));
 			result.forEach((group) -> {
 				System.out.println("Group ID : " + group.getId() + ". " + group.getName() + " = "
-						+ studentService.studentsCountByGroupId(group) + " students in this group.");
+						+ studentService.studentsCountByGroup(group) + " students in this group.");
 			});
 		}
 	}

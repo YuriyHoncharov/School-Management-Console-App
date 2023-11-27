@@ -58,8 +58,8 @@ public class StudentServiceImpl implements StudentService {
 	}
 	
 	@Override
-	public int studentsCountByGroupId(Group group) {
-		return studentDao.studentsCountByGroupId(group);
+	public int studentsCountByGroup(Group group) {
+		return studentDao.studentsCountByGroup(group);
 	}
 
 }

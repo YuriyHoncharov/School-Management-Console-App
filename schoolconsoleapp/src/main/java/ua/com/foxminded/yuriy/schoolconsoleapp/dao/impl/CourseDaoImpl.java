@@ -39,7 +39,7 @@ public class CourseDaoImpl implements CourseDao {
 
 	@Override
 	public List<Course> getByStudentId(int studentId) {
-		String jpql = "SELECT c FROM Course c JOIN FETCH c.students s WHERE s.id = :studentId ORDER BY c.id";
+		String jpql = "SELECT c FROM Course c WHERE c.id IN (SELECT cr.id FROM Student s JOIN s.courses cr WHERE s.id = :studentId) ORDER BY c.id";
 		return entityManager.createQuery(jpql, Course.class).setParameter("studentId", studentId).getResultList();
 	}
 

@@ -1,35 +1,28 @@
 package ua.com.foxminded.yuriy.schoolconsoleapp.dao.impl;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.util.List;
-
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.GroupDao;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentDao;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 
-@JdbcTest
+@DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {StudentDaoImpl.class, GroupDaoImpl.class}))
 @TestPropertySource(locations = "classpath:application-test.properties")
 @Sql(scripts = { "/schema.sql", "/test-data.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = { "/test-data-clear.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 
 public class GroupDaoIT {
-
-	private GroupDaoImpl groupDao;
-	private StudentDaoImpl studentDao;
 	
 	@Autowired
-	
-	
-	@BeforeEach
-	void setUp() {
-		groupDao = new GroupDaoImpl();
-	}
+	private GroupDao groupDao;
+	@Autowired
+	private StudentDao studentDao;
 	
 	@Test
 	void shouldgetAllLessOrEqual() {
@@ -40,8 +33,8 @@ public class GroupDaoIT {
 	
 	@Test
 	void shouldReturnStudentsCountByGroupId() {
-		int groupId = 1;
-		int studentsCount = groupDao.studentsCountByGroupId(groupId);
+		Group group = new Group("Group X", 1);
+		int studentsCount = studentDao.studentsCountByGroup(group);
 		assertEquals(3, studentsCount);
 	}
 	

@@ -1,7 +1,7 @@
 package ua.com.foxminded.yuriy.schoolconsoleapp.dao;
 
 import java.util.List;
-
+import org.springframework.stereotype.Repository;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
@@ -24,6 +24,6 @@ public interface StudentDao {
 	
 	void update(Student student);
 	
-	int studentsCountByGroupId(Group group);
+	int studentsCountByGroup(Group group);
 
 }

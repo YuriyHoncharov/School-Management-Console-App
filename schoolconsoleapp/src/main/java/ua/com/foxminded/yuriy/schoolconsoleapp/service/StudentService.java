@@ -22,6 +22,6 @@ public interface StudentService {
 	
 	void update (Student student);
 	
-	int studentsCountByGroupId(Group group);
+	int studentsCountByGroup(Group group);
 
 }
