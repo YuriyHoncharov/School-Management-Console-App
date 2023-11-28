@@ -19,7 +19,7 @@ public class DeleteStudentCommand implements Command {
 	private StudentDto studentDto;
 
 	@Autowired
-	public DeleteStudentCommand(StudentService studentService,StudentDto studentDto) {
+	public DeleteStudentCommand(StudentService studentService, StudentDto studentDto) {
 		this.studentService = studentService;
 		this.studentDto = studentDto;
 	}
@@ -31,7 +31,7 @@ public class DeleteStudentCommand implements Command {
 		System.out.println("Enter - 1 to confirm and - 2 to continue.");
 		if (choiceYesOrNot(sc)) {
 			List<Student> allStudents = studentService.getAll();
-			List<StudentDto>studentsList = studentDto.studentsListDto(allStudents);
+			List<StudentDto> studentsList = studentDto.studentsListDto(allStudents);
 			for (StudentDto studentDto : studentsList) {
 				System.out.println(studentDto.toString());
 			}
@@ -41,7 +41,7 @@ public class DeleteStudentCommand implements Command {
 			System.out.println("Student with entered ID is not found.");
 		} else {
 			if (choiceToDelete(sc, student)) {
-				studentService.deleteById(student.getId());
+				studentService.delete(student);
 				System.out.println((studentDto.studentToDto(student)).toString() + " - Has been deleted from database.");
 			} else {
 				System.out.println("You canceled the operation.");
@@ -52,12 +52,19 @@ public class DeleteStudentCommand implements Command {
 	private Student getStudent(Scanner sc) {
 		System.out.println("Enter student's ID you want to delete..");
 		int id = InputValidator.getNextInt(sc);
-		return studentService.getById(id);
+		Student student;
+		try {
+			student = studentService.getById(id);
+		} catch (Exception e) {
+			return null;
+		}
+		return student;
 	}
 
 	private boolean choiceToDelete(Scanner sc, Student student) {
 		StudentDto studentPrint = studentDto.studentToDto(student);
-		System.out.println(studentPrint.toString() + " - Will be deleted from the database. Are you sure you want to confirm?");
+		System.out.println(
+				studentPrint.toString() + " - Will be deleted from the database. Are you sure you want to confirm?");
 		System.out.println("Enter - 1 to confirm and - 2 to cancel.");
 		int confirmation = InputValidator.getNextInt(sc);
 		return confirmation == 1;

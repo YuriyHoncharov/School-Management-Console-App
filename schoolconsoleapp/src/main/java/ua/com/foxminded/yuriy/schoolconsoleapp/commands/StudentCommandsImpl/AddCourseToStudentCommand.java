@@ -8,6 +8,7 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.dto.StudentDto;
+import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.CourseService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
@@ -56,7 +57,12 @@ public class AddCourseToStudentCommand implements Command {
 	private Student getStudent(Scanner sc) {
 		System.out.println("Please enter the student's id...");
 		int studentId = InputValidator.getNextInt(sc);
-		Student student = studentService.getById(studentId);
+		Student student;
+		try {
+			student = studentService.getById(studentId);
+		} catch (Exception e) {
+			return null;
+		}
 		return student;
 	}
 

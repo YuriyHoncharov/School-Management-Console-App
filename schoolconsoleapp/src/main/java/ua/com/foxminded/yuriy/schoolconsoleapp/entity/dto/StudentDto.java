@@ -5,12 +5,13 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
+import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 
 @Component
 public class StudentDto {
 	private int id;
-	private int groupId;
+	private Group group;
 	private String firstName;
 	private String lastName;
 	private List<Course> courses = new ArrayList<>();
@@ -31,12 +32,12 @@ public class StudentDto {
 		this.id = id;
 	}
 
-	public int getGroupId() {
-		return groupId;
+	public Group getGroup() {
+		return group;
 	}
 
-	public void setGroupId(int groupId) {
-		this.groupId = groupId;
+	public void setGroup(Group group) {
+		this.group = group;
 	}
 
 	public String getFirstName() {
@@ -61,8 +62,8 @@ public class StudentDto {
 	public String courseToString() {
 
 		StringBuilder sb = new StringBuilder();
-		
-		if(courses.isEmpty()) {
+
+		if (courses.isEmpty()) {
 			return "No courses are currently assigned to this student.";
 		}
 
@@ -81,8 +82,9 @@ public class StudentDto {
 	@Override
 	public String toString() {
 		String courseString = courseToString();
-		return String.format("ID : %-3d | Name : %-20s | Group ID : %-2d | Courses : %-15s" , id,
-				firstName + " " + lastName, groupId, courseString);
+		String groupName = (group != null) ? String.valueOf(group.getId()) : "N/A";
+		return String.format("ID : %-3d | Name : %-20s | Group ID : %-2s | Courses : %-15s", id,
+				firstName + " " + lastName, groupName, courseString);
 	}
 
 	public List<StudentDto> studentsListDto(List<Student> students) {
@@ -93,23 +95,23 @@ public class StudentDto {
 			student.setId(st.getId());
 			student.setFirstName(st.getFirstName());
 			student.setLastName(st.getLastName());
-			student.setGroupId(st.getGroupId());
+			student.setGroup(st.getGroup());
 			student.setCourses(st.getCourses());
 			studentsDto.add(student);
 
 		}
 		return studentsDto;
 	}
-	
+
 	public StudentDto studentToDto(Student student) {
-		
+
 		StudentDto studentDto = new StudentDto();
 		studentDto.setCourses(student.getCourses());
 		studentDto.setFirstName(student.getFirstName());
-		studentDto.setGroupId(student.getGroupId());
+		studentDto.setGroup(student.getGroup());
 		studentDto.setId(student.getId());
 		studentDto.setLastName(student.getLastName());
 		return studentDto;
-		
+
 	}
 }

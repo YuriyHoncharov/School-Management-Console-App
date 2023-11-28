@@ -1,4 +1,5 @@
 package ua.com.foxminded.yuriy.schoolconsoleapp;
+
 import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -7,10 +8,10 @@ import org.springframework.stereotype.Component;
 import ua.com.foxminded.yuriy.schoolconsoleapp.dataGenerator.DataGenerator;
 
 @Component
-public class AppInitializer implements ApplicationRunner{
+public class AppInitializer implements ApplicationRunner {
 	private Flyway flyway;
 	private DataGenerator dataGenerator;
-	private ConsoleMenu consoleMenu;	
+	private ConsoleMenu consoleMenu;
 
 	@Autowired
 	public AppInitializer(Flyway flyway, DataGenerator dataGenerator, ConsoleMenu consoleMenu) {
@@ -26,6 +27,4 @@ public class AppInitializer implements ApplicationRunner{
 		dataGenerator.initializeAndPopulateTestDatabase();
 		consoleMenu.run();
 	}
-	
-	
 }

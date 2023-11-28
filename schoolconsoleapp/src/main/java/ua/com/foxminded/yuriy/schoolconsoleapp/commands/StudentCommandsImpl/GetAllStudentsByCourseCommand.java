@@ -32,8 +32,9 @@ public class GetAllStudentsByCourseCommand implements Command {
 		}
 		int courseId = InputValidator.getNextInt(sc);
 		boolean courseExist = courses.stream().anyMatch(course -> course.getId() == courseId);
-		if (courseExist) {
-			List<Student> studentList = studentService.getAllByCourse(courseId);
+		Course course = courses.stream().filter(c -> c.getId() == courseId).findFirst().orElse(null);
+		if (courseExist && course != null) {
+			List<Student> studentList = studentService.getAllByCourse(course);
 			for (Student student : studentList) {
 				System.out.println(student.getId() + ". " + student.getFirstName() + " " + student.getLastName());
 			}
