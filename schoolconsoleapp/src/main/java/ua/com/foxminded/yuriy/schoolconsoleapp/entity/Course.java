@@ -14,13 +14,13 @@ public class Course {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "course_id")
+	@Column(name = "id")
 	private int id;
 
-	@Column(name = "course_name", nullable = false)
+	@Column(name = "name", nullable = false)
 	private String name;
 
-	@Column(name = "course_description")
+	@Column(name = "description")
 	private String description;
 
 	public Course(String name, String description, int id) {

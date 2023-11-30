@@ -14,10 +14,10 @@ public class Group {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "group_id")	
+	@Column(name = "id")	
 	private int id;
 	
-	@Column(name = "group_name", nullable = false)
+	@Column(name = "name", nullable = false)
 	private String name;	
 
 	public Group(String name, int id) {

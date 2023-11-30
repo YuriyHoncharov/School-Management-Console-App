@@ -22,11 +22,11 @@ public class Student {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "student_id", nullable = false)
+	@Column(name = "id", nullable = false)
 	private int id;
 
 	@ManyToOne
-   @JoinColumn(name = "group_id", referencedColumnName = "group_id")
+   @JoinColumn(name = "group_id", referencedColumnName = "id")
    private Group group;
 	
 	@Column(name = "first_name", nullable = false)
