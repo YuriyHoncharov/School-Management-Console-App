@@ -1,48 +1,54 @@
 package ua.com.foxminded.yuriy.schoolconsoleapp.dao.impl;
 
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.GroupDao;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.sqlqueries.SqlGroupQueries;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.mappers.GroupMapper;
-import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 
-@Component
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
+
+import org.springframework.stereotype.Repository;
+
+
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.GroupDao;
+import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
+import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
+
+@Repository
 public class GroupDaoImpl implements GroupDao {
 
-	private final JdbcTemplate jdbcTemplate;
+@PersistenceContext
+private EntityManager entityManager;
 
-	@Autowired
-	public GroupDaoImpl(JdbcTemplate jdbcTemplate) {
-		this.jdbcTemplate = jdbcTemplate;
-	}
-
+	@Override
+	@Transactional
 	public void addAll(List<Group> groups) {
-		for (Group group : groups) {
-			jdbcTemplate.update(SqlGroupQueries.ADD_ALL, group.getId(), group.getName());
-		}
+	    for (int i = 0; i < groups.size(); i++) {
+	        try {
+	            entityManager.merge(groups.get(i));
+	        } catch (Exception e) {
+	            throw new DaoException("Failed to save group to database: " + groups.get(i));
+	        }
+	        if (i % groups.size() == 0) {
+	            entityManager.flush();
+	            entityManager.clear();
+	        }
+	    }
 	}
 
 	@Override
 	public List<Group> getAllLessOrEqual(int studentCount) {
-
-		return jdbcTemplate.query(SqlGroupQueries.GET_BY_LESS_OR_EQUAL_STUDENTS, new GroupMapper(), studentCount);
-	}
-
-	@Override
-	public int studentsCountByGroupId(int groupId) {
-		return jdbcTemplate.queryForObject(SqlGroupQueries.GET_STUDENTS_COUNT_BY_GROUP_ID, Integer.class, groupId);
+		String jpql = "SELECT g FROM Group g WHERE (SELECT COUNT(s) FROM Student s WHERE s.group = g) <= :studentCount";
+		return entityManager.createQuery(jpql, Group.class).setParameter("studentCount", (long) studentCount).getResultList();
 	}
 
 	@Override
 	public List<Group> getAll() {
-		return jdbcTemplate.query(SqlGroupQueries.GET_ALL_GROUPS, new GroupMapper());
+		String jpql = "SELECT g FROM Group g";
+		return entityManager.createQuery(jpql, Group.class).getResultList();
 	}
 
 	@Override
 	public Group getById(int groupId) {
-		return jdbcTemplate.queryForObject(SqlGroupQueries.GET_BY_ID, new GroupMapper(), groupId);
+		return entityManager.find(Group.class, groupId);
 	}
 }

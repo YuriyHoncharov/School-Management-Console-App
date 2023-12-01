@@ -7,8 +7,6 @@ public interface GroupService {
 
 	List<Group> getAllLessOrEqual(int studentsCount);
 
-	int studentsCountByGroupId(int groupId);
-
 	List<Group> getAll();
 
 	Group getById(int groupId);

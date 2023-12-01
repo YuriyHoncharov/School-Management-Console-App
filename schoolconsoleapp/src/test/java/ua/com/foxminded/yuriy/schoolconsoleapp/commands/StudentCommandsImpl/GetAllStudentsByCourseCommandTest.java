@@ -74,7 +74,7 @@ class GetAllStudentsByCourseCommandTest {
 
 		when(mockCourseService.getAllCourses()).thenReturn(courses);
 		when(InputValidator.getNextInt(mockScanner)).thenReturn(courseId);
-		when(mockStudentService.getAllByCourse(courseId)).thenReturn(studentList);
+		when(mockStudentService.getAllByCourse(course)).thenReturn(studentList);
 
 		mockGetAllStudentsByCourseCommand.execute(mockScanner);
 

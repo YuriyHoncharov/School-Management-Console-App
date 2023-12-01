@@ -4,43 +4,55 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "students")
 public class Student {
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(courses, firstName, groupId, id, lastName);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Student other = (Student) obj;
-		return Objects.equals(courses, other.courses) && Objects.equals(firstName, other.firstName)
-				&& groupId == other.groupId && id == other.id && Objects.equals(lastName, other.lastName);
-	}
-
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id", nullable = false)
 	private int id;
-	private int groupId;
+
+	@ManyToOne
+   @JoinColumn(name = "group_id", referencedColumnName = "id")
+   private Group group;
+	
+	@Column(name = "first_name", nullable = false)
 	private String firstName;
+
+	@Column(name = "last_name", nullable = false)
 	private String lastName;
+
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@JoinTable(
+	    name = "students_courses",
+	    joinColumns = @JoinColumn(name = "student_id"),
+	    inverseJoinColumns = @JoinColumn(name = "course_id")
+	)
 	private List<Course> courses = new ArrayList<>();
 
-	public Student() {
-	}
+	public Student() {	}
 
 	public Student(String firstName, String lastName) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 	}
 
-	public Student(int id, int groupId, String firstName, String lastName) {
+	public Student(int id, Group group, String firstName, String lastName) {
 		this.id = id;
-		this.groupId = groupId;
+		this.group = group;
 		this.firstName = firstName;
 		this.lastName = lastName;
 	}
@@ -57,16 +69,16 @@ public class Student {
 		this.id = id;
 	}
 
-	public void setGroupId(int groupId) {
-		this.groupId = groupId;
+	public void setGroup(Group group) {
+		this.group = group;
 	}
 
 	public int getId() {
 		return id;
 	}
 
-	public int getGroupId() {
-		return groupId;
+	public Group getGroup() {
+		return group;
 	}
 
 	public String getFirstName() {
@@ -79,8 +91,26 @@ public class Student {
 
 	@Override
 	public String toString() {
-		return "[Student ID : " + id + ", Group ID : " + groupId + ", First Name : " + firstName + ", Last Name : "
+		return "[Student ID : " + id + ", Group ID : " + group.toString() + ", First Name : " + firstName + ", Last Name : "
 				+ lastName + coursesToString() + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(courses, firstName, group, id, lastName);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Student other = (Student) obj;
+		return Objects.equals(courses, other.courses) && Objects.equals(firstName, other.firstName)
+				&& Objects.equals(group, other.group) && id == other.id && Objects.equals(lastName, other.lastName);
 	}
 
 	public List<Course> getCourses() {

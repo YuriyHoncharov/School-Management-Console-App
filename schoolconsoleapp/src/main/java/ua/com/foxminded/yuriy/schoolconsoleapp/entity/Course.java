@@ -1,11 +1,26 @@
 package ua.com.foxminded.yuriy.schoolconsoleapp.entity;
 
 import java.util.Objects;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
+@Entity
+@Table(name = "courses")
 public class Course {
-	
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private int id;
+
+	@Column(name = "name", nullable = false)
 	private String name;
+
+	@Column(name = "description")
 	private String description;
 
 	public Course(String name, String description, int id) {
@@ -13,9 +28,8 @@ public class Course {
 		this.description = description;
 		this.id = id;
 	}
-	
+
 	public Course() {
-		
 	}
 
 	public int getId() {

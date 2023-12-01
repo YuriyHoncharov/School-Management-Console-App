@@ -51,9 +51,11 @@ public class RandomDataGenerator {
 	public List<Student> generateStudents() {
 
 		List<Student> students = new ArrayList<>();
+		List<Group> groups = generateGroups();
 
 		int studentsCount = 1;
 		int groupId = 1;
+		Group group = null;
 		List<Course> courses = generateCourses();
 		String[] firstName = { "Emma", "Noah", "Olivia", "Liam", "Ava", "William", "Sophia", "Mason", "Isabella", "James",
 				"Mia", "Benjamin", "Charlotte", "Jacob", "Amelia", "Michael", "Harper", "Ethan", "Evelyn", "Daniel" };
@@ -73,8 +75,10 @@ public class RandomDataGenerator {
 				studentsCount = 1;
 				groupId++;
 			}
+			int finalGroupId = groupId;
+			group = groups.stream().filter(g -> g.getId() == finalGroupId).findFirst().orElse(null);
 			Student student = new Student(name, surname);
-			student.setGroupId(groupId);
+			student.setGroup(group);
 			student.setCourse(new ArrayList<>(assignedCourse));
 			students.add(student);
 			studentsCount++;

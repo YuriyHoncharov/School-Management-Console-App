@@ -8,6 +8,8 @@ import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +19,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.dto.StudentDto;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.StudentServiceImpl;
@@ -62,12 +66,16 @@ class DeleteStudentCommandTest {
 	void execute_shouldDeleteStudent() {
 		int studentId = 10;
 		int confirmation = 1;
+		List<Course>courses = new ArrayList<>();
+		courses.add(new Course("Math", "Math Course", 1));
 		Student student = new Student("Name", "Lastname");
 		student.setId(studentId);
+		student.setCourse(courses);
 		StudentDto studentPrint = new StudentDto();
 		studentPrint.setFirstName("Name");
 		studentPrint.setLastName("Lastname");
-		studentPrint.setId(studentId);
+		studentPrint.setId(student.getId());
+		studentPrint.setCourses(student.getCourses());
 
 		when(InputValidator.getNextInt(mockScanner)).thenReturn(2, studentId, confirmation);
 		when(mockStudentService.getById(studentId)).thenReturn(student);
@@ -76,7 +84,7 @@ class DeleteStudentCommandTest {
 		mockDeleteStudentCommand.execute(mockScanner);
 
 		verify(mockStudentService).getById(studentId);
-		verify(mockStudentService).deleteById(student.getId());
+		verify(mockStudentService).delete(student);
 	}
 
 	@Test
@@ -90,9 +98,12 @@ class DeleteStudentCommandTest {
 		studentPrint.setLastName("Lastname");
 		studentPrint.setId(studentId);
 		String message = "Do you want to see the entire list of students?\r\n"
-				+ "Enter - 1 to confirm and - 2 to continue.\r\n" + "Enter student's ID you want to delete..\r\n"
-				+ "ID : 10  | Name : Name Lastname        | Group ID : 0  | Courses : No courses are currently assigned to this student. - Will be deleted from the database. Are you sure you want to confirm?\r\n"
-				+ "Enter - 1 to confirm and - 2 to cancel.\r\n" + "You canceled the operation.\r\n" + "";
+				+ "Enter - 1 to confirm and - 2 to continue.\r\n"
+				+ "Enter student's ID you want to delete..\r\n"
+				+ "ID : 10  | Name : Name Lastname        | Group ID : N/A | Courses : No courses are currently assigned to this student. - Will be deleted from the database. Are you sure you want to confirm?\r\n"
+				+ "Enter - 1 to confirm and - 2 to cancel.\r\n"
+				+ "You canceled the operation.\r\n"
+				+ "";
 		when(InputValidator.getNextInt(mockScanner)).thenReturn(2, studentId, confirmation);
 		when(mockStudentService.getById(studentId)).thenReturn(student);
 		when(mockStudentDto.studentToDto(student)).thenReturn(studentPrint);

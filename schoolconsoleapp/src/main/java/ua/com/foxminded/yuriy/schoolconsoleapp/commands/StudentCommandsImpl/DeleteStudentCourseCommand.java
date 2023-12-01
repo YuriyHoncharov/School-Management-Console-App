@@ -10,20 +10,17 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.dto.StudentDto;
-import ua.com.foxminded.yuriy.schoolconsoleapp.service.CourseService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
 
 @Component
 public class DeleteStudentCourseCommand implements Command {
-	// TO DO
-	private CourseService courseService;
+	
 	private StudentService studentService;
 	private StudentDto studentDto;
 
 	@Autowired
-	public DeleteStudentCourseCommand(CourseService courseService, StudentService studentService, StudentDto studentDto) {
-		this.courseService = courseService;
+	public DeleteStudentCourseCommand(StudentService studentService, StudentDto studentDto) {		
 		this.studentService = studentService;
 		this.studentDto = studentDto;
 	}
@@ -60,7 +57,7 @@ public class DeleteStudentCourseCommand implements Command {
 		try {
 			Student student = studentService.getById(studentId);
 			return student;
-		} catch (EmptyResultDataAccessException e) {
+		} catch (Exception e) {
 			return null;
 		}
 	}

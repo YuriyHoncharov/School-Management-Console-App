@@ -24,11 +24,6 @@ public class GroupServiceImpl implements GroupService {
 	}
 
 	@Override
-	public int studentsCountByGroupId(int groupId) {
-		return groupDao.studentsCountByGroupId(groupId);
-	}
-
-	@Override
 	public List<Group> getAll() {
 		return new ArrayList<>(groupDao.getAll());
 	}

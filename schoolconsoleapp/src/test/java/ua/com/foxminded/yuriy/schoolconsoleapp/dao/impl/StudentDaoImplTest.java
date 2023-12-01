@@ -1,33 +1,35 @@
 package ua.com.foxminded.yuriy.schoolconsoleapp.dao.impl;
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
+import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
-import org.springframework.jdbc.core.JdbcTemplate;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.sqlqueries.SqlCourseQueries;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.constants.sqlqueries.SqlStudentQueries;
 
 @ExtendWith(MockitoExtension.class)
 class StudentDaoImplTest {
 
 	@Mock
-	private JdbcTemplate jdbcTemplate;
+	private EntityManager entityManager;
 	@InjectMocks
 	private StudentDaoImpl studentDao;
+	@Mock
+	TypedQuery<Student> mockQuery;
+	@Mock
+	TypedQuery<Long> mockLongQuery;
 
 	@Test
 	void addAllTest_Success() throws SQLException {
@@ -40,28 +42,19 @@ class StudentDaoImplTest {
 		student2.setCourse(courses);
 		students.add(student);
 		students.add(student2);
-		when(jdbcTemplate.queryForObject(SqlStudentQueries.GET_LAST_ID_VALUE, Integer.class)).thenReturn(1);
-		when(jdbcTemplate.batchUpdate(eq(SqlStudentQueries.ADD_ALL), any(BatchPreparedStatementSetter.class)))
-				.thenAnswer(invocation -> {
-					BatchPreparedStatementSetter setter = invocation.getArgument(1);
-					PreparedStatement preparedStatement = mock(PreparedStatement.class);
-					for (int i = 0; i < students.size(); i++) {
-						setter.setValues(preparedStatement, i);
-					}
-					return new int[students.size()];
-				});
-
 		studentDao.addAll(students);
-		verify(jdbcTemplate, times(1)).batchUpdate(eq(SqlStudentQueries.ADD_ALL),
-				any(BatchPreparedStatementSetter.class));
+		for (Student st : students) {
+			verify(entityManager, times(1)).merge(st);
+		}
 	}
 
 	@Test
 	void deleteByIdTest_Success() throws SQLException {
-		int studentId = 1;
-		when(jdbcTemplate.update(eq(SqlStudentQueries.DELETE), eq(studentId))).thenReturn(1);
-		studentDao.deleteById(studentId);
-		verify(jdbcTemplate, times(1)).update(eq(SqlStudentQueries.DELETE), eq(studentId));
+		Student student = new Student("name", "lastname");
+		when(entityManager.merge(student)).thenReturn(student);
+		studentDao.delete(student);
+		verify(entityManager, times(1)).merge(student);
+		verify(entityManager, times(1)).remove(student);
 	}
 
 	@Test
@@ -72,19 +65,22 @@ class StudentDaoImplTest {
 		List<Course> courses = new ArrayList<>();
 		courses.add(course);
 		student.setCourse(courses);
-		when(jdbcTemplate.update(eq(SqlStudentQueries.UPDATE), eq(student.getGroupId()), eq(student.getFirstName()),
-				eq(student.getLastName()), eq(student.getId()))).thenReturn(1);
-		when(jdbcTemplate.update(eq(SqlCourseQueries.DELETE_ALL_FROM_STUDENT), eq(student.getId()))).thenReturn(1);
-		when(jdbcTemplate.update(eq(SqlCourseQueries.ADD_TO_STUDENT_BY_ID), eq(course.getId()), eq(student.getId())))
-				.thenReturn(1);
+		when(entityManager.find(Student.class, student.getId())).thenReturn(student);
 		studentDao.update(student);
-		verify(jdbcTemplate, times(1)).update(eq(SqlStudentQueries.UPDATE), eq(student.getGroupId()),
-				eq(student.getFirstName()), eq(student.getLastName()), eq(student.getId()));
-		verify(jdbcTemplate, times(1)).update(eq(SqlCourseQueries.DELETE_ALL_FROM_STUDENT), eq(student.getId()));
+		verify(entityManager, times(1)).merge(student);
 		for (Course c : student.getCourses()) {
-			verify(jdbcTemplate, times(1)).update(eq(SqlCourseQueries.ADD_TO_STUDENT_BY_ID), eq(course.getId()),
-					eq(student.getId()));
+			verify(entityManager, times(1)).getReference(Course.class, course.getId());
 		}
 	}
 
+	@Test
+	void studentsCountByGroupIdTest_Success() throws SQLException {
+		Group group = new Group("AA-11", 1);
+		long expectedCount = 20;
+		when(entityManager.createQuery(anyString())).thenReturn(mockLongQuery);
+		when(mockLongQuery.setParameter(anyString(), eq(group))).thenReturn(mockLongQuery);
+		when(mockLongQuery.getSingleResult()).thenReturn(expectedCount);
+		int result = studentDao.studentsCountByGroup(group);
+		assertEquals(expectedCount, result);
+	}
 }
