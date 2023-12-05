@@ -2,22 +2,22 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.dataGenerator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.CourseDao;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.GroupDao;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentDao;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.CourseRepository;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.GroupRepository;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentRepository;
 
 @Component
 public class DataGenerator {
 
-	private CourseDao courseDao;
-	private GroupDao groupDao;
-	private StudentDao studentDao;
+	private CourseRepository courseDao;
+	private GroupRepository groupDao;
+	private StudentRepository studentDao;
 
 	public DataGenerator() {
 	}
 
 	@Autowired
-	public DataGenerator(CourseDao courseDao, GroupDao groupDao, StudentDao studentDao) {
+	public DataGenerator(CourseRepository courseDao, GroupRepository groupDao, StudentRepository studentDao) {
 		this.courseDao = courseDao;
 		this.groupDao = groupDao;
 		this.studentDao = studentDao;

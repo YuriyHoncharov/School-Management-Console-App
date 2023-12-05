@@ -12,7 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentDao;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentRepository;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
@@ -25,7 +25,7 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 public class StudentDaoIT {
 
 	@Autowired
-	private StudentDao studentDao;
+	private StudentRepository studentDao;
 
 	@Test
 	void injectedComponentAreNotNull() {
@@ -64,7 +64,7 @@ public class StudentDaoIT {
 		student1.setCourse(courses);
 		student2.setCourse(courses);
 		student3.setCourse(courses);
-		List<Student> studentOnCourse = studentDao.getAllByCourse(course);
+		List<Student> studentOnCourse = studentDao.findAllByCourse(course);
 
 		assertEquals(student1, studentOnCourse.get(0));
 		assertEquals(student2, studentOnCourse.get(1));
@@ -74,7 +74,7 @@ public class StudentDaoIT {
 	@Test
 	void shouldAddStudentCorrectly() {
 		Student student = new Student("TestName", "TestLastName");
-		int studentId = studentDao.add(student);
+		int studentId = studentDao.addStudent(student);
 		assertNotNull(studentId);
 		Student insertedStudent = studentDao.getById(studentId);
 		assertEquals(student.getFirstName(), insertedStudent.getFirstName());

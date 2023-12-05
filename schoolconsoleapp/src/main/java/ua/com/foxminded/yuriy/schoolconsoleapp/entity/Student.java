@@ -35,7 +35,7 @@ public class Student {
 	@Column(name = "last_name", nullable = false)
 	private String lastName;
 
-	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@ManyToMany(cascade = { CascadeType.MERGE })
 	@JoinTable(
 	    name = "students_courses",
 	    joinColumns = @JoinColumn(name = "student_id"),

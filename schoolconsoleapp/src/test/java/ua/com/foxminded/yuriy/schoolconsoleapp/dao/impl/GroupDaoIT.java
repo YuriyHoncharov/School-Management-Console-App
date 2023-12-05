@@ -8,8 +8,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.GroupDao;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentDao;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.GroupRepository;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentRepository;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {StudentDaoImpl.class, GroupDaoImpl.class}))
@@ -20,9 +20,9 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 public class GroupDaoIT {
 	
 	@Autowired
-	private GroupDao groupDao;
+	private GroupRepository groupDao;
 	@Autowired
-	private StudentDao studentDao;
+	private StudentRepository studentDao;
 	
 	@Test
 	void shouldgetAllLessOrEqual() {

@@ -17,7 +17,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.CourseDao;
+import ua.com.foxminded.yuriy.schoolconsoleapp.dao.CourseRepository;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = CourseDaoImpl.class))
@@ -28,7 +28,7 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 public class CourseDaoIT {
 
 	@Autowired
-	private CourseDao courseDao;
+	private CourseRepository courseDao;
 	
 	@Test
 	void injectedComponentAreNotNull() {
