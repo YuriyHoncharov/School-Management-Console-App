@@ -17,8 +17,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.CourseRepository;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
+import ua.com.foxminded.yuriy.schoolconsoleapp.repository.CourseRepository;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = CourseDaoImpl.class))
 @TestPropertySource(locations = "classpath:application-test.properties")
@@ -42,14 +42,14 @@ public class CourseDaoIT {
 		List<Course> courses = new ArrayList<>();
 		courses.add(course);
 		courses.add(course2);
-		courseDao.addAll(courses);
-		assertEquals(4, courseDao.getAllCourses().size());
+		courseDao.saveAll(courses);
+		assertEquals(4, courseDao.findAll().size());
 	}
 
 	@Test
 	void shouldReturnAvailableCourses() {
 		int studentId = 1;
-		List<Course> availableCourses = courseDao.getAvailableCourses(studentId);
+		List<Course> availableCourses = courseDao.findByIdNotInAndOrderByid(studentId);
 		Course course = new Course("History", "World History", 2);
 		List<Course> courses = new ArrayList<>();
 		courses.add(course);
@@ -59,7 +59,7 @@ public class CourseDaoIT {
 	@Test
 	void shouldReturnCoursesByStudentId() {
 		int studenId = 3;
-		List<Course> coursesFromDb = courseDao.getByStudentId(studenId);
+		List<Course> coursesFromDb = courseDao.getById(studenId);
 		Course course = new Course("History", "World History", 2);
 		List<Course> courses = new ArrayList<>();
 		courses.add(course);
@@ -70,13 +70,13 @@ public class CourseDaoIT {
 	void shouldReturnCourseById() {
 		int courseId = 2;
 		Course course = new Course("History", "World History", 2);
-		Course courseFromDb = courseDao.getById(courseId);
+		Course courseFromDb = courseDao.findById(courseId);
 		assertEquals(course, courseFromDb);
 	}
 
 	@Test
 	void shouldReturnAllCourses() {
-		List<Course> courses = courseDao.getAllCourses();
+		List<Course> courses = courseDao.findAll();
 		assertEquals(2, courses.size());
 	}
 

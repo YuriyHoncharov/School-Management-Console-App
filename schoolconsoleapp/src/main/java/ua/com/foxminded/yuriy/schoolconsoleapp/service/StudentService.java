@@ -16,8 +16,6 @@ public interface StudentService {
 
 	Student getById(int id);
 
-	Student getByName(String firstName, String lastName);
-
 	List<Student> getAll();
 	
 	void update (Student student);

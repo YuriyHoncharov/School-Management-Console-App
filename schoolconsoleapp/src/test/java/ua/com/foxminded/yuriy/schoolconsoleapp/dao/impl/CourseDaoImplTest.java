@@ -34,7 +34,7 @@ public class CourseDaoImplTest {
 		courses.add(new Course("Mathematics", "Math Course", 1));
 		courses.add(new Course("Biology", "Biology Course", 2));
 
-		courseDao.addAll(courses);
+		courseDao.saveAll(courses);
 
 		for (Course course : courses) {
 			verify(entityManager, times(1)).merge(course);
@@ -50,7 +50,7 @@ public class CourseDaoImplTest {
 		when(entityManager.createQuery(anyString(), eq(Course.class))).thenReturn(mockQuery);
 		when(mockQuery.setParameter(anyString(), eq(studentId))).thenReturn(mockQuery);
 		when(mockQuery.getResultList()).thenReturn(courses);		
-		List<Course> result = courseDao.getByStudentId(studentId);		
+		List<Course> result = courseDao.getById(studentId);		
 		assertEquals(courses, result);
 	}
 
@@ -61,7 +61,7 @@ public class CourseDaoImplTest {
 		courses.add(new Course("Biology", "Biology Course", 2));
 		when(entityManager.createQuery(anyString(), eq(Course.class))).thenReturn(mockQuery);
 		when(mockQuery.getResultList()).thenReturn(courses);
-		List<Course> coursesFromDb = courseDao.getAllCourses();		
+		List<Course> coursesFromDb = courseDao.findAll();		
 		assertEquals(courses, coursesFromDb);
 	}
 }

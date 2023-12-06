@@ -42,7 +42,7 @@ class StudentDaoImplTest {
 		student2.setCourse(courses);
 		students.add(student);
 		students.add(student2);
-		studentDao.addAll(students);
+		studentDao.saveAll(students);
 		for (Student st : students) {
 			verify(entityManager, times(1)).merge(st);
 		}
@@ -66,7 +66,7 @@ class StudentDaoImplTest {
 		courses.add(course);
 		student.setCourse(courses);
 		when(entityManager.find(Student.class, student.getId())).thenReturn(student);
-		studentDao.update(student);
+		studentDao.save(student);
 		verify(entityManager, times(1)).merge(student);
 		for (Course c : student.getCourses()) {
 			verify(entityManager, times(1)).getReference(Course.class, course.getId());
@@ -80,7 +80,7 @@ class StudentDaoImplTest {
 		when(entityManager.createQuery(anyString())).thenReturn(mockLongQuery);
 		when(mockLongQuery.setParameter(anyString(), eq(group))).thenReturn(mockLongQuery);
 		when(mockLongQuery.getSingleResult()).thenReturn(expectedCount);
-		int result = studentDao.studentsCountByGroup(group);
+		int result = studentDao.countByGroup(group);
 		assertEquals(expectedCount, result);
 	}
 }

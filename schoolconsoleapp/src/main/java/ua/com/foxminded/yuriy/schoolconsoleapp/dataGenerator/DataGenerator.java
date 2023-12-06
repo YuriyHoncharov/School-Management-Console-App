@@ -2,9 +2,10 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.dataGenerator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.CourseRepository;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.GroupRepository;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentRepository;
+
+import ua.com.foxminded.yuriy.schoolconsoleapp.repository.CourseRepository;
+import ua.com.foxminded.yuriy.schoolconsoleapp.repository.GroupRepository;
+import ua.com.foxminded.yuriy.schoolconsoleapp.repository.StudentRepository;
 
 @Component
 public class DataGenerator {
@@ -26,8 +27,8 @@ public class DataGenerator {
 
 	public void initializeAndPopulateTestDatabase() {
 		RandomDataGenerator randomDataGenerator = new RandomDataGenerator();
-		groupDao.addAll(randomDataGenerator.generateGroups());
-		courseDao.addAll(randomDataGenerator.generateCourses());
-		studentDao.addAll(randomDataGenerator.generateStudents());
+		groupDao.saveAll(randomDataGenerator.generateGroups());
+		courseDao.saveAll(randomDataGenerator.generateCourses());
+		studentDao.saveAll(randomDataGenerator.generateStudents());
 	}
 }

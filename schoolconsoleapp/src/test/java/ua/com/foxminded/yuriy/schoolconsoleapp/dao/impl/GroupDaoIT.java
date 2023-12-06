@@ -8,9 +8,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.GroupRepository;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentRepository;
+
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
+import ua.com.foxminded.yuriy.schoolconsoleapp.repository.GroupRepository;
+import ua.com.foxminded.yuriy.schoolconsoleapp.repository.StudentRepository;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {StudentDaoImpl.class, GroupDaoImpl.class}))
 @TestPropertySource(locations = "classpath:application-test.properties")
@@ -27,27 +28,27 @@ public class GroupDaoIT {
 	@Test
 	void shouldgetAllLessOrEqual() {
 		int studentCount = 3;
-		List<Group>groups = groupDao.getAllLessOrEqual(studentCount);
+		List<Group>groups = groupDao.getByStudentsCountLessThanOrEqual(studentCount);
 		assertEquals(2, groups.size());
 	}
 	
 	@Test
 	void shouldReturnStudentsCountByGroupId() {
 		Group group = new Group("Group X", 1);
-		int studentsCount = studentDao.studentsCountByGroup(group);
+		int studentsCount = studentDao.countByGroup(group);
 		assertEquals(3, studentsCount);
 	}
 	
 	@Test
 	void shouldReturnAllGroups() {
-		List<Group>groups = groupDao.getAll();
+		List<Group>groups = groupDao.findAll();
 		assertEquals(2, groups.size());
 	}
 	
 	@Test
 	void shouldReturnGroupById() {
 		int groupId = 1;
-		Group groupFromDb = groupDao.getById(groupId);
+		Group groupFromDb = groupDao.findById(groupId);
 		Group group = new Group("Group X", 1);
 		assertEquals(group, groupFromDb);		
 	}	

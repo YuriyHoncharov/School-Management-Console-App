@@ -1,4 +1,4 @@
-package ua.com.foxminded.yuriy.schoolconsoleapp.dao;
+package ua.com.foxminded.yuriy.schoolconsoleapp.repository;
 
 import java.util.List;
 
@@ -10,21 +10,12 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 
 public interface CourseRepository extends JpaRepository<Course, Integer> {
 
-	default void addAll(List<Course> courses) {
-		saveAll(courses);
-	}
-
 	@Query("SELECT c FROM Course c WHERE c.id NOT IN (SELECT cr.id FROM Student s JOIN s.courses cr WHERE s.id = :studentId) ORDER BY c.id")
 	List<Course> getAvailableCourses(@Param("studentId") int studentId);
+	
+	List<Course> getById(int studentId);
 
-	@Query("SELECT c FROM Course c WHERE c.id IN (SELECT cr.id FROM Student s JOIN s.courses cr WHERE s.id = :studentId) ORDER BY c.id")
-	List<Course> getByStudentId(@Param("studentId") int studentId);
+	Course findById(int courseId);
 
-	default Course getById(int courseId) {
-		return findById(courseId).orElse(null);
-	}
-
-	default List<Course> getAllCourses() {
-		return findAll();
-	}
+	List<Course> findAll();
 }

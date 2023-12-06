@@ -31,7 +31,7 @@ class GroupDaoImplTest {
 		String groupName = "AA-11";
 		Group group = new Group(groupName, groupId);
 		when(entityManager.find(Group.class, groupId)).thenReturn(group);
-		groupDao.getById(groupId);
+		groupDao.findById(groupId);
 		verify(entityManager, times(1)).find(Group.class, groupId);
 	}
 
@@ -49,7 +49,7 @@ class GroupDaoImplTest {
 
 		when(mockQuery.getResultList()).thenReturn(trueGroups);
 
-		List<Group> result = groupDao.getAllLessOrEqual(studentCount);
+		List<Group> result = groupDao.getByStudentsCountLessThanOrEqual(studentCount);
 		assertIterableEquals(trueGroups, result);
 	}
 }

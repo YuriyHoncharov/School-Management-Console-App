@@ -27,7 +27,7 @@ public class GetGroupsByStudentsNumberCommand implements Command {
 	@Override
 	public void execute(Scanner sc) {
 		System.out.println("Please enter the number..");
-		int count = InputValidator.getNextInt(sc);
+		Long count = (long) InputValidator.getNextInt(sc);
 		List<Group> result = groupService.getAllLessOrEqual(count);
 		if (result.isEmpty()) {
 			System.out.println("No one group has " + count + " or less students.");

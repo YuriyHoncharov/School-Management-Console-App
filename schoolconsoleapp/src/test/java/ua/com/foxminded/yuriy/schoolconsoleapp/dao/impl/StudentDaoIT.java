@@ -12,10 +12,11 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentRepository;
+
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
+import ua.com.foxminded.yuriy.schoolconsoleapp.repository.StudentRepository;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = StudentDaoImpl.class))
 @TestPropertySource(locations = "classpath:application-test.properties")
@@ -39,7 +40,7 @@ public class StudentDaoIT {
 		List<Student> students = new ArrayList<>();
 		students.add(student);
 
-		studentDao.addAll(students);
+		studentDao.saveAll(students);
 		assertEquals(7, studentDao.getAll().size());
 	}
 
@@ -108,7 +109,7 @@ public class StudentDaoIT {
 
 	@Test
 	void shouldGetStudentByName() {
-		Student student = studentDao.getByName("Bob", "Johnson");
+		Student student = studentDao.getByFirstNameAndLastName("Bob", "Johnson");
 		Group group = new Group("Group X", 1);
 		Course course = new Course("History", "World History", 2);
 		List<Course> courses = new ArrayList<>();
@@ -126,7 +127,7 @@ public class StudentDaoIT {
 		List<Course> courses = new ArrayList<>();
 		courses.add(course);
 		student.setCourse(courses);
-		studentDao.update(student);
+		studentDao.save(student);
 		Student updatedStudent = studentDao.getById(1);
 		assertEquals(student, updatedStudent);
 	}
