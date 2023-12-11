@@ -59,7 +59,7 @@ public class CourseDaoIT {
 	@Test
 	void shouldReturnCoursesByStudentId() {
 		int studenId = 3;
-		List<Course> coursesFromDb = courseDao.getById(studenId);
+		List<Course> coursesFromDb = courseDao.findById(studenId);
 		Course course = new Course("History", "World History", 2);
 		List<Course> courses = new ArrayList<>();
 		courses.add(course);

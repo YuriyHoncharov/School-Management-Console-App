@@ -1,11 +1,16 @@
 package ua.com.foxminded.yuriy.schoolconsoleapp.entity;
 
+import java.util.List;
 import java.util.Objects;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -22,6 +27,9 @@ public class Course {
 
 	@Column(name = "description")
 	private String description;
+
+	@ManyToMany(mappedBy = "courses", cascade = { CascadeType.MERGE })
+	private List<Student> students;
 
 	public Course(String name, String description, int id) {
 		this.name = name;
@@ -42,6 +50,14 @@ public class Course {
 
 	public String getDescription() {
 		return description;
+	}
+
+	public List<Student> getStudents() {
+		return students;
+	}
+
+	public void setStudents(List<Student> students) {
+		this.students = students;
 	}
 
 	@Override

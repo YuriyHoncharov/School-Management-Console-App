@@ -50,7 +50,7 @@ public class CourseDaoImplTest {
 		when(entityManager.createQuery(anyString(), eq(Course.class))).thenReturn(mockQuery);
 		when(mockQuery.setParameter(anyString(), eq(studentId))).thenReturn(mockQuery);
 		when(mockQuery.getResultList()).thenReturn(courses);		
-		List<Course> result = courseDao.getById(studentId);		
+		List<Course> result = courseDao.findById(studentId);		
 		assertEquals(courses, result);
 	}
 

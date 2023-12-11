@@ -1,24 +1,31 @@
 package ua.com.foxminded.yuriy.schoolconsoleapp.entity;
 
+import java.util.List;
 import java.util.Objects;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "groups")
 public class Group {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")	
+	@Column(name = "id")
 	private int id;
-	
+
 	@Column(name = "name", nullable = false)
-	private String name;	
+	private String name;
+
+	@OneToMany(mappedBy = "group", cascade = { CascadeType.ALL })
+	private List<Student> students;
 
 	public Group(String name, int id) {
 		this.name = name;
@@ -27,6 +34,10 @@ public class Group {
 
 	public Group() {
 	}
+	
+	 public int getCount() {
+       return students.size();
+   }
 
 	public int getId() {
 		return id;
@@ -42,6 +53,14 @@ public class Group {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public List<Student> getStudents() {
+		return students;
+	}
+
+	public void setStudents(List<Student> students) {
+		this.students = students;
 	}
 
 	@Override
