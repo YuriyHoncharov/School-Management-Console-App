@@ -20,6 +20,8 @@ public interface StudentService {
 	
 	void update (Student student);
 	
-	int studentsCountByGroup(Group group);
+	int countByGroup(Group group);
+	
+	void saveAll(List<Student>student);
 
 }

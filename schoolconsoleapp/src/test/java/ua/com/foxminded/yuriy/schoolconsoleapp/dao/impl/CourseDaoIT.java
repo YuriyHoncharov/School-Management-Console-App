@@ -20,7 +20,7 @@ import org.springframework.test.context.jdbc.Sql;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.repository.CourseRepository;
 
-@DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = CourseDaoImpl.class))
+@DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = CourseRepository.class))
 @TestPropertySource(locations = "classpath:application-test.properties")
 @Sql(scripts = { "/schema.sql", "/test-data.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = { "/test-data-clear.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
@@ -28,11 +28,11 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.repository.CourseRepository;
 public class CourseDaoIT {
 
 	@Autowired
-	private CourseRepository courseDao;
+	private CourseRepository courseRepository;
 	
 	@Test
 	void injectedComponentAreNotNull() {
-		assertThat(courseDao).isNotNull();
+		assertThat(courseRepository).isNotNull();
 	}
 	
 	@Test
@@ -42,41 +42,32 @@ public class CourseDaoIT {
 		List<Course> courses = new ArrayList<>();
 		courses.add(course);
 		courses.add(course2);
-		courseDao.saveAll(courses);
-		assertEquals(4, courseDao.findAll().size());
+		courseRepository.saveAll(courses);
+		assertEquals(4, courseRepository.findAll().size());
 	}
 
 	@Test
 	void shouldReturnAvailableCourses() {
 		int studentId = 1;
-		List<Course> availableCourses = courseDao.findByIdNotInAndOrderByid(studentId);
+		List<Course> availableCourses = courseRepository.findAllByStudentId(studentId);
 		Course course = new Course("History", "World History", 2);
 		List<Course> courses = new ArrayList<>();
 		courses.add(course);
 		assertEquals(courses, availableCourses);
 	}
 
-	@Test
-	void shouldReturnCoursesByStudentId() {
-		int studenId = 3;
-		List<Course> coursesFromDb = courseDao.findById(studenId);
-		Course course = new Course("History", "World History", 2);
-		List<Course> courses = new ArrayList<>();
-		courses.add(course);
-		assertEquals(courses, coursesFromDb);
-	}
 
 	@Test
 	void shouldReturnCourseById() {
 		int courseId = 2;
 		Course course = new Course("History", "World History", 2);
-		Course courseFromDb = courseDao.findById(courseId);
+		Course courseFromDb = courseRepository.findById(courseId).orElse(null);
 		assertEquals(course, courseFromDb);
 	}
 
 	@Test
 	void shouldReturnAllCourses() {
-		List<Course> courses = courseDao.findAll();
+		List<Course> courses = courseRepository.findAll();
 		assertEquals(2, courses.size());
 	}
 

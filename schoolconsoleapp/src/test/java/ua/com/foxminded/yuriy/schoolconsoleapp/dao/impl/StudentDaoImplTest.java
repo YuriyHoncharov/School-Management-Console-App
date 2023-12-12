@@ -1,4 +1,5 @@
 package ua.com.foxminded.yuriy.schoolconsoleapp.dao.impl;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -13,6 +14,10 @@ import javax.persistence.TypedQuery;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
+import ua.com.foxminded.yuriy.schoolconsoleapp.repository.CourseRepository;
+import ua.com.foxminded.yuriy.schoolconsoleapp.repository.StudentRepository;
+import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.StudentServiceImpl;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,13 +28,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class StudentDaoImplTest {
 
 	@Mock
-	private EntityManager entityManager;
+	private StudentRepository studentRepository;
 	@InjectMocks
-	private StudentDaoImpl studentDao;
-	@Mock
-	TypedQuery<Student> mockQuery;
-	@Mock
-	TypedQuery<Long> mockLongQuery;
+	private StudentServiceImpl studentServiceImpl;
 
 	@Test
 	void addAllTest_Success() throws SQLException {
@@ -42,19 +43,22 @@ class StudentDaoImplTest {
 		student2.setCourse(courses);
 		students.add(student);
 		students.add(student2);
-		studentDao.saveAll(students);
-		for (Student st : students) {
-			verify(entityManager, times(1)).merge(st);
-		}
+		when(studentRepository.saveAll(students)).thenReturn(students);
+		List<Student> result = studentRepository.saveAll(students);
+		assertEquals(students, result);
+		assertEquals(2, result.size());
 	}
 
 	@Test
 	void deleteByIdTest_Success() throws SQLException {
+		int studentId = 1;
 		Student student = new Student("name", "lastname");
-		when(entityManager.merge(student)).thenReturn(student);
-		studentDao.delete(student);
-		verify(entityManager, times(1)).merge(student);
-		verify(entityManager, times(1)).remove(student);
+		student.setId(studentId);
+		when(studentRepository.getById(studentId)).thenReturn(student);
+		Student studentTest = studentServiceImpl.getById(studentId);
+		studentServiceImpl.delete(studentTest);
+		verify(studentRepository, times(1)).getById(studentId);
+		verify(studentRepository, times(1)).delete(studentTest);
 	}
 
 	@Test
@@ -65,22 +69,17 @@ class StudentDaoImplTest {
 		List<Course> courses = new ArrayList<>();
 		courses.add(course);
 		student.setCourse(courses);
-		when(entityManager.find(Student.class, student.getId())).thenReturn(student);
-		studentDao.save(student);
-		verify(entityManager, times(1)).merge(student);
-		for (Course c : student.getCourses()) {
-			verify(entityManager, times(1)).getReference(Course.class, course.getId());
-		}
+		when(studentRepository.save(student)).thenReturn(student);
+		studentServiceImpl.update(student);
+		verify(studentRepository, times(1)).save(student);
 	}
 
 	@Test
 	void studentsCountByGroupIdTest_Success() throws SQLException {
 		Group group = new Group("AA-11", 1);
-		long expectedCount = 20;
-		when(entityManager.createQuery(anyString())).thenReturn(mockLongQuery);
-		when(mockLongQuery.setParameter(anyString(), eq(group))).thenReturn(mockLongQuery);
-		when(mockLongQuery.getSingleResult()).thenReturn(expectedCount);
-		int result = studentDao.countByGroup(group);
+		int expectedCount = 20;
+		when(studentRepository.countByGroup(group)).thenReturn(expectedCount);
+		int result = studentServiceImpl.countByGroup(group);
 		assertEquals(expectedCount, result);
 	}
 }

@@ -19,7 +19,7 @@ public class ConsoleMenu {
 	public ConsoleMenu(Invoker invoker) {
 		this.invoker = invoker;		
 	}
-
+	
 	public void run() {
 
 		PrintStream printStream = System.out;

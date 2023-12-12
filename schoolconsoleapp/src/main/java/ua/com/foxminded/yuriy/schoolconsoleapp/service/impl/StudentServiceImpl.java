@@ -1,13 +1,11 @@
 package ua.com.foxminded.yuriy.schoolconsoleapp.service.impl;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
@@ -15,7 +13,6 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.repository.StudentRepository;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
 
 @Service
-@Transactional
 public class StudentServiceImpl implements StudentService {
 
 	private StudentRepository studentRepository;
@@ -34,11 +31,13 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	@Override
+	@Transactional
 	public void delete(Student student) {
 		studentRepository.delete(student);
 	}
 
 	@Override
+	@Transactional
 	public int add(Student student) {
 		studentRepository.save(student);
 		return student.getId();
@@ -55,13 +54,19 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	@Override
+	@Transactional
 	public void update(Student student) {
 		studentRepository.save(student);
 	}
-	
+
 	@Override
-	public int studentsCountByGroup(Group group) {
+	public int countByGroup(Group group) {
 		return studentRepository.countByGroup(group);
 	}
 
+	@Override
+	@Transactional
+	public void saveAll(List<Student> student) {
+		studentRepository.saveAll(student);
+	}
 }

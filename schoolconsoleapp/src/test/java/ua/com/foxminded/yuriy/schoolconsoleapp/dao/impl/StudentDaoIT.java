@@ -17,8 +17,9 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 import ua.com.foxminded.yuriy.schoolconsoleapp.repository.StudentRepository;
+import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.StudentServiceImpl;
 
-@DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = StudentDaoImpl.class))
+@DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {StudentRepository.class, StudentServiceImpl.class}))
 @TestPropertySource(locations = "classpath:application-test.properties")
 @Sql(scripts = { "/schema.sql", "/test-data.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = { "/test-data-clear.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
@@ -26,11 +27,13 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.repository.StudentRepository;
 public class StudentDaoIT {
 
 	@Autowired
-	private StudentRepository studentDao;
+	private StudentRepository studentRepository;
+	@Autowired
+	private StudentServiceImpl studentServiceImpl;
 
 	@Test
 	void injectedComponentAreNotNull() {
-		assertThat(studentDao).isNotNull();
+		assertThat(studentRepository).isNotNull();
 	}
 
 	@Test
@@ -40,13 +43,13 @@ public class StudentDaoIT {
 		List<Student> students = new ArrayList<>();
 		students.add(student);
 
-		studentDao.saveAll(students);
-		assertEquals(7, studentDao.getAll().size());
+		studentRepository.saveAll(students);
+		assertEquals(7, studentRepository.getAll().size());
 	}
 
 	@Test
 	void shouldGetAllStudents() {
-		List<Student> students = studentDao.getAll();
+		List<Student> students = studentRepository.getAll();
 		assertEquals(6, students.size());
 	}
 
@@ -65,7 +68,7 @@ public class StudentDaoIT {
 		student1.setCourse(courses);
 		student2.setCourse(courses);
 		student3.setCourse(courses);
-		List<Student> studentOnCourse = studentDao.findAllByCourse(course);
+		List<Student> studentOnCourse = studentRepository.getAllByCoursesContains(course);
 
 		assertEquals(student1, studentOnCourse.get(0));
 		assertEquals(student2, studentOnCourse.get(1));
@@ -75,9 +78,9 @@ public class StudentDaoIT {
 	@Test
 	void shouldAddStudentCorrectly() {
 		Student student = new Student("TestName", "TestLastName");
-		int studentId = studentDao.addStudent(student);
+		int studentId = studentServiceImpl.add(student);
 		assertNotNull(studentId);
-		Student insertedStudent = studentDao.getById(studentId);
+		Student insertedStudent = studentRepository.getById(studentId);
 		assertEquals(student.getFirstName(), insertedStudent.getFirstName());
 		assertEquals(student.getLastName(), insertedStudent.getLastName());
 	}
@@ -87,8 +90,8 @@ public class StudentDaoIT {
 		int studentId = 1;
 		Group group = new Group("Group X", 1);
 		Student student = new Student(1, group, "John", "Doe");
-		studentDao.delete(student);
-		Student deletedStudent = studentDao.getById(studentId);
+		studentRepository.delete(student);
+		Student deletedStudent = studentRepository.getById(studentId);
 		assertNull(deletedStudent);
 	}
 
@@ -103,20 +106,8 @@ public class StudentDaoIT {
 		courses.add(course);
 		student.setCourse(courses);
 
-		Student studentFromDb = studentDao.getById(studentId);
+		Student studentFromDb = studentRepository.getById(studentId);
 		assertEquals(student, studentFromDb);
-	}
-
-	@Test
-	void shouldGetStudentByName() {
-		Student student = studentDao.getByFirstNameAndLastName("Bob", "Johnson");
-		Group group = new Group("Group X", 1);
-		Course course = new Course("History", "World History", 2);
-		List<Course> courses = new ArrayList<>();
-		courses.add(course);
-		Student studentFromDb = new Student(3, group, "Bob", "Johnson");
-		studentFromDb.setCourse(courses);
-		assertEquals(studentFromDb, student);
 	}
 
 	@Test
@@ -127,8 +118,8 @@ public class StudentDaoIT {
 		List<Course> courses = new ArrayList<>();
 		courses.add(course);
 		student.setCourse(courses);
-		studentDao.save(student);
-		Student updatedStudent = studentDao.getById(1);
+		studentRepository.save(student);
+		Student updatedStudent = studentRepository.getById(1);
 		assertEquals(student, updatedStudent);
 	}
 }
