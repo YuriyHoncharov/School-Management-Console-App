@@ -1,4 +1,4 @@
-package ua.com.foxminded.yuriy.schoolconsoleapp.dao.impl;
+package ua.com.foxminded.yuriy.schoolconsoleapp.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -25,7 +25,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class StudentDaoImplTest {
+class StudentRepositoryTest {
 
 	@Mock
 	private StudentRepository studentRepository;
@@ -33,7 +33,7 @@ class StudentDaoImplTest {
 	private StudentServiceImpl studentServiceImpl;
 
 	@Test
-	void addAllTest_Success() throws SQLException {
+	void getAllTest_Success() throws SQLException {
 		List<Course> courses = new ArrayList<>();
 		courses.add(new Course("Mathematics", "Math Course", 1));
 		List<Student> students = new ArrayList<>();
@@ -43,35 +43,24 @@ class StudentDaoImplTest {
 		student2.setCourse(courses);
 		students.add(student);
 		students.add(student2);
-		when(studentRepository.saveAll(students)).thenReturn(students);
-		List<Student> result = studentRepository.saveAll(students);
+		when(studentRepository.getAll()).thenReturn(students);
+		List<Student> result = studentRepository.getAll();
 		assertEquals(students, result);
 		assertEquals(2, result.size());
+		assertEquals(students.get(0), result.get(0));
+		assertEquals(students.get(1), result.get(1));
 	}
 
 	@Test
-	void deleteByIdTest_Success() throws SQLException {
-		int studentId = 1;
-		Student student = new Student("name", "lastname");
-		student.setId(studentId);
-		when(studentRepository.getById(studentId)).thenReturn(student);
-		Student studentTest = studentServiceImpl.getById(studentId);
-		studentServiceImpl.delete(studentTest);
-		verify(studentRepository, times(1)).getById(studentId);
-		verify(studentRepository, times(1)).delete(studentTest);
-	}
-
-	@Test
-	void update_Success() throws SQLException {
-		Student student = new Student("Name", "Lastname");
-		student.setId(1);
-		Course course = new Course("Mathematics", "Math Course", 1);
+	void getById_shouldReturnCorrectStudentObject_Success() {
 		List<Course> courses = new ArrayList<>();
-		courses.add(course);
+		courses.add(new Course("Mathematics", "Math Course", 1));
+		Student student = new Student("name", "lastname");
 		student.setCourse(courses);
-		when(studentRepository.save(student)).thenReturn(student);
-		studentServiceImpl.update(student);
-		verify(studentRepository, times(1)).save(student);
+		int studentId = 1;
+		when(studentRepository.getById(1)).thenReturn(student);
+		Student studentTest = studentRepository.getById(studentId);
+		assertEquals(student, studentTest);
 	}
 
 	@Test
@@ -81,5 +70,19 @@ class StudentDaoImplTest {
 		when(studentRepository.countByGroup(group)).thenReturn(expectedCount);
 		int result = studentServiceImpl.countByGroup(group);
 		assertEquals(expectedCount, result);
+	}
+
+	@Test
+	void getAllByCoursesContains_shouldReturnCorrectStudentList_Success() {
+		List<Student> students = new ArrayList<>();
+		Student student = new Student("name", "lastname");
+		Student student2 = new Student("name2", "lastname2");
+		students.add(student);
+		students.add(student2);
+		Course course = new Course("Mathematics", "Math Course", 1);
+		when(studentRepository.getAllByCoursesContains(course)).thenReturn(students);
+		List<Student> result = studentRepository.getAllByCoursesContains(course);
+		assertEquals(students.get(0), result.get(0));
+		assertEquals(students.get(1), result.get(1));
 	}
 }

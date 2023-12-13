@@ -1,4 +1,4 @@
-package ua.com.foxminded.yuriy.schoolconsoleapp.dao.impl;
+package ua.com.foxminded.yuriy.schoolconsoleapp.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -16,7 +16,7 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.repository.CourseRepository;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.CourseServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
-public class CourseDaoImplTest {
+public class CourseRepositoryTest {
 
 	@Mock
 	private CourseRepository courseRepository;
@@ -26,21 +26,13 @@ public class CourseDaoImplTest {
 	private TypedQuery<Course> mockQuery;
 
 	@Test
-	void addAllTest_Success() {
+	void findAllByStudentId_shouldReturnCorrectCoursesList_Success() {
 		List<Course> courses = new ArrayList<>();
 		courses.add(new Course("Mathematics", "Math Course", 1));
 		courses.add(new Course("Biology", "Biology Course", 2));
-		when(courseRepository.saveAll(courses)).thenReturn(courses);
-		List<Course> result = courseRepository.saveAll(courses);
+		int studentId = 10;
+		when(courseRepository.findAllByStudentId(studentId)).thenReturn(courses);
+		List<Course> result = courseRepository.findAllByStudentId(studentId);
 		assertEquals(courses, result);
-	}
-
-	@Test
-	void getByStudentId_Success_shouldReturnCorrectCourse() {
-		int courseId = 1;
-		Course course = new Course("Mathematics", "Math Course", 1);
-		when(courseRepository.findById(courseId)).thenReturn(Optional.of(course));
-		Course courseTest = courseServiceImpl.getById(courseId);
-		assertEquals(course, courseTest);
 	}
 }

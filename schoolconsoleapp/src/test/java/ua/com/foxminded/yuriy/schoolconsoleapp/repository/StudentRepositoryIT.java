@@ -1,5 +1,4 @@
-package ua.com.foxminded.yuriy.schoolconsoleapp.dao.impl;
-
+package ua.com.foxminded.yuriy.schoolconsoleapp.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,39 +11,26 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
-
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 import ua.com.foxminded.yuriy.schoolconsoleapp.repository.StudentRepository;
-import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.StudentServiceImpl;
+import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
 
-@DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {StudentRepository.class, StudentServiceImpl.class}))
+@DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
+		StudentRepository.class, StudentService.class }))
 @TestPropertySource(locations = "classpath:application-test.properties")
 @Sql(scripts = { "/schema.sql", "/test-data.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = { "/test-data-clear.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 
-public class StudentDaoIT {
+public class StudentRepositoryIT {
 
 	@Autowired
 	private StudentRepository studentRepository;
-	@Autowired
-	private StudentServiceImpl studentServiceImpl;
 
 	@Test
 	void injectedComponentAreNotNull() {
 		assertThat(studentRepository).isNotNull();
-	}
-
-	@Test
-	void shouldAddAllStudents() {
-		Group group = new Group("AA-11", 1);
-		Student student = new Student(10, group, "TestName", "TestLastName");
-		List<Student> students = new ArrayList<>();
-		students.add(student);
-
-		studentRepository.saveAll(students);
-		assertEquals(7, studentRepository.getAll().size());
 	}
 
 	@Test
@@ -76,26 +62,6 @@ public class StudentDaoIT {
 	}
 
 	@Test
-	void shouldAddStudentCorrectly() {
-		Student student = new Student("TestName", "TestLastName");
-		int studentId = studentServiceImpl.add(student);
-		assertNotNull(studentId);
-		Student insertedStudent = studentRepository.getById(studentId);
-		assertEquals(student.getFirstName(), insertedStudent.getFirstName());
-		assertEquals(student.getLastName(), insertedStudent.getLastName());
-	}
-
-	@Test
-	void shouldDeleteStudentById() {
-		int studentId = 1;
-		Group group = new Group("Group X", 1);
-		Student student = new Student(1, group, "John", "Doe");
-		studentRepository.delete(student);
-		Student deletedStudent = studentRepository.getById(studentId);
-		assertNull(deletedStudent);
-	}
-
-	@Test
 	void shouldReturnStudentById() {
 		int studentId = 3;
 
@@ -109,17 +75,12 @@ public class StudentDaoIT {
 		Student studentFromDb = studentRepository.getById(studentId);
 		assertEquals(student, studentFromDb);
 	}
-
+	
 	@Test
-	void shouldUpdateStudentInfoCorrectly() {
-		Group group = new Group("Group Y", 2);
-		Student student = new Student(1, group, "New Name", "New Last Name");
-		Course course = new Course("History", "World History", 2);
-		List<Course> courses = new ArrayList<>();
-		courses.add(course);
-		student.setCourse(courses);
-		studentRepository.save(student);
-		Student updatedStudent = studentRepository.getById(1);
-		assertEquals(student, updatedStudent);
+	void shouldReturnCorrectCountNumber() {
+		Group group = new Group("Group X", 1);
+		int count = studentRepository.countByGroup(group);
+		assertEquals(3, count);
 	}
+
 }
