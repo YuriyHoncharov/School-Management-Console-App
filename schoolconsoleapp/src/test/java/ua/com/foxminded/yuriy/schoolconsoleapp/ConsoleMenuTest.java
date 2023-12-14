@@ -14,10 +14,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Invoker;
+import ua.com.foxminded.yuriy.schoolconsoleapp.logger.CustomLogger;
 
 @ExtendWith(MockitoExtension.class)
 class ConsoleMenuTest {
@@ -26,6 +28,11 @@ class ConsoleMenuTest {
 	private Command commandMock;
 	@Mock
 	private Invoker invokerMock;
+	@Mock
+	private CustomLogger customLogger;
+	@InjectMocks
+	private ConsoleMenu consoleMenu;
+	
 	private final PrintStream systemOut = System.out;
 
 	@BeforeEach
@@ -57,7 +64,7 @@ class ConsoleMenuTest {
 	private void runConsoleMenuWithCommand(String userInput) {
 		ByteArrayInputStream testIn = new ByteArrayInputStream(userInput.getBytes());
 		System.setIn(testIn);
-		ConsoleMenu consoleMenu = new ConsoleMenu(invokerMock);
+		
 		consoleMenu.run();
 	}
 }

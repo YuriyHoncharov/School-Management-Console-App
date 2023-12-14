@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Invoker;
+import ua.com.foxminded.yuriy.schoolconsoleapp.logger.CustomLogger;
 
 
 @Component
@@ -14,9 +15,11 @@ public class ConsoleMenu {
 
 	public static final String LINE = " - ";
 	private Invoker invoker;
+	private CustomLogger customLogger;
 	
 	@Autowired
-	public ConsoleMenu(Invoker invoker) {
+	public ConsoleMenu(Invoker invoker, CustomLogger customLogger) {
+		this.customLogger = customLogger;
 		this.invoker = invoker;		
 	}
 	
@@ -39,6 +42,7 @@ public class ConsoleMenu {
 				break;
 			} else if (commands.containsKey(command)) {
 				commands.get(command).execute(sc);
+				customLogger.logCommand(command);
 			} else {
 				printStream.println("Invalid command, please try again.");
 			}
