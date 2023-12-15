@@ -1,24 +1,14 @@
 package ua.com.foxminded.yuriy.schoolconsoleapp.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
-import ua.com.foxminded.yuriy.schoolconsoleapp.logger.CustomLogger;
-import ua.com.foxminded.yuriy.schoolconsoleapp.repository.CourseRepository;
-import ua.com.foxminded.yuriy.schoolconsoleapp.repository.StudentRepository;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.StudentServiceImpl;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -30,8 +20,6 @@ class StudentRepositoryTest {
 
 	@Mock
 	private StudentRepository studentRepository;
-	@Mock
-	private CustomLogger customLogger;
 	@InjectMocks
 	private StudentServiceImpl studentServiceImpl;
 

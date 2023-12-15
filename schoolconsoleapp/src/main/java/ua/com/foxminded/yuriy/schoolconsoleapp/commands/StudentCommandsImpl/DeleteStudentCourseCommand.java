@@ -3,13 +3,15 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.dto.StudentDto;
-import ua.com.foxminded.yuriy.schoolconsoleapp.logger.CustomLogger;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
 
@@ -18,13 +20,12 @@ public class DeleteStudentCourseCommand implements Command {
 
 	private StudentService studentService;
 	private StudentDto studentDto;
-	private CustomLogger customLogger;
+	public static final Logger logger = LoggerFactory.getLogger(DeleteStudentCourseCommand.class);
 
 	@Autowired
-	public DeleteStudentCourseCommand(StudentService studentService, StudentDto studentDto, CustomLogger customLogger) {
+	public DeleteStudentCourseCommand(StudentService studentService, StudentDto studentDto) {
 		this.studentService = studentService;
 		this.studentDto = studentDto;
-		this.customLogger = customLogger;
 	}
 
 	@Override
@@ -44,7 +45,6 @@ public class DeleteStudentCourseCommand implements Command {
 		} else {
 			List<Course> actualCourses = student.getCourses();
 			int choosenCourse = choiceCourseToDelete(sc, student);
-			customLogger.logInfo("User decided to delete a course from student with following ID : " + choosenCourse);
 			if (studentFollowsCourse(actualCourses, choosenCourse)) {
 				deleteCourse(student, choosenCourse);
 			} else {
@@ -61,7 +61,7 @@ public class DeleteStudentCourseCommand implements Command {
 			Student student = studentService.getById(studentId);
 			return student;
 		} catch (Exception e) {
-			customLogger.logInfo("Student that user tried to select is not exist in database");
+			logger.warn("Student with following ID was not found in data base : {}", studentId);
 			return null;
 		}
 	}

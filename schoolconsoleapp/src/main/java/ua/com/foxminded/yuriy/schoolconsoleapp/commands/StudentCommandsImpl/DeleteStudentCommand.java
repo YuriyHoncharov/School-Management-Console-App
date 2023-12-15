@@ -2,14 +2,13 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl;
 
 import java.util.List;
 import java.util.Scanner;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.dto.StudentDto;
-import ua.com.foxminded.yuriy.schoolconsoleapp.logger.CustomLogger;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
 
@@ -18,18 +17,16 @@ public class DeleteStudentCommand implements Command {
 
 	private StudentService studentService;
 	private StudentDto studentDto;
-	private CustomLogger customLogger;
+	public static final Logger logger = LoggerFactory.getLogger(DeleteStudentCommand.class);
 
 	@Autowired
-	public DeleteStudentCommand(StudentService studentService, StudentDto studentDto, CustomLogger customLogger) {
+	public DeleteStudentCommand(StudentService studentService, StudentDto studentDto) {
 		this.studentService = studentService;
 		this.studentDto = studentDto;
-		this.customLogger = customLogger;
 	}
 
 	@Override
 	public void execute(Scanner sc) {
-
 		System.out.println("Do you want to see the entire list of students?");
 		System.out.println("Enter - 1 to confirm and - 2 to continue.");
 		if (choiceYesOrNot(sc)) {
@@ -44,7 +41,6 @@ public class DeleteStudentCommand implements Command {
 			System.out.println("Student with entered ID is not found.");
 		} else {
 			if (choiceToDelete(sc, student)) {
-				customLogger.logInfo("The user confirmed the delete operation of the student.");
 				studentService.delete(student);
 				System.out.println((studentDto.studentToDto(student)).toString() + " - Has been deleted from database.");
 			} else {
@@ -60,7 +56,7 @@ public class DeleteStudentCommand implements Command {
 		try {
 			student = studentService.getById(id);
 		} catch (Exception e) {
-			customLogger.logInfo("The selected student is not exist in database");
+			logger.info("The student with following ID was not found in data base : {}", id);
 			return null;
 		}
 		return student;

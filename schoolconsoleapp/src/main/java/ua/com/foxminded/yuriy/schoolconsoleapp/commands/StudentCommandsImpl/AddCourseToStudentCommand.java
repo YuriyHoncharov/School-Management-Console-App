@@ -2,13 +2,15 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl;
 
 import java.util.List;
 import java.util.Scanner;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.dto.StudentDto;
-import ua.com.foxminded.yuriy.schoolconsoleapp.logger.CustomLogger;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.CourseService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
@@ -19,20 +21,19 @@ public class AddCourseToStudentCommand implements Command {
 	private CourseService courseService;
 	private StudentService studentService;
 	private StudentDto studentDto;
-	private CustomLogger customLogger;
 
 	@Autowired
-	public AddCourseToStudentCommand(CourseService courseService, StudentService studentService, StudentDto studentDto,
-			CustomLogger customLogger) {
+	public AddCourseToStudentCommand(CourseService courseService, StudentService studentService, StudentDto studentDto) {
 		this.courseService = courseService;
 		this.studentService = studentService;
 		this.studentDto = studentDto;
-		this.customLogger = customLogger;
 	}
+
+	public static final Logger logger = LoggerFactory.getLogger(AddCourseToStudentCommand.class);
 
 	@Override
 	public void execute(Scanner sc) {
-
+		
 		System.out.println("Do you want to see the entire list of students?");
 		System.out.println("Enter - 1 to confirm and - 2 to continue.");
 		if (choiceYesOrNot(sc)) {
@@ -49,11 +50,11 @@ public class AddCourseToStudentCommand implements Command {
 		} else {
 			List<Course> courses = availableCourses(student);
 			int choosenCourse = InputValidator.getNextInt(sc);
-			customLogger.logInfo("User choosen to insert a course to the student with following ID : " + choosenCourse);
+
 			boolean courseExist = courses.stream().anyMatch(course -> course.getId() == choosenCourse);
 			if (!courseExist) {
 				System.out.println("This number is missing, please choose the course from the list");
-				customLogger.logInfo("But course with that ID is not exist");
+
 			} else {
 				addCourseToStudent(student, choosenCourse);
 			}
@@ -68,7 +69,7 @@ public class AddCourseToStudentCommand implements Command {
 		try {
 			student = studentService.getById(studentId);
 		} catch (Exception e) {
-			customLogger.logInfo("Student that user tried to select is not exist in database");
+			logger.warn("Student with following ID was not found :{} " ,studentId);
 			return null;
 		}
 		return student;

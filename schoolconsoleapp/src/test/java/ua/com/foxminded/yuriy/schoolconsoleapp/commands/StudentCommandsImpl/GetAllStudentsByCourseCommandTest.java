@@ -1,7 +1,6 @@
 package ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 import java.io.ByteArrayOutputStream;
@@ -17,10 +16,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
-import ua.com.foxminded.yuriy.schoolconsoleapp.logger.CustomLogger;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.CourseServiceImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.StudentServiceImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
@@ -31,21 +28,13 @@ class GetAllStudentsByCourseCommandTest {
 
 	@Mock
 	private StudentServiceImpl mockStudentService;
-
 	@Mock
-	private CourseServiceImpl mockCourseService;
-	
-	@Mock
-	private CustomLogger customLogger;
-	
+	private CourseServiceImpl mockCourseService;	
 	@Mock
 	private Scanner mockScanner;
-
 	@InjectMocks
 	private GetAllStudentsByCourseCommand mockGetAllStudentsByCourseCommand;
-
 	private MockedStatic<InputValidator> mockedStatic;
-
 	private PrintStream originalSystemOut;
 	private ByteArrayOutputStream outputStreamCaptor;
 

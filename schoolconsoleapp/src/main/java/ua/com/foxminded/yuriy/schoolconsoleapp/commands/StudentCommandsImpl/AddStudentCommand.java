@@ -2,14 +2,13 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl;
 
 import java.util.List;
 import java.util.Scanner;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
-import ua.com.foxminded.yuriy.schoolconsoleapp.logger.CustomLogger;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.GroupService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
@@ -19,21 +18,18 @@ public class AddStudentCommand implements Command {
 
 	private StudentService studentService;
 	private GroupService groupService;
-	private CustomLogger customLogger;
+	public static final Logger logger = LoggerFactory.getLogger(AddStudentCommand.class);
 
 	@Autowired
-	public AddStudentCommand(StudentService studentService, GroupService groupService, CustomLogger customLogger) {
+	public AddStudentCommand(StudentService studentService, GroupService groupService) {
 		this.studentService = studentService;
 		this.groupService = groupService;
-		this.customLogger = customLogger;
 	}
 
 	@Override
 	public void execute(Scanner sc) {
-
 		Student newStudent = createStudent(sc);
 		if (groupAssignDecision(sc)) {
-			customLogger.logInfo("User decieded to insert the created Student to an existing Group");
 			assignStudentToGroup(sc, newStudent);
 		} else {
 			System.out.println(
@@ -66,12 +62,12 @@ public class AddStudentCommand implements Command {
 
 		allGroups.forEach(g -> System.out.println(g.toString()));
 		int groupId = InputValidator.getNextInt(sc);
-		customLogger.logInfo("User wanted to insert the student to the Group with following ID : " + groupId);
+
 		boolean groupExist = allGroups.stream().anyMatch(group -> group.getId() == groupId);
 		Group groupToAssign = allGroups.stream().filter(gr -> gr.getId() == groupId).findFirst().orElse(null);
 		if (!groupExist) {
 			System.out.println("The group with ID : " + groupId + " does now exist. Please retry");
-			customLogger.logInfo("The group was not assigned because is not exist with following ID : " + groupId);
+
 		} else {
 			student.setGroup(groupToAssign);
 			studentService.update(student);
