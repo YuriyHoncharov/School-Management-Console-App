@@ -2,8 +2,6 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl;
 
 import java.util.List;
 import java.util.Scanner;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
@@ -18,8 +16,7 @@ public class AddStudentCommand implements Command {
 
 	private StudentService studentService;
 	private GroupService groupService;
-	public static final Logger logger = LoggerFactory.getLogger(AddStudentCommand.class);
-
+	
 	@Autowired
 	public AddStudentCommand(StudentService studentService, GroupService groupService) {
 		this.studentService = studentService;

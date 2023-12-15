@@ -56,7 +56,7 @@ public class DeleteStudentCommand implements Command {
 		try {
 			student = studentService.getById(id);
 		} catch (Exception e) {
-			logger.info("The student with following ID was not found in data base : {}", id);
+			logger.warn("The student with following ID was not found in data base : {}", id);
 			return null;
 		}
 		return student;
