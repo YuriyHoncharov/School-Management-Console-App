@@ -8,7 +8,7 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.dto.StudentDto;
-import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
+import ua.com.foxminded.yuriy.schoolconsoleapp.logger.CustomLogger;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.CourseService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
@@ -19,12 +19,15 @@ public class AddCourseToStudentCommand implements Command {
 	private CourseService courseService;
 	private StudentService studentService;
 	private StudentDto studentDto;
+	private CustomLogger customLogger;
 
 	@Autowired
-	public AddCourseToStudentCommand(CourseService courseService, StudentService studentService, StudentDto studentDto) {
+	public AddCourseToStudentCommand(CourseService courseService, StudentService studentService, StudentDto studentDto,
+			CustomLogger customLogger) {
 		this.courseService = courseService;
 		this.studentService = studentService;
 		this.studentDto = studentDto;
+		this.customLogger = customLogger;
 	}
 
 	@Override
@@ -34,6 +37,7 @@ public class AddCourseToStudentCommand implements Command {
 		System.out.println("Enter - 1 to confirm and - 2 to continue.");
 		if (choiceYesOrNot(sc)) {
 			List<Student> allStudents = studentService.getAll();
+
 			List<StudentDto> studentsList = studentDto.studentsListDto(allStudents);
 			for (StudentDto studentDto : studentsList) {
 				System.out.println(studentDto.toString());
@@ -45,9 +49,11 @@ public class AddCourseToStudentCommand implements Command {
 		} else {
 			List<Course> courses = availableCourses(student);
 			int choosenCourse = InputValidator.getNextInt(sc);
+			customLogger.logInfo("User choosen to insert a course to the student with following ID : " + choosenCourse);
 			boolean courseExist = courses.stream().anyMatch(course -> course.getId() == choosenCourse);
 			if (!courseExist) {
 				System.out.println("This number is missing, please choose the course from the list");
+				customLogger.logInfo("But course with that ID is not exist");
 			} else {
 				addCourseToStudent(student, choosenCourse);
 			}
@@ -57,10 +63,12 @@ public class AddCourseToStudentCommand implements Command {
 	private Student getStudent(Scanner sc) {
 		System.out.println("Please enter the student's id...");
 		int studentId = InputValidator.getNextInt(sc);
+
 		Student student;
 		try {
 			student = studentService.getById(studentId);
 		} catch (Exception e) {
+			customLogger.logInfo("Student that user tried to select is not exist in database");
 			return null;
 		}
 		return student;
@@ -82,6 +90,7 @@ public class AddCourseToStudentCommand implements Command {
 		student.setCourse(courses);
 		studentService.update(student);
 		System.out.println("Course has been succesfuly added to the student.");
+
 	}
 
 	private boolean choiceYesOrNot(Scanner sc) {

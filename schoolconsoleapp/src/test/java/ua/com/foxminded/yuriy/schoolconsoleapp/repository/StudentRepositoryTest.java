@@ -14,6 +14,7 @@ import javax.persistence.TypedQuery;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
+import ua.com.foxminded.yuriy.schoolconsoleapp.logger.CustomLogger;
 import ua.com.foxminded.yuriy.schoolconsoleapp.repository.CourseRepository;
 import ua.com.foxminded.yuriy.schoolconsoleapp.repository.StudentRepository;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.StudentServiceImpl;
@@ -29,6 +30,8 @@ class StudentRepositoryTest {
 
 	@Mock
 	private StudentRepository studentRepository;
+	@Mock
+	private CustomLogger customLogger;
 	@InjectMocks
 	private StudentServiceImpl studentServiceImpl;
 

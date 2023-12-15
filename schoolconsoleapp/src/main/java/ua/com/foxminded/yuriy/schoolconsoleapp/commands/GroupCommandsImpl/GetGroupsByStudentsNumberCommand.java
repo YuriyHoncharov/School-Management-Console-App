@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
+import ua.com.foxminded.yuriy.schoolconsoleapp.logger.CustomLogger;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.GroupService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
@@ -17,11 +18,15 @@ public class GetGroupsByStudentsNumberCommand implements Command {
 
 	private StudentService studentService;
 	private GroupService groupService;
+	private CustomLogger customLogger;
 
 	@Autowired
-	public GetGroupsByStudentsNumberCommand(StudentService studentService, GroupService groupService) {
+
+	public GetGroupsByStudentsNumberCommand(StudentService studentService, GroupService groupService,
+			CustomLogger customLogger) {
 		this.studentService = studentService;
 		this.groupService = groupService;
+		this.customLogger = customLogger;
 	}
 
 	@Override

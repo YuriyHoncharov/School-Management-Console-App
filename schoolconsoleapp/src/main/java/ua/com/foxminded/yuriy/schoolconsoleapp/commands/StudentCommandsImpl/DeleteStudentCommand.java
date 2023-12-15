@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.dto.StudentDto;
+import ua.com.foxminded.yuriy.schoolconsoleapp.logger.CustomLogger;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
 
@@ -17,11 +18,13 @@ public class DeleteStudentCommand implements Command {
 
 	private StudentService studentService;
 	private StudentDto studentDto;
+	private CustomLogger customLogger;
 
 	@Autowired
-	public DeleteStudentCommand(StudentService studentService, StudentDto studentDto) {
+	public DeleteStudentCommand(StudentService studentService, StudentDto studentDto, CustomLogger customLogger) {
 		this.studentService = studentService;
 		this.studentDto = studentDto;
+		this.customLogger = customLogger;
 	}
 
 	@Override
@@ -41,6 +44,7 @@ public class DeleteStudentCommand implements Command {
 			System.out.println("Student with entered ID is not found.");
 		} else {
 			if (choiceToDelete(sc, student)) {
+				customLogger.logInfo("The user confirmed the delete operation of the student.");
 				studentService.delete(student);
 				System.out.println((studentDto.studentToDto(student)).toString() + " - Has been deleted from database.");
 			} else {
@@ -56,6 +60,7 @@ public class DeleteStudentCommand implements Command {
 		try {
 			student = studentService.getById(id);
 		} catch (Exception e) {
+			customLogger.logInfo("The selected student is not exist in database");
 			return null;
 		}
 		return student;

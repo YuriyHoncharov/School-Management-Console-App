@@ -20,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
+import ua.com.foxminded.yuriy.schoolconsoleapp.logger.CustomLogger;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.CourseServiceImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.StudentServiceImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
@@ -33,7 +34,10 @@ class GetAllStudentsByCourseCommandTest {
 
 	@Mock
 	private CourseServiceImpl mockCourseService;
-
+	
+	@Mock
+	private CustomLogger customLogger;
+	
 	@Mock
 	private Scanner mockScanner;
 

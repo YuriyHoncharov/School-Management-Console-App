@@ -9,8 +9,7 @@ public class CustomLogger {
 
 	private static final Logger logger = LoggerFactory.getLogger(CustomLogger.class);
 	
-	public void logCommand(String command) {
-		logger.info("User executed command : {}" ,command );
+	public void logInfo(String info) {
+		logger.info(info);
 	}
-
 }

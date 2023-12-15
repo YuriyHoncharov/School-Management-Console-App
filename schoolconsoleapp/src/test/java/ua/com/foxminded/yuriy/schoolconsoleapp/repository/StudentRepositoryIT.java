@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
@@ -14,11 +15,12 @@ import org.springframework.test.context.jdbc.Sql;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
+import ua.com.foxminded.yuriy.schoolconsoleapp.logger.CustomLogger;
 import ua.com.foxminded.yuriy.schoolconsoleapp.repository.StudentRepository;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
-		StudentRepository.class, StudentService.class }))
+		StudentRepository.class, StudentService.class, CustomLogger.class }))
 @TestPropertySource(locations = "classpath:application-test.properties")
 @Sql(scripts = { "/schema.sql", "/test-data.sql" }, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = { "/test-data-clear.sql" }, executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
@@ -27,7 +29,7 @@ public class StudentRepositoryIT {
 
 	@Autowired
 	private StudentRepository studentRepository;
-
+	
 	@Test
 	void injectedComponentAreNotNull() {
 		assertThat(studentRepository).isNotNull();

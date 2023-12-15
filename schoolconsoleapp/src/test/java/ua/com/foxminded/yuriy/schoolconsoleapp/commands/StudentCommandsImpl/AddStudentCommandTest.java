@@ -23,6 +23,7 @@ import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
+import ua.com.foxminded.yuriy.schoolconsoleapp.logger.CustomLogger;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.GroupServiceImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.StudentServiceImpl;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
@@ -39,6 +40,9 @@ class AddStudentCommandTest {
 
 	@Mock
 	private Scanner mockScanner;
+	
+	@Mock
+	private CustomLogger customLogger;
 
 	private MockedStatic<InputValidator> mockedStatic;
 

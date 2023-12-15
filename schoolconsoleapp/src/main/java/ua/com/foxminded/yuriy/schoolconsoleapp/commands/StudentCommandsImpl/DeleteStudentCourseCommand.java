@@ -9,19 +9,22 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.dto.StudentDto;
+import ua.com.foxminded.yuriy.schoolconsoleapp.logger.CustomLogger;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
 
 @Component
 public class DeleteStudentCourseCommand implements Command {
-	
+
 	private StudentService studentService;
 	private StudentDto studentDto;
+	private CustomLogger customLogger;
 
 	@Autowired
-	public DeleteStudentCourseCommand(StudentService studentService, StudentDto studentDto) {		
+	public DeleteStudentCourseCommand(StudentService studentService, StudentDto studentDto, CustomLogger customLogger) {
 		this.studentService = studentService;
 		this.studentDto = studentDto;
+		this.customLogger = customLogger;
 	}
 
 	@Override
@@ -41,6 +44,7 @@ public class DeleteStudentCourseCommand implements Command {
 		} else {
 			List<Course> actualCourses = student.getCourses();
 			int choosenCourse = choiceCourseToDelete(sc, student);
+			customLogger.logInfo("User decided to delete a course from student with following ID : " + choosenCourse);
 			if (studentFollowsCourse(actualCourses, choosenCourse)) {
 				deleteCourse(student, choosenCourse);
 			} else {
@@ -57,6 +61,7 @@ public class DeleteStudentCourseCommand implements Command {
 			Student student = studentService.getById(studentId);
 			return student;
 		} catch (Exception e) {
+			customLogger.logInfo("Student that user tried to select is not exist in database");
 			return null;
 		}
 	}
@@ -70,6 +75,7 @@ public class DeleteStudentCourseCommand implements Command {
 		}
 		System.out.println("Please enter the course ID from which you wish to remove the student.");
 		return InputValidator.getNextInt(sc);
+
 	}
 
 	private boolean studentFollowsCourse(List<Course> actualCourses, int choosenCourse) {

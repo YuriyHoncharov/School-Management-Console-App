@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
+import ua.com.foxminded.yuriy.schoolconsoleapp.logger.CustomLogger;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.impl.GroupServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
@@ -17,6 +18,8 @@ class GroupRepositoryTest {
 
 	@Mock
 	private GroupRepository groupRepository;
+	@Mock
+	private CustomLogger customLogger;
 	@InjectMocks
 	private GroupServiceImpl groupServiceImpl;
 

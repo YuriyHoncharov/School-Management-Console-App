@@ -9,27 +9,26 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Invoker;
 import ua.com.foxminded.yuriy.schoolconsoleapp.logger.CustomLogger;
 
-
 @Component
 public class ConsoleMenu {
 
 	public static final String LINE = " - ";
 	private Invoker invoker;
 	private CustomLogger customLogger;
-	
+
 	@Autowired
 	public ConsoleMenu(Invoker invoker, CustomLogger customLogger) {
 		this.customLogger = customLogger;
-		this.invoker = invoker;		
+		this.invoker = invoker;
 	}
-	
+
 	public void run() {
 
 		PrintStream printStream = System.out;
 		Map<String, Command> commands = invoker.registerCommands();
 		Scanner sc = new Scanner(System.in);
 
-		while (true) {			
+		while (true) {
 			printStream.println("Please select the command to execute..");
 			for (Command command : commands.values()) {
 				printStream.println(command.name() + LINE + command.description());
@@ -41,10 +40,11 @@ public class ConsoleMenu {
 				System.out.println("Application is closed.");
 				break;
 			} else if (commands.containsKey(command)) {
+				customLogger.logInfo("User executed command number : " + command);
 				commands.get(command).execute(sc);
-				customLogger.logCommand(command);
 			} else {
 				printStream.println("Invalid command, please try again.");
+				customLogger.logInfo("User inserted command that not exist.");
 			}
 		}
 	}
