@@ -2,7 +2,6 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
@@ -24,7 +23,7 @@ class StudentRepositoryTest {
 	private StudentServiceImpl studentServiceImpl;
 
 	@Test
-	void getAllTest_Success() throws SQLException {
+	void getAllTest_Success() {
 		List<Course> courses = new ArrayList<>();
 		courses.add(new Course("Mathematics", "Math Course", 1));
 		List<Student> students = new ArrayList<>();
@@ -55,7 +54,7 @@ class StudentRepositoryTest {
 	}
 
 	@Test
-	void studentsCountByGroupIdTest_Success() throws SQLException {
+	void studentsCountByGroupIdTest_Success() {
 		Group group = new Group("AA-11", 1);
 		int expectedCount = 20;
 		when(studentRepository.countByGroup(group)).thenReturn(expectedCount);
