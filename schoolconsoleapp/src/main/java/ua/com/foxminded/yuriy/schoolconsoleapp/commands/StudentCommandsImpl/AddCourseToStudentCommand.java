@@ -54,9 +54,10 @@ public class AddCourseToStudentCommand implements Command {
 			boolean courseExist = courses.stream().anyMatch(course -> course.getId() == choosenCourse);
 			if (!courseExist) {
 				System.out.println("This number is missing, please choose the course from the list");
-
+				logger.warn("Course has not been added because a course with following ID : {} - does not exist.", choosenCourse);
 			} else {
 				addCourseToStudent(student, choosenCourse);
+				logger.info("Course with ID : {} has been added to the student with ID : {}", choosenCourse, student.getId());
 			}
 		}
 	}
@@ -91,7 +92,6 @@ public class AddCourseToStudentCommand implements Command {
 		student.setCourse(courses);
 		studentService.update(student);
 		System.out.println("Course has been succesfuly added to the student.");
-
 	}
 
 	private boolean choiceYesOrNot(Scanner sc) {

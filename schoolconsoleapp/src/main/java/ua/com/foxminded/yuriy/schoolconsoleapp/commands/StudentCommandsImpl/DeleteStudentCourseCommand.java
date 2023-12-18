@@ -50,6 +50,7 @@ public class DeleteStudentCourseCommand implements Command {
 			} else {
 				System.out.println(
 						"Unable to find the course with the provided ID. Please ensure that the ID is correct and the student is not already unenrolled from this course..");
+				logger.warn("Any course has been deleted from Student with ID : {}, because the Course ID is incorrect.", student.getId());
 			}
 		}
 	}
@@ -88,6 +89,7 @@ public class DeleteStudentCourseCommand implements Command {
 		student.getCourses().removeIf(course -> course.getId() == choosenCourse);
 		studentService.update(student);
 		System.out.println("Course has been succesfully removed.");
+		logger.info("Course with ID : {} has been removed from Student with ID : {}", choosenCourse, student.getId());
 	}
 
 	private boolean choiceYesOrNot(Scanner sc) {

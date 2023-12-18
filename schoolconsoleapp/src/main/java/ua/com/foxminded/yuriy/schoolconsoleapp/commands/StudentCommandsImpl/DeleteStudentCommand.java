@@ -43,8 +43,10 @@ public class DeleteStudentCommand implements Command {
 			if (choiceToDelete(sc, student)) {
 				studentService.delete(student);
 				System.out.println((studentDto.studentToDto(student)).toString() + " - Has been deleted from database.");
+				logger.info("Student with ID : {} has been deleted from database", student.getId());
 			} else {
 				System.out.println("You canceled the operation.");
+				logger.warn("User canceled the operation");
 			}
 		}
 	}
