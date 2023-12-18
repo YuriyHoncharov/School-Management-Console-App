@@ -1,3 +1,5 @@
+-- Create School Tables
+
 CREATE TABLE IF NOT EXISTS groups (
 id SERIAL PRIMARY KEY,
 name TEXT NOT NULL
