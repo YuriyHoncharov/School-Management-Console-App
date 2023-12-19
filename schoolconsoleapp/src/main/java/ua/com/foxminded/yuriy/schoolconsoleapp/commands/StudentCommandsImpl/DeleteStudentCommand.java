@@ -2,10 +2,10 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl;
 
 import java.util.List;
 import java.util.Scanner;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.dto.StudentDto;
@@ -17,6 +17,7 @@ public class DeleteStudentCommand implements Command {
 
 	private StudentService studentService;
 	private StudentDto studentDto;
+	public static final Logger logger = LoggerFactory.getLogger(DeleteStudentCommand.class);
 
 	@Autowired
 	public DeleteStudentCommand(StudentService studentService, StudentDto studentDto) {
@@ -26,7 +27,6 @@ public class DeleteStudentCommand implements Command {
 
 	@Override
 	public void execute(Scanner sc) {
-
 		System.out.println("Do you want to see the entire list of students?");
 		System.out.println("Enter - 1 to confirm and - 2 to continue.");
 		if (choiceYesOrNot(sc)) {
@@ -43,8 +43,10 @@ public class DeleteStudentCommand implements Command {
 			if (choiceToDelete(sc, student)) {
 				studentService.delete(student);
 				System.out.println((studentDto.studentToDto(student)).toString() + " - Has been deleted from database.");
+				logger.info("Student with ID : {} has been deleted from database", student.getId());
 			} else {
 				System.out.println("You canceled the operation.");
+				logger.warn("User canceled the operation");
 			}
 		}
 	}
@@ -56,6 +58,7 @@ public class DeleteStudentCommand implements Command {
 		try {
 			student = studentService.getById(id);
 		} catch (Exception e) {
+			logger.warn("The student with following ID was not found in data base : {}", id);
 			return null;
 		}
 		return student;

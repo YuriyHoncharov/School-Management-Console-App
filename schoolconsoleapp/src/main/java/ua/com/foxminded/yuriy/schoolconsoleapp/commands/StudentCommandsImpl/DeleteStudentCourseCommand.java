@@ -3,8 +3,10 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
@@ -15,12 +17,13 @@ import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
 
 @Component
 public class DeleteStudentCourseCommand implements Command {
-	
+
 	private StudentService studentService;
 	private StudentDto studentDto;
+	public static final Logger logger = LoggerFactory.getLogger(DeleteStudentCourseCommand.class);
 
 	@Autowired
-	public DeleteStudentCourseCommand(StudentService studentService, StudentDto studentDto) {		
+	public DeleteStudentCourseCommand(StudentService studentService, StudentDto studentDto) {
 		this.studentService = studentService;
 		this.studentDto = studentDto;
 	}
@@ -47,6 +50,7 @@ public class DeleteStudentCourseCommand implements Command {
 			} else {
 				System.out.println(
 						"Unable to find the course with the provided ID. Please ensure that the ID is correct and the student is not already unenrolled from this course..");
+				logger.warn("Any course has been deleted from Student with ID : {}, because the Course ID is incorrect.", student.getId());
 			}
 		}
 	}
@@ -58,6 +62,7 @@ public class DeleteStudentCourseCommand implements Command {
 			Student student = studentService.getById(studentId);
 			return student;
 		} catch (Exception e) {
+			logger.warn("Student with following ID was not found in data base : {}", studentId);
 			return null;
 		}
 	}
@@ -71,6 +76,7 @@ public class DeleteStudentCourseCommand implements Command {
 		}
 		System.out.println("Please enter the course ID from which you wish to remove the student.");
 		return InputValidator.getNextInt(sc);
+
 	}
 
 	private boolean studentFollowsCourse(List<Course> actualCourses, int choosenCourse) {
@@ -83,6 +89,7 @@ public class DeleteStudentCourseCommand implements Command {
 		student.getCourses().removeIf(course -> course.getId() == choosenCourse);
 		studentService.update(student);
 		System.out.println("Course has been succesfully removed.");
+		logger.info("Course with ID : {} has been removed from Student with ID : {}", choosenCourse, student.getId());
 	}
 
 	private boolean choiceYesOrNot(Scanner sc) {

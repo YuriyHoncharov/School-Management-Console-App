@@ -39,7 +39,7 @@ class AddStudentCommandTest {
 
 	@Mock
 	private Scanner mockScanner;
-
+	
 	private MockedStatic<InputValidator> mockedStatic;
 
 	@InjectMocks

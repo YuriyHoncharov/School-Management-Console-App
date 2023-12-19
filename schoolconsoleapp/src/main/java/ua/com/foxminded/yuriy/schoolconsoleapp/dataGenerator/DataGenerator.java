@@ -2,32 +2,33 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.dataGenerator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.CourseDao;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.GroupDao;
-import ua.com.foxminded.yuriy.schoolconsoleapp.dao.StudentDao;
+
+import ua.com.foxminded.yuriy.schoolconsoleapp.repository.CourseRepository;
+import ua.com.foxminded.yuriy.schoolconsoleapp.repository.GroupRepository;
+import ua.com.foxminded.yuriy.schoolconsoleapp.repository.StudentRepository;
 
 @Component
 public class DataGenerator {
 
-	private CourseDao courseDao;
-	private GroupDao groupDao;
-	private StudentDao studentDao;
+	private CourseRepository courseRepository;
+	private GroupRepository groupRepository;
+	private StudentRepository studentRepository;
 
 	public DataGenerator() {
 	}
 
 	@Autowired
-	public DataGenerator(CourseDao courseDao, GroupDao groupDao, StudentDao studentDao) {
-		this.courseDao = courseDao;
-		this.groupDao = groupDao;
-		this.studentDao = studentDao;
+	public DataGenerator(CourseRepository courseDao, GroupRepository groupDao, StudentRepository studentDao) {
+		this.courseRepository = courseDao;
+		this.groupRepository = groupDao;
+		this.studentRepository = studentDao;
 
 	}
 
 	public void initializeAndPopulateTestDatabase() {
 		RandomDataGenerator randomDataGenerator = new RandomDataGenerator();
-		groupDao.addAll(randomDataGenerator.generateGroups());
-		courseDao.addAll(randomDataGenerator.generateCourses());
-		studentDao.addAll(randomDataGenerator.generateStudents());
+		groupRepository.saveAll(randomDataGenerator.generateGroups());
+		courseRepository.saveAll(randomDataGenerator.generateCourses());
+		studentRepository.saveAll(randomDataGenerator.generateStudents());
 	}
 }

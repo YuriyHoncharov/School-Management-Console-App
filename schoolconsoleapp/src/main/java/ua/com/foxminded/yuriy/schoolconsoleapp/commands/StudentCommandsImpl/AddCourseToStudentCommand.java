@@ -2,13 +2,15 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl;
 
 import java.util.List;
 import java.util.Scanner;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Course;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.dto.StudentDto;
-import ua.com.foxminded.yuriy.schoolconsoleapp.exception.DaoException;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.CourseService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.service.StudentService;
 import ua.com.foxminded.yuriy.schoolconsoleapp.util.InputValidator;
@@ -27,13 +29,16 @@ public class AddCourseToStudentCommand implements Command {
 		this.studentDto = studentDto;
 	}
 
+	public static final Logger logger = LoggerFactory.getLogger(AddCourseToStudentCommand.class);
+
 	@Override
 	public void execute(Scanner sc) {
-
+		
 		System.out.println("Do you want to see the entire list of students?");
 		System.out.println("Enter - 1 to confirm and - 2 to continue.");
 		if (choiceYesOrNot(sc)) {
 			List<Student> allStudents = studentService.getAll();
+
 			List<StudentDto> studentsList = studentDto.studentsListDto(allStudents);
 			for (StudentDto studentDto : studentsList) {
 				System.out.println(studentDto.toString());
@@ -45,11 +50,14 @@ public class AddCourseToStudentCommand implements Command {
 		} else {
 			List<Course> courses = availableCourses(student);
 			int choosenCourse = InputValidator.getNextInt(sc);
+
 			boolean courseExist = courses.stream().anyMatch(course -> course.getId() == choosenCourse);
 			if (!courseExist) {
 				System.out.println("This number is missing, please choose the course from the list");
+				logger.warn("Course has not been added because a course with following ID : {} - does not exist.", choosenCourse);
 			} else {
 				addCourseToStudent(student, choosenCourse);
+				logger.info("Course with ID : {} has been added to the student with ID : {}", choosenCourse, student.getId());
 			}
 		}
 	}
@@ -57,10 +65,12 @@ public class AddCourseToStudentCommand implements Command {
 	private Student getStudent(Scanner sc) {
 		System.out.println("Please enter the student's id...");
 		int studentId = InputValidator.getNextInt(sc);
+
 		Student student;
 		try {
 			student = studentService.getById(studentId);
 		} catch (Exception e) {
+			logger.warn("Student with following ID was not found :{} " ,studentId);
 			return null;
 		}
 		return student;

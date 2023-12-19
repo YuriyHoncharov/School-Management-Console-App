@@ -31,17 +31,6 @@ class CourseServiceTest {
 	}
 
 	@Test
-	void shouldGetCoursesByStudentId() {
-		int studentId = 1;
-		List<Course> studentCourses = Arrays.asList(new Course("Math", "Math Description", 1),
-				new Course("Physics", "Physics Description", 1));
-		when(courseService.getByStudentId(studentId)).thenReturn(studentCourses);
-		List<Course> resultCourses = courseService.getByStudentId(studentId);
-		assertEquals(studentCourses.size(), resultCourses.size());
-		verify(courseService).getByStudentId(studentId);
-	}
-
-	@Test
 	void shouldGetCourseById() {
 		int courseId = 1;
 		Course course = new Course("Math", "Math Description", 1);

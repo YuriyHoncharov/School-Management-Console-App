@@ -3,9 +3,10 @@ package ua.com.foxminded.yuriy.schoolconsoleapp.commands.StudentCommandsImpl;
 import java.util.List;
 import java.util.Scanner;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import ua.com.foxminded.yuriy.schoolconsoleapp.commands.Command;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Group;
 import ua.com.foxminded.yuriy.schoolconsoleapp.entity.Student;
@@ -18,6 +19,7 @@ public class AddStudentCommand implements Command {
 
 	private StudentService studentService;
 	private GroupService groupService;
+	public static final Logger logger = LoggerFactory.getLogger(AddStudentCommand.class);
 
 	@Autowired
 	public AddStudentCommand(StudentService studentService, GroupService groupService) {
@@ -27,7 +29,6 @@ public class AddStudentCommand implements Command {
 
 	@Override
 	public void execute(Scanner sc) {
-
 		Student newStudent = createStudent(sc);
 		if (groupAssignDecision(sc)) {
 			assignStudentToGroup(sc, newStudent);
@@ -59,16 +60,20 @@ public class AddStudentCommand implements Command {
 
 		System.out.println("Please insert the Group ID you want to assign to your student..");
 		List<Group> allGroups = groupService.getAll();
+
 		allGroups.forEach(g -> System.out.println(g.toString()));
 		int groupId = InputValidator.getNextInt(sc);
+
 		boolean groupExist = allGroups.stream().anyMatch(group -> group.getId() == groupId);
 		Group groupToAssign = allGroups.stream().filter(gr -> gr.getId() == groupId).findFirst().orElse(null);
 		if (!groupExist) {
-			System.out.println("The group with ID : " + groupId + " does now exist. Please retry");
+			System.out.println("The group with ID : " + groupId + " does not exist. Please retry");
+			logger.warn("A group with followind ID : {} - was not assigned to the student [{}] because the Group does not exist", groupId, student.getId());
 		} else {
 			student.setGroup(groupToAssign);
 			studentService.update(student);
 			System.out.println("Group has been succesfully added to the student.");
+			logger.warn("A group with followind ID : {} - was successfully assigned to the student with ID : [{}].", groupId, student.getId());
 		}
 	}
 

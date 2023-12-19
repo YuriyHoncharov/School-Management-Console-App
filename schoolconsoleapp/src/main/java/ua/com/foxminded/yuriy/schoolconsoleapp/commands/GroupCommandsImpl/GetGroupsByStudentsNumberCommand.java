@@ -17,7 +17,7 @@ public class GetGroupsByStudentsNumberCommand implements Command {
 
 	private StudentService studentService;
 	private GroupService groupService;
-
+		
 	@Autowired
 	public GetGroupsByStudentsNumberCommand(StudentService studentService, GroupService groupService) {
 		this.studentService = studentService;
@@ -27,7 +27,7 @@ public class GetGroupsByStudentsNumberCommand implements Command {
 	@Override
 	public void execute(Scanner sc) {
 		System.out.println("Please enter the number..");
-		int count = InputValidator.getNextInt(sc);
+		Long count = (long) InputValidator.getNextInt(sc);
 		List<Group> result = groupService.getAllLessOrEqual(count);
 		if (result.isEmpty()) {
 			System.out.println("No one group has " + count + " or less students.");
@@ -35,7 +35,7 @@ public class GetGroupsByStudentsNumberCommand implements Command {
 			Collections.sort(result, Comparator.comparingInt(Group::getId));
 			result.forEach((group) -> {
 				System.out.println("Group ID : " + group.getId() + ". " + group.getName() + " = "
-						+ studentService.studentsCountByGroup(group) + " students in this group.");
+						+ studentService.countByGroup(group) + " students in this group.");
 			});
 		}
 	}
